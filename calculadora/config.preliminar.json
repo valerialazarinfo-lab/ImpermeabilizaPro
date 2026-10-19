@@ -1,0 +1,53 @@
+{
+  "version": "1.0-draft",
+  "status": "simulation_only_not_approved_for_publication",
+  "currency": "EUR",
+  "prices_exclude_vat": true,
+  "sources": [
+    "https://www.quantobra.pt/precos-construcao/impermeabilizacao",
+    "https://www.habitissimo.pt/orcamentos/impermeabilizacoes",
+    "https://www.habitissimo.pt/orcamentos/impermeabilizacao-de-terracos"
+  ],
+  "price_bands_eur_per_m2_ex_vat": {
+    "bituminous_single": {
+      "min": 25,
+      "max": 39
+    },
+    "bituminous_double": {
+      "min": 38,
+      "max": 58
+    },
+    "liquid_membrane": {
+      "min": 28,
+      "max": 45
+    },
+    "cementitious_flexible": {
+      "min": 22,
+      "max": 35
+    },
+    "terrace_moderate_preparation": {
+      "min": 45,
+      "max": 70
+    }
+  },
+  "minimum_complete_project_ex_vat": 1000,
+  "minimum_policy": "Provisional commercial screening threshold, not an automatic quotation",
+  "calculation": "base_band * area + separately validated extras; never double-count preparation",
+  "unknown_or_complex_conditions": "manual_review_no_automatic_price",
+  "excluded_services": [
+    "pitched tiled roofs",
+    "high-altitude work"
+  ],
+  "public_display": "Range subject to technical assessment; VAT treatment must be validated",
+  "validation_required": [
+    "materials",
+    "labor",
+    "travel",
+    "access",
+    "details",
+    "overheads",
+    "margin",
+    "VAT",
+    "insurance"
+  ]
+}
