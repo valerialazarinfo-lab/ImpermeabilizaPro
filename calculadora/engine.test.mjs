@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {estimate} from './engine.mjs';
+import {readFileSync} from 'node:fs';
+const config=JSON.parse(readFileSync(new URL('./config.preliminar.json', import.meta.url),'utf8'));
+test('40 m² de tela dupla',()=>assert.deepEqual(estimate({service:'bituminous_double',area:40},config),{review:false,min:1520,max:2320,currency:'EUR',vatIncluded:false,provisional:true}));
+test('área pequena aplica mínimo comercial provisório',()=>assert.equal(estimate({service:'liquid_membrane',area:8},config).min,1000));
+test('acesso difícil requer avaliação',()=>assert.equal(estimate({service:'bituminous_double',area:40,difficultAccess:true},config).review,true));
+test('área desconhecida requer avaliação',()=>assert.equal(estimate({service:'bituminous_double',area:0},config).review,true));
+test('serviço não previsto requer avaliação',()=>assert.equal(estimate({service:'roof_tiles',area:40},config).review,true));
