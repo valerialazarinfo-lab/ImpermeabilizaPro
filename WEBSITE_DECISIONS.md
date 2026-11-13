@@ -111,3 +111,10 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 - Novas páginas: condomínios, preços por m², Sobral de Monte Agraço, Alenquer, Arruda dos Vinhos, Vila Franca de Xira. `/simulador/` passou a `noindex` (foco em particulares e pequenas infiltrações).
 - Apresentação como empresa (decisão da responsável, 13-11-2026): ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição. Denominação, NIF e sede só depois do registo; alvará IMPIC (classe 2 previsto) e seguro só depois de emitidos.
 - Sem avaliações, garantias, alvará ou seguro no site até existirem. Plano de visibilidade gratuita em `docs/plano-visibilidade.md`; perfil Google em `docs/google-perfil-empresa.md`.
+
+## Ficha Google e zonas — 13 November 2026 (tarde)
+
+- Ficha Google alinhada com o site (detalhe em `docs/google-perfil-empresa.md`, secção «Estado»). Conta: proimpermeabiliza@gmail.com.
+- 4 páginas de zona novas para completar os 13 concelhos da ficha: Odivelas, Amadora, Lourinhã, Cadaval (geradas por `scripts/gerar_paginas.py`, com «na»/«no» no título). Freguesias atuais e fatores gerais, sem obras inventadas.
+- Rodapé: link «Deixe a sua avaliação no Google» e as 13 zonas.
+- Verificado: `scripts/verificar_site.py` sem erros (41 páginas); sem overflow em iPhone 13; sem erros JS.

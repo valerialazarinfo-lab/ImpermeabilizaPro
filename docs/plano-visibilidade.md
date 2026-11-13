@@ -21,7 +21,7 @@ Não há forma honesta de garantir o 1.º lugar: depende da concorrência, das a
 
 ### 2. Perfil da Empresa no Google (Google Maps) — guia em `docs/google-perfil-empresa.md`
 - Completar tudo: categoria, serviços, área de serviço, descrição, fotografias reais, horário.
-- Website: `https://impermeabilizapro.pt/?utm_source=google&utm_medium=organic&utm_campaign=perfil_google`.
+- Website: `https://impermeabilizapro.pt/?utm_source=google&utm_medium=organic&utm_campaign=gbp`.
 - Publicar 1 fotografia de obra por semana.
 - **Avaliações** são o fator n.º 1 no Maps: pedir a todos os clientes no fim da obra (mensagens prontas no guia). Nunca oferecer nada em troca.
 

@@ -280,22 +280,35 @@ LOCAIS = {
     "sintra": dict(nome="Sintra",
         freg=["Agualva e Mira-Sintra", "Algueirão-Mem Martins", "Almargem do Bispo, Pêro Pinheiro e Montelavar", "Cacém e São Marcos", "Casal de Cambra", "Colares", "Massamá e Monte Abraão", "Queluz e Belas", "Rio de Mouro", "São João das Lampas e Terrugem", "Sintra (Santa Maria e São Miguel, São Martinho e São Pedro de Penaferrim)"],
         fatores=[("Humidade e nevoeiro", "Perto da serra as superfícies demoram a secar: marcamos a aplicação para dias secos."), ("Condomínios e caves", "Terraços de prédios em Queluz, Cacém e Algueirão; caves em terrenos inclinados.")]),
+    "odivelas": dict(nome="Odivelas", nova=True,
+        freg=["Odivelas", "Pontinha e Famões", "Póvoa de Santo Adrião e Olival Basto", "Ramada e Caneças"],
+        fatores=[("Prédios e condomínios", "Terraços de cobertura de prédios em Odivelas, Póvoa de Santo Adrião e Ramada."), ("Caves e garagens", "Garagens e caves de condomínios, onde a água entra por paredes enterradas e juntas.")]),
+    "amadora": dict(nome="Amadora", em="na", nova=True,
+        freg=["Águas Livres", "Alfragide", "Encosta do Sol", "Falagueira-Venda Nova", "Mina de Água", "Venteira"],
+        fatores=[("Prédios e condomínios", "Concelho muito urbano: sobretudo terraços de cobertura de prédios e garagens de condomínios."), ("Comércio e serviços", "Coberturas planas de edifícios de comércio e serviços, por exemplo em Alfragide.")]),
+    "lourinha": dict(nome="Lourinhã", em="na", nova=True,
+        freg=["Lourinhã e Atalaia", "Miragaia e Marteleira", "Moita dos Ferreiros", "Reguengo Grande", "Ribamar", "Santa Bárbara", "São Bartolomeu dos Galegos e Moledo", "Vimeiro"],
+        fatores=[("Perto do mar", "Em Ribamar e na costa, o vento e a maresia desgastam mais depressa as telas expostas: o acabamento mineral protege-as."), ("Armazéns agrícolas", "Coberturas planas de armazéns e pavilhões agrícolas com grandes áreas.")]),
+    "cadaval": dict(nome="Cadaval", em="no", nova=True,
+        freg=["Alguber", "Cadaval e Pêro Moniz", "Lamas e Cercal", "Painho e Figueiros", "Peral", "Vermelha", "Vilar"],
+        fatores=[("Armazéns e pavilhões", "Coberturas planas de armazéns e pavilhões agrícolas com grandes áreas."), ("Chuva com vento", "No Oeste a chuva vem batida pelo vento e entra sobretudo por remates, platibandas e soleiras.")]),
     "lisboa": dict(nome="Lisboa", freg=[],
         fatores=[("Edifícios antigos", "Terraços de cobertura com várias camadas antigas: muitas vezes é preciso remover antes de impermeabilizar."), ("Logística na cidade", "Acesso, estacionamento e licença de ocupação da via pública quando há contentor ou andaime.")]),
 }
 FOTOS_LOCAL = [["gaia_largo", "cobertura_mineral", "terraco_claraboia"], ["gaia_caso", "parede_imperalum", "gaia_rolo"], ["terraco_grua", "gaia_juntas", "aroeira"]]
 for i, (slug, d) in enumerate(LOCAIS.items()):
     n = d["nome"]
+    em = d.get("em", "em")  # "na Amadora", "no Cadaval"
     PAGINAS["impermeabilizacao-" + slug] = dict(
-        titulo=f"Impermeabilização em {n}: Coberturas e Terraços | ImpermeabilizaPro",
-        desc=f"Impermeabilização de coberturas planas, terraços e caves em {n}, para construtoras, condomínios e empresas. A partir de {MIN} m². Veja o preço por m².",
-        eyebrow=f"IMPERMEABILIZAÇÃO · {n.upper()}", h1=f"Impermeabilização em {n}",
-        sub=f"Coberturas planas, terraços e caves em {n}, para construtoras, condomínios e empresas. Obras a partir de {MIN} m².",
+        titulo=f"Impermeabilização {em} {n}: Coberturas e Terraços | ImpermeabilizaPro",
+        desc=f"Impermeabilização de coberturas planas, terraços e caves {em} {n}, para construtoras, condomínios e empresas. A partir de {MIN} m². Veja o preço por m².",
+        eyebrow=f"IMPERMEABILIZAÇÃO · {n.upper()}", h1=f"Impermeabilização {em} {n}",
+        sub=f"Coberturas planas, terraços e caves {em} {n}, para construtoras, condomínios e empresas. Obras a partir de {MIN} m².",
         sup=None, fotos=d.get("fotos", FOTOS_LOCAL[i % 3]), local=d,
         inclui=[(t, x) for t, x in d["fatores"]] + [("Preço por m² na hora", "Use a calculadora ou envie fotografias pelo WhatsApp.")],
         texto=[], precos=PRECOS_TELA[:3],
-        faq=[(f"Fazem obras de impermeabilização em {n}?", f"Sim. Trabalhamos a partir de Sobral de Monte Agraço e fazemos obras em {n}."), FAQ_MIN, FAQ_IVA],
-        servico=f"Impermeabilização em {n}", oferta=("material", "tela_2"), area=n)
+        faq=[(f"Fazem obras de impermeabilização {em} {n}?", f"Sim. Trabalhamos a partir de Sobral de Monte Agraço e fazemos obras {em} {n}."), FAQ_MIN, FAQ_IVA],
+        servico=f"Impermeabilização {em} {n}", oferta=("material", "tela_2"), area=n)
 
 
 # ---------------------------------------------------------------- HTML

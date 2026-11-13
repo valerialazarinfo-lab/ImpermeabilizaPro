@@ -3,6 +3,20 @@
 Atualizado: 2026-11-13. Objetivo: perfil completo e coerente com o site antes de começar a pedir avaliações.
 Regras confirmadas nas páginas de ajuda da Google (ver Fontes). Não inventar fotografias, obras nem avaliações.
 
+## Estado da ficha em 2026-11-13 (feito pela Valeria com o Claude no Chrome)
+
+- Conta que gere a ficha: proimpermeabiliza@gmail.com (empresa de área de serviço, morada oculta, validada).
+- Categorias: «Empresa de impermeabilização» (principal), «Empreiteiro» e «Serviço de reparação de danos causados pela água».
+- 7 serviços sem telhados (terraços e varandas, coberturas planas, paredes e paredes enterradas, casas de banho e interiores, tela asfáltica, reparação de infiltrações, subcontratação para empreiteiros).
+- Área de serviço: 13 concelhos (Sobral de Monte Agraço, Torres Vedras, Arruda dos Vinhos, Alenquer, Mafra, Loures, Lisboa, Sintra, Odivelas, Vila Franca de Xira, Lourinhã, Cadaval, Amadora). Todos têm página no site.
+- Website na ficha: `https://impermeabilizapro.pt/?utm_source=google&utm_medium=organic&utm_campaign=gbp` (nos relatórios, procurar a campanha `gbp`).
+- Horário: 08:00–22:00 todos os dias (confirmado). Data de abertura: fica como está.
+- Publicações antigas que anunciavam telhados eliminadas; publicação nova sem telhados, com botão «Ligar agora».
+- 10 fotografias reais carregadas; 3 cópias exatas eliminadas. Falta apagar as 2 versões antigas do terraço com clarabóia quando as novas saírem de «Pending».
+- Link para pedir avaliações: https://g.page/r/CSxqX6SG4QDvEBM/review (já no rodapé do site).
+- **Descrição a corrigir:** a descrição colocada de manhã não refere o mínimo de 100 m² nem a falta de pequenas reparações. Substituir pela descrição da secção 2.
+- Ponto de partida (relatório Google de outubro de 2026): 67 visualizações, 1 visita ao site, 0 chamadas.
+
 ## 1. Dados base (copiar exatamente)
 
 | Campo | Valor |
@@ -11,7 +25,7 @@ Regras confirmadas nas páginas de ajuda da Google (ver Fontes). Não inventar f
 | Categoria principal | Procurar «impermeabiliza» e escolher a categoria de serviço de impermeabilização que aparecer |
 | Categorias extra | Empreiteiro de coberturas (se existir «coberturas planas»), Empreiteiro geral — só se corresponderem ao que fazem |
 | Telefone | 930 446 198 |
-| Website | `https://impermeabilizapro.pt/?utm_source=google&utm_medium=organic&utm_campaign=perfil_google` |
+| Website | `https://impermeabilizapro.pt/?utm_source=google&utm_medium=organic&utm_campaign=gbp` (o que está na ficha) |
 | Morada | Tipo «empresa de área de serviço»: **esconder a morada** aos clientes (trabalham na obra do cliente) |
 | Área de serviço | Distritos de Lisboa, Santarém, Setúbal e Leiria (ou os concelhos principais: Sobral de Monte Agraço, Arruda dos Vinhos, Alenquer, Torres Vedras, Mafra, Loures, Lisboa, Sintra, Vila Franca de Xira) |
 | Horário | O horário real em que atendem o telefone |
@@ -63,7 +77,7 @@ Regras confirmadas nas páginas de ajuda da Google (ver Fontes). Não inventar f
 
 ## 6. Depois de ter o link
 
-Enviar o link de avaliações para ser ligado no site (rodapé: «Deixe a sua avaliação no Google», em `scripts/partials/footer.html`). Quando houver avaliações reais, podemos mostrar a nota e o número no site, sempre com ligação ao Google e a data.
+Feito: o link está no rodapé («Deixe a sua avaliação no Google», em `scripts/partials/footer.html`). Quando houver avaliações reais, podemos mostrar a nota e o número no site, sempre com ligação ao Google e a data.
 
 ## Fontes (consultadas a 2026-11-13)
 - Google — Dicas para obter mais avaliações: https://support.google.com/business/answer/7035772
