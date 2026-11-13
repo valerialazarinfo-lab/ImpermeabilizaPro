@@ -344,7 +344,9 @@ def pagina(slug, p):
     corpo = (f'<section class="h-hero slim" id="pedido"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
              f'<div class="wrap h-hero-in"><div><p class="h-crumbs"><a href="/">Início</a> › {e(p["h1"])}</p><p class="h-eyebrow">{e(p["eyebrow"])}</p><h1>{e(p["h1"])}</h1><p class="h-sub">{minimo_span(p["sub"])}</p>'
              f'<ul class="h-chips"><li>Obras a partir de <span data-minimo-obra>{MIN}</span> m²</li><li>Preços de entrada</li><li>Fotografias reais</li></ul>'
-             f'<p>Prefere falar? <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a> · Vinícius Nascimento</p></div>{calc}</div></section>\n')
+             f'<p>Prefere falar? <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a> · Vinícius Nascimento</p>'
+             + ('<p><a class="h-tel" href="/assets/apresentacao-impermeabilizapro.pdf" download>Descarregar apresentação (PDF, 4 páginas)</a></p>' if slug in ("empresas", "impermeabilizacao-condominios") else "")
+             + f'</div>{calc}</div></section>\n')
     corpo += (precos if ordem_precos_topo else sec_fotos)
     corpo += f'<section class="h-sec{" soft" if not ordem_precos_topo else ""}"><div class="wrap"><h2>{"O que inclui" if not p.get("local") else "Em " + e(p["local"]["nome"])}</h2><ul class="h-inclui">{inclui}</ul>'
     corpo += f'<div class="h-texto" style="margin-top:18px">{texto}{local}</div></div></section>\n'
@@ -598,12 +600,67 @@ def gerar_obras_guias():
             d.mkdir(exist_ok=True)
             (d / "index.html").write_text(pagina_artigo(f"{base}/{s}", a, tipo), encoding="utf-8")
 
+
+# ---------------------------------------------------------------- apresentação (HTML A4 → PDF com scripts/gerar_pdf.js)
+def apresentacao():
+    obras = "".join(
+        f'<div class="ob"><img src="/assets/{a["img"]}" alt=""><div><h3>{e(a["h1"])}</h3><table>{"".join(f"<tr><th>{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])}</table></div></div>'
+        for a in OBRAS.values())
+    serv = [("g-obra-real-cobertura-02.webp", "Coberturas planas", "Edifícios, armazéns e pavilhões."), ("g-telhado-real-04.webp", "Terraços", "De cobertura, sobre garagens e de condomínios."),
+            ("g-parede-real-01.webp", "Caves e paredes enterradas", "Obra nova, antes do aterro."), ("g-telhado-real-01.webp", "Tela asfáltica", "Uma ou duas camadas, acabamento mineral.")]
+    servh = "".join(f'<div class="sv"><img src="/assets/{i}" alt=""><b>{e(t)}</b><span>{e(d)}</span></div>' for i, t, d in serv)
+    html_ = f'''<!doctype html><html lang="pt-PT"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<title>Apresentação ImpermeabilizaPro</title><link rel="canonical" href="{SITE}/apresentacao/">
+<style>
+@page{{size:A4;margin:0}}*{{box-sizing:border-box}}body{{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#122943}}
+.pg{{width:210mm;height:297mm;padding:16mm 15mm;position:relative;page-break-after:always;overflow:hidden}}
+.capa{{color:#fff;padding:0}}.capa>img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}.capa::after{{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#061a33e6,#0a2340b3 55%,#061a33f2)}}
+.capa .in{{position:relative;z-index:1;padding:22mm 16mm;height:100%;display:flex;flex-direction:column}}
+.logo{{display:flex;gap:10px;align-items:center;font-weight:800;font-size:20px}}.logo img{{width:48px;height:48px;border-radius:8px;background:#fff}}
+h1{{font-size:38px;line-height:1.08;margin:auto 0 12px;letter-spacing:-.02em}}.capa p{{font-size:16px;color:#d7e7f3;max-width:150mm;line-height:1.5}}
+.chips{{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 26px}}.chips span{{border:1px solid #ffffff55;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700}}
+.ct{{font-size:15px;line-height:1.7}}.ct b{{font-size:20px}}
+h2{{font-size:24px;margin:0 0 4px;color:#0a2340}}.lead{{color:#4a5e6f;margin:0 0 14px;font-size:13px}}
+.svs{{display:grid;grid-template-columns:1fr 1fr;gap:10px}}.sv{{border:1px solid #dce4eb;border-radius:10px;overflow:hidden;font-size:12px}}.sv img{{width:100%;height:38mm;object-fit:cover;display:block}}.sv b{{display:block;padding:7px 9px 0;font-size:14px}}.sv span{{display:block;padding:2px 9px 9px;color:#4a5e6f}}
+.para{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;font-size:12px}}.para div{{border-left:4px solid #0c7357;background:#f3f6f9;padding:8px 10px}}.para b{{display:block;font-size:13px}}
+.nao{{margin-top:12px;font-size:12px;color:#4a5e6f}}
+.ob{{display:grid;grid-template-columns:78mm 1fr;gap:10px;margin-bottom:10px;border:1px solid #dce4eb;border-radius:10px;overflow:hidden}}.ob img{{width:100%;height:50mm;object-fit:cover;display:block}}.ob h3{{font-size:15px;margin:8px 0 4px}}
+.ob table{{font-size:11.5px;border-collapse:collapse}}.ob th{{text-align:left;color:#4a5e6f;padding:2px 8px 2px 0;font-weight:600}}.ob td{{padding:2px 0}}
+.price-table{{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}}.price-table th,.price-table td{{padding:7px 8px;border-bottom:1px solid #e1e8ee;text-align:left}}.price-table thead th{{background:#0a2340;color:#fff}}.price-table small{{display:block;color:#5b6d7c;font-weight:400}}.sr-only{{display:none}}
+.passos{{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px;margin-top:10px}}.passos div{{background:#f3f6f9;border-radius:8px;padding:9px}}.passos b{{display:block;font-size:13px}}
+.nota{{font-size:10.5px;color:#5b6d7c;line-height:1.45}}
+.rod{{position:absolute;left:15mm;right:15mm;bottom:10mm;display:flex;justify-content:space-between;font-size:10.5px;color:#5b6d7c;border-top:1px solid #e1e8ee;padding-top:6px}}
+.fim{{background:#0a2340;color:#fff;border-radius:12px;padding:14px 16px;margin-top:14px}}.fim b{{font-size:18px}}
+</style></head><body>
+<section class="pg capa"><img src="/assets/foto-real-20260915-162914-1600.webp" alt=""><div class="in">
+<div class="logo"><img src="/assets/logo-impermeabilizapro.webp" alt="">ImpermeabilizaPro</div>
+<h1>Impermeabilização de coberturas, terraços e caves para obras</h1>
+<p>Para construtoras, condomínios e empresas nos distritos de Lisboa, Santarém, Setúbal e Leiria. Base em Sobral de Monte Agraço.</p>
+<div class="chips"><span>Obras a partir de {MIN} m²</span><span>De {MIN} a mais de 3.000 m²</span><span>Com material ou só execução</span><span>Preços de entrada</span></div>
+<div class="ct">Vinícius Nascimento · 5 anos de experiência<br><b>930 446 198</b> (telefone e WhatsApp)<br>proimpermeabiliza@gmail.com · impermeabilizapro.pt</div></div></section>
+<section class="pg"><h2>O que fazemos</h2><p class="lead">Coberturas e áreas planas a partir de {MIN} m². Subempreitada ou obra completa.</p><div class="svs">{servh}</div>
+<div class="para"><div><b>Construtoras e empreiteiros</b>Subempreitada com material e mão de obra, ou só execução.</div><div><b>Condomínios e administrações</b>Proposta com preço por m² e total para a assembleia.</div><div><b>Empresas e armazéns</b>Coberturas planas de grande área.</div><div><b>Moradias com grandes áreas</b>Coberturas e terraços a partir de {MIN} m².</div></div>
+<p class="nao">Não fazemos pequenas reparações, telhados de telha nem trabalhos em grande altura.</p><div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
+<section class="pg"><h2>Obras reais</h2><p class="lead">Fotografias das nossas obras.</p>{obras}<div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
+<section class="pg"><h2>Preços de referência por m²</h2><p class="lead">Material e mão de obra, obras a partir de {MIN} m² com acesso fácil. Preços de entrada, abaixo das referências de mercado. Áreas maiores têm preço por m² mais baixo.</p>
+{tabela_precos(PRECOS_TERRACO)}
+<p class="nota">Valores indicativos ({HOJE}); não são orçamento. {e(IVA_LONGO)} O valor final é confirmado depois de vermos a obra.</p>
+<h2 style="margin-top:14px">Como trabalhamos</h2><div class="passos"><div><b>1. Medições e fotografias</b>Planta, mapa de quantidades ou caderno de encargos.</div><div><b>2. Proposta</b>Solução, preço por m², total e o que está incluído.</div><div><b>3. Execução</b>Datas combinadas com o planeamento da obra.</div></div>
+<div class="fim"><b>Peça uma proposta</b><br>930 446 198 (telefone e WhatsApp) · proimpermeabiliza@gmail.com<br>Calculadora de preço por m²: impermeabilizapro.pt/calculadora</div>
+<div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
+</body></html>'''
+    # Imagens em JPEG leve (assets/pdf/) para o PDF não ficar pesado.
+    html_ = re.sub(r'src="/assets/(?!logo)([^"]+)\.(webp|jpeg)"', r'src="/assets/pdf/\1.jpg"', html_)
+    (RAIZ / "apresentacao").mkdir(exist_ok=True)
+    (RAIZ / "apresentacao" / "index.html").write_text(html_, encoding="utf-8")
+
 if __name__ == "__main__":
     for slug, p in PAGINAS.items():
         d = RAIZ / slug
         d.mkdir(exist_ok=True)
         (d / "index.html").write_text(pagina(slug, p), encoding="utf-8")
     gerar_obras_guias()
+    apresentacao()
     tabela_home()
     sitemap()
     llms()
