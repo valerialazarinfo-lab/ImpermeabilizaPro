@@ -9,24 +9,22 @@ config;minimo_obra_m2;Mínimo de obra;100;100;m²;;Decisão comercial (pedido de
 config;iva_percentagem;IVA;23;23;%;;Taxa normal do Continente (CIVA art. 18.º). A taxa de 6% (verba 2.27) só se aplica em certas reparações em habitação com materiais ≤ 20% — por isso não é usada por defeito
 config;area_maxima_m2;Área máxima com preço automático;3000;3000;m²;;HIPÓTESE: acima disto orçamento sempre à medida
 config;ralos_maximo;Ralos máximos com preço automático;20;20;un;;HIPÓTESE
-config;fator_preco_entrada;Fator de preço de entrada (aplicado a tudo);0,9;0,9;fator;;Decisão comercial (2026-11-13): preços cerca de 10% abaixo das referências de mercado para criar parcerias. Para voltar ao preço de mercado: 1
+config;fator_preco_entrada;Fator de preço (aplicado a tudo);1;1;fator;;Decisão (2026-11-13): preço médio de mercado. O mínimo do intervalo garante ≥50% de margem sobre os custos conhecidos (cálculo interno no Drive, não publicar custos). 0,9 dava 45–47%
 config;autoliquidacao_ativa;Autoliquidação do IVA para empresas (1 = sim, 0 = não);0;0;sim/não;;Desde 1-7-2026 só com alvará ou certificado IMPIC válido (DL 97/2026; Ofício-Circulado 25117/2026). Pôr 1 quando houver habilitação IMPIC
-config;margem_base_percentagem;Margem do intervalo (±);10;10;%;;Decisão de apresentação: intervalo estreito à volta do valor médio
-config;margem_nao_sei_percentagem;Margem extra por cada «Não sei» (±);4;4;%;;Decisão de apresentação: mais incerteza quando falta informação
-config;margem_maxima_percentagem;Margem máxima (±);20;20;%;;Decisão de apresentação
+config;margem_base_percentagem;Margem do intervalo (±, à volta do melhor e do pior caso);5;5;%;;Decisão de apresentação: intervalo estreito à volta do valor médio
 cliente;empresa;Empresa ou construtora;0;0;iva;autoliquidacao;CIVA art. 2.º n.º 1 al. j): autoliquidação só se config;autoliquidacao_ativa = 1 (prestador com alvará/certificado IMPIC, desde 1-7-2026)
 cliente;condominio;Condomínio ou administração de prédio;0;0;iva;;IVA à taxa legal (condomínios não liquidam IVA)
 cliente;particular;Particular (moradia ou prédio próprio);0;0;iva;;IVA à taxa legal
 cliente;outra;Outra entidade (pública, IPSS, associação);0;0;iva;;IVA à taxa legal; confirmar regime no orçamento
 escala;100;De 100 a 199 m²;1;1;fator;;Referência base
-escala;200;De 200 a 499 m²;0,93;0,93;fator;;HIPÓTESE (economia de escala). Referência: impermeabilizar.pt «grandes terraços 18–25 €/m²» vs 22–38 €/m²
-escala;500;De 500 a 999 m²;0,87;0,87;fator;;HIPÓTESE (economia de escala)
-escala;1000;1000 m² ou mais;0,82;0,82;fator;;HIPÓTESE (economia de escala)
-superficie;cobertura_plana;Cobertura plana (não transitável);1;1;fator;materiais:tela_1|tela_2|membrana_liquida;Referência base (fator 1)
-superficie;terraco;Terraço transitável;1;1;fator;materiais:tela_1|tela_2|membrana_liquida|cimenticia;Referência base (fator 1). Acabamento/proteção escolhido à parte
-superficie;varanda;Varanda;1,1;1,25;fator;materiais:membrana_liquida|cimenticia|tela_1;HIPÓTESE: mais remates e soleiras por m² do que num terraço
-superficie;cave;Cave, garagem ou parede enterrada;1,05;1,2;fator;materiais:tela_1|tela_2|cimenticia|membrana_liquida;HIPÓTESE. Referência de mercado: parede de cave ~35 €/m² (prummo.app, IVA não indicado)
-superficie;parede_exterior;Parede exterior / fachada (até 1.º piso);0,7;0,9;fator;materiais:cimenticia|membrana_liquida;HIPÓTESE. Mercado: fachada elastomérica 10–18 €/m² s/IVA (impermeabilizar.pt), 50–90 €/m² (habitissimo.pt)
+escala;200;De 200 a 499 m²;0,99;0,99;fator;;Decisão (2026-11-13): cerca de 90% do custo é variável (tela e aplicação), por isso o desconto por área é pequeno
+escala;500;De 500 a 999 m²;0,98;0,98;fator;;Idem: custo maioritariamente variável
+escala;1000;1000 m² ou mais;0,97;0,97;fator;;Idem: custo maioritariamente variável
+superficie;cobertura_plana;Cobertura plana (não transitável);1;1;fator;materiais:tela_1|tela_2|membrana_liquida,recomendado:tela_2;Referência base (fator 1)
+superficie;terraco;Terraço transitável;1;1;fator;materiais:tela_1|tela_2|membrana_liquida|cimenticia,recomendado:tela_2;Referência base (fator 1). Acabamento/proteção escolhido à parte
+superficie;varanda;Varanda;1,1;1,25;fator;materiais:membrana_liquida|cimenticia|tela_1,recomendado:membrana_liquida;HIPÓTESE: mais remates e soleiras por m² do que num terraço
+superficie;cave;Cave, garagem ou parede enterrada;1,05;1,2;fator;materiais:tela_1|tela_2|cimenticia|membrana_liquida,recomendado:tela_1;HIPÓTESE. Referência de mercado: parede de cave ~35 €/m² (prummo.app, IVA não indicado)
+superficie;parede_exterior;Parede exterior / fachada (até 1.º piso);0,7;0,9;fator;materiais:cimenticia|membrana_liquida,recomendado:cimenticia;HIPÓTESE. Mercado: fachada elastomérica 10–18 €/m² s/IVA (impermeabilizar.pt), 50–90 €/m² (habitissimo.pt)
 superficie;casa_banho;Casa de banho ou zona interior (serviço à parte);0;0;fator;servico_a_parte;Decisão do negócio (2026-11-13): serviço à parte, orçamentado após avaliação; o mínimo de m² não se aplica
 superficie;telhado_inclinado;Telhado de telha ou inclinado;0;0;fator;excluido;Regra do negócio (AGENTS.md): não fazemos telhados de telha/inclinados
 material;tela_1;Tela asfáltica, 1 camada;22;32;€/m²;;impermeabilizar.pt 22–38 €/m² s/IVA (terraço em betão); pom-lda.pt 25–35 €/m² (suporte bom); bluepeak.pt 15–25 €/m² — consultado 2026-11-13 via pesquisa
@@ -38,12 +36,12 @@ suporte;bom;Bom estado, sem fissuras;0;0;€/m²;;Referência base
 suporte;fissuras;Fissuras ou pequenas reparações;3;6;€/m²;;HIPÓTESE
 suporte;degradado;Degradado, precisa de regularização;10;20;€/m²;;visualupworks.com: regularização +10–20 €/m²
 suporte;pendentes;Água acumula — corrigir pendentes;15;25;€/m²;;pom-lda.pt: tela com correção de pendentes 45–65 €/m² vs 25–35 €/m² com suporte bom
-suporte;nao_sei;Não sei;0;12;€/m²;nota,nao_sei;Intervalo alargado até à regularização; confirmar com fotografias
+suporte;nao_sei;Não sei;0;20;€/m²;nota,nao_sei;Intervalo alargado até à regularização; confirmar com fotografias
 remocao;nenhuma;Não há sistema antigo a remover;0;0;€/m²;;Referência base
 remocao;tela_antiga;Remover tela ou membrana antiga;8;15;€/m²;;visualupworks.com +8–15 €/m²; pom-lda.pt +10–20 €/m²
 remocao;sobre_ceramico;Aplicar sobre o pavimento cerâmico existente;8;14;€/m²;;impermeabilizar.pt: terraço com cerâmica sem levantar 35–52 vs betão 22–38 €/m² s/IVA
 remocao;levantar_ceramico;Levantar pavimento cerâmico;15;25;€/m²;nota;HIPÓTESE com base em impermeabilizar.pt (levantar e recolocar 48–68 €/m²). Não inclui pavimento novo
-remocao;nao_sei;Não sei;0;12;€/m²;nota,nao_sei;Intervalo até à remoção de tela antiga
+remocao;nao_sei;Não sei;0;15;€/m²;nota,nao_sei;Intervalo até à remoção de tela antiga
 acesso;facil;Acesso fácil (rés-do-chão, elevador ou acesso direto);0;0;€/m²;;Referência base
 acesso;escadas;Só por escadas, sem elevador;5;10;€/m²;;pom-lda.pt: prédio sem elevador +5–10 €/m²
 acesso;andaime;Precisa de andaime ou plataforma;0;0;%;avaliacao;Regra do negócio: avaliar segurança e meios antes de qualquer preço

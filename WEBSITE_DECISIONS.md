@@ -104,7 +104,7 @@ The inherited assets/vinicius-nascimento.webp is invalid (both browser display a
 
 Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, mínimo de 100 m² e melhorias do site inteiro»:
 - Público principal: construtoras, condomínios e empresas; obras grandes. Mínimo de 100 m² em coberturas e áreas planas (valor único em `calculadora/precos.csv`; mudar com `scripts/definir_minimo_obra.py`). Não fazer pequenas reparações. Casas de banho: serviço à parte, sem preço automático.
-- Preços de entrada ~10% abaixo das referências de mercado (`config;fator_preco_entrada` = 0,9) para criar parcerias. Valores base ainda por validar com obras reais.
+- Preços (revisto a 13-11-2026): preço médio de mercado (`config;fator_preco_entrada` = 1). Com 0,9 o mínimo do intervalo dava 45–47% de margem sobre os custos conhecidos (Lumiar); com 1 dá 50–52%. Intervalo ±5%; nas respostas «Não sei», mínimo = tudo em bom estado e máximo = pior caso. Desconto por área pequeno (−1% a −3%), porque cerca de 90% do custo é variável. Não publicar custos internos (repositório público). Valores base ainda por validar com obras reais.
 - IVA à taxa legal (23%; 6% quando a lei permite). **Autoliquidação desligada** (`config;autoliquidacao_ativa` = 0): desde 1-7-2026 só se aplica com alvará/certificado IMPIC (DL 97/2026; Ofício-Circulado 25117/2026), que ainda não existe. Ligar quando houver habilitação.
 - Calculadora no topo de todas as páginas, com intervalo estreito (±10%, +4% por «Não sei», máx. ±20%) e desconto por área.
 - Páginas de serviço, preço e zona geradas por `scripts/gerar_paginas.py`; cabeçalho e rodapé por `scripts/partials/` + `scripts/harmonizar_layout.py`; verificação em `scripts/verificar_site.py` (também no GitHub Actions).

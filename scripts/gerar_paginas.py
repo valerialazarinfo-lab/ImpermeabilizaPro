@@ -38,9 +38,14 @@ IVA_CURTO = "Autoliquidação para empresas; taxa legal para os restantes." if A
 IVA_LONGO = ("Para empresas e construtoras com IVA dedutível, os serviços de construção civil são faturados com autoliquidação (o preço é sem IVA). Para condomínios e particulares aplica-se o IVA à taxa legal: 23%, ou 6% quando a lei o permite." if AUTOLIQ else "Aplicamos o IVA à taxa legal: 23%, ou 6% nas obras de habitação em que a lei o permite. Para empresas com IVA dedutível, o valor que conta é o preço sem IVA, que mostramos sempre.")
 
 
+MARGEM = cfg("margem_base_percentagem") / 100
+
+
 def faixa(g, k):
+    """Preço publicado: valor médio da linha × fator de entrada, ± a margem da calculadora (igual à calculadora)."""
     r = CSV[(g, k)]
-    return num(r["min"]) * FATOR, num(r["max"]) * FATOR
+    medio = (num(r["min"]) + num(r["max"])) / 2 * FATOR
+    return medio * (1 - MARGEM), medio * (1 + MARGEM)
 
 
 def n0(v):
@@ -220,7 +225,7 @@ PAGINAS = {
         inclui=[("Proposta por m²", "A partir das medições ou do caderno de encargos."), ("Com material ou só execução", "Como for melhor para a obra."),
                 ("Preços sem IVA", "Mostramos sempre o valor sem IVA, o que conta para a sua empresa."), ("Obras grandes", "Já executámos mais de 3.000 m² numa só obra.")],
         texto=["Envie as medições, a planta ou o mapa de quantidades e a data prevista. Respondemos com preço por m², o que está incluído e a disponibilidade.",
-               "Estamos a começar parcerias com construtoras na região de Lisboa e Oeste, com preços de entrada abaixo do mercado."],
+               "Procuramos parcerias com construtoras na região de Lisboa e Oeste: proposta rápida, preço por m² claro e cumprimento do planeamento da obra."],
         precos=PRECOS_TELA[:2] + [("material", "membrana_liquida")], faq=[("Como é faturado o IVA?", IVA_LONGO), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material."), FAQ_MIN],
         servico="Subempreitada de impermeabilização", oferta=("material", "tela_2"),
         wa="Olá, sou de uma construtora e queria uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]. Posso enviar medições."),
@@ -244,8 +249,8 @@ PAGINAS = {
         sub="Tabela de preços com e sem IVA, para obras a partir de 100 m². Para o valor da sua obra, use a calculadora.",
         sup=None, fotos=["gaia_largo", "aroeira", "ericeira"], precos_topo=True,
         inclui=[("Preço base", "Material e mão de obra por m²."), ("Acréscimos", "Somam-se quando se aplicam."),
-                ("Escala", "Acima de 200 m² o preço por m² desce."), ("IVA", IVA_CURTO)],
-        texto=[f"Os preços são indicativos para obras a partir de {MIN} m², com acesso fácil, na zona de Lisboa e Oeste. Estamos a criar parcerias e praticamos preços de entrada abaixo das referências de mercado."],
+                ("Escala", "Acima de 200 m² o preço por m² desce ligeiramente."), ("IVA", IVA_CURTO)],
+        texto=[f"Os preços são indicativos para obras a partir de {MIN} m², com acesso fácil, na zona de Lisboa e Oeste. Os preços estão na média do mercado e são iguais aos da calculadora."],
         precos=PRECOS_TODOS, faq=[FAQ_IVA, FAQ_MIN, ("O preço inclui deslocação?", "Na zona de Sobral de Monte Agraço e Oeste, sim. Para Lisboa, Santarém, Setúbal e Leiria pode haver um pequeno acréscimo, que a calculadora já inclui.")],
         servico="Impermeabilização", oferta=("material", "tela_1")),
 }
@@ -335,7 +340,7 @@ def pagina(slug, p):
         local = fr
     precos = ""
     if com_fonte(p["precos"]):
-        precos = (f'<section class="h-sec soft" id="precos"><div class="wrap"><h2>Preços de referência por m²</h2><p class="h-lead">Material e mão de obra, para obras a partir de <span data-minimo-obra>{MIN}</span> m² com acesso fácil. Preços de entrada, abaixo das referências de mercado.</p>'
+        precos = (f'<section class="h-sec soft" id="precos"><div class="wrap"><h2>Preços de referência por m²</h2><p class="h-lead">Material e mão de obra, para obras a partir de <span data-minimo-obra>{MIN}</span> m² com acesso fácil. Preço médio de mercado, claro desde o primeiro contacto.</p>'
                   f'{tabela_precos(p["precos"])}<p class="calc-legal">Valores indicativos, não são orçamento. A calculadora junta os acréscimos e o desconto por área. Atualizado em {HOJE}.</p></div></section>')
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{minimo_span(a)}</p></details>" for q, a in p["faq"])
     links = "".join(f'<a href="{u}">{e(t)}</a>' for u, t in LINKS_SERV if u != f"/{slug}/")
@@ -343,7 +348,7 @@ def pagina(slug, p):
     ordem_precos_topo = p.get("precos_topo")
     corpo = (f'<section class="h-hero slim" id="pedido"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
              f'<div class="wrap h-hero-in"><div><p class="h-crumbs"><a href="/">Início</a> › {e(p["h1"])}</p><p class="h-eyebrow">{e(p["eyebrow"])}</p><h1>{e(p["h1"])}</h1><p class="h-sub">{minimo_span(p["sub"])}</p>'
-             f'<ul class="h-chips"><li>Obras a partir de <span data-minimo-obra>{MIN}</span> m²</li><li>Preços de entrada</li><li>Fotografias reais</li></ul>'
+             f'<ul class="h-chips"><li>Obras a partir de <span data-minimo-obra>{MIN}</span> m²</li><li>Preço claro por m²</li><li>Fotografias reais</li></ul>'
              f'<p>Prefere falar? <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a> · Vinícius Nascimento</p>'
              + ('<p><a class="h-tel" href="/assets/apresentacao-impermeabilizapro.pdf" download>Descarregar apresentação (PDF, 4 páginas)</a></p>' if slug in ("empresas", "impermeabilizacao-condominios") else "")
              + f'</div>{calc}</div></section>\n')
@@ -355,7 +360,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-7"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-11"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -395,7 +400,7 @@ def tabela_home():
     p = RAIZ / "index.html"
     s = p.read_text(encoding="utf-8")
     bloco = (f'<!-- precos-referencia:inicio -->\n<section class="h-sec soft" id="precos"><div class="wrap"><h2>Preços de referência por m²</h2>'
-             f'<p class="h-lead">Material e mão de obra, para obras a partir de <span data-minimo-obra>{MIN}</span> m² com acesso fácil. Preços de entrada, abaixo das referências de mercado.</p>'
+             f'<p class="h-lead">Material e mão de obra, para obras a partir de <span data-minimo-obra>{MIN}</span> m² com acesso fácil. Preço médio de mercado, claro desde o primeiro contacto.</p>'
              f'{tabela_precos(PRECOS_TERRACO[:3] + [("remocao", "tela_antiga"), ("suporte", "degradado"), ("acesso", "escadas")])}'
              f'<p style="margin-top:14px"><a class="btn whatsapp big" href="/precos-impermeabilizacao/">Ver todos os preços</a></p></div></section>\n<!-- precos-referencia:fim -->')
     s = re.sub(r"<!-- precos-referencia:inicio -->.*?<!-- precos-referencia:fim -->", bloco, s, flags=re.S)
@@ -424,7 +429,7 @@ def llms():
 
 ## Preços indicativos (atualizado em {HOJE}, obras a partir de {MIN} m², acesso fácil)
 """ + "\n".join(linhas) + f"""
-- Áreas maiores têm preço por m² mais baixo (a partir de 200 m², 500 m² e 1000 m²).
+- Áreas maiores têm preço por m² ligeiramente mais baixo (a partir de 200 m², 500 m² e 1000 m²).
 
 ## Páginas
 - [Calculadora de preço por m²]({SITE}/calculadora/)
@@ -543,7 +548,7 @@ def pagina_artigo(caminho, a, tipo):
     hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
-    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-7\"></script>\n</body>\n</html>\n"
+    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-11\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):
@@ -636,13 +641,13 @@ h2{{font-size:24px;margin:0 0 4px;color:#0a2340}}.lead{{color:#4a5e6f;margin:0 0
 <div class="logo"><img src="/assets/logo-impermeabilizapro.webp" alt="">ImpermeabilizaPro</div>
 <h1>Impermeabilização de coberturas, terraços e caves para obras</h1>
 <p>Para construtoras, condomínios e empresas nos distritos de Lisboa, Santarém, Setúbal e Leiria. Base em Sobral de Monte Agraço.</p>
-<div class="chips"><span>Obras a partir de {MIN} m²</span><span>De {MIN} a mais de 3.000 m²</span><span>Com material ou só execução</span><span>Preços de entrada</span></div>
+<div class="chips"><span>Obras a partir de {MIN} m²</span><span>De {MIN} a mais de 3.000 m²</span><span>Com material ou só execução</span><span>Preço claro por m²</span></div>
 <div class="ct">Vinícius Nascimento · 5 anos de experiência<br><b>930 446 198</b> (telefone e WhatsApp)<br>proimpermeabiliza@gmail.com · impermeabilizapro.pt</div></div></section>
 <section class="pg"><h2>O que fazemos</h2><p class="lead">Coberturas e áreas planas a partir de {MIN} m². Subempreitada ou obra completa.</p><div class="svs">{servh}</div>
 <div class="para"><div><b>Construtoras e empreiteiros</b>Subempreitada com material e mão de obra, ou só execução.</div><div><b>Condomínios e administrações</b>Proposta com preço por m² e total para a assembleia.</div><div><b>Empresas e armazéns</b>Coberturas planas de grande área.</div><div><b>Moradias com grandes áreas</b>Coberturas e terraços a partir de {MIN} m².</div></div>
 <p class="nao">Não fazemos pequenas reparações, telhados de telha nem trabalhos em grande altura.</p><div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
 <section class="pg"><h2>Obras reais</h2><p class="lead">Fotografias das nossas obras.</p>{obras}<div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
-<section class="pg"><h2>Preços de referência por m²</h2><p class="lead">Material e mão de obra, obras a partir de {MIN} m² com acesso fácil. Preços de entrada, abaixo das referências de mercado. Áreas maiores têm preço por m² mais baixo.</p>
+<section class="pg"><h2>Preços de referência por m²</h2><p class="lead">Material e mão de obra, obras a partir de {MIN} m² com acesso fácil. Preço médio de mercado, claro desde o primeiro contacto. Áreas maiores têm preço por m² ligeiramente mais baixo.</p>
 {tabela_precos(PRECOS_TERRACO)}
 <p class="nota">Valores indicativos ({HOJE}); não são orçamento. {e(IVA_LONGO)} O valor final é confirmado depois de vermos a obra.</p>
 <h2 style="margin-top:14px">Como trabalhamos</h2><div class="passos"><div><b>1. Medições e fotografias</b>Planta, mapa de quantidades ou caderno de encargos.</div><div><b>2. Proposta</b>Solução, preço por m², total e o que está incluído.</div><div><b>3. Execução</b>Datas combinadas com o planeamento da obra.</div></div>

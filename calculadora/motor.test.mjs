@@ -9,15 +9,15 @@ const base = { cliente: 'condominio', superficie: 'cobertura_plana', area: 150, 
 
 test('mínimo de obra lido do CSV', () => assert.equal(minimoObra(t), 100));
 
-test('caso base: intervalo estreito (±10%) com IVA para condomínio', () => {
+test('caso base: intervalo estreito (±5%) com IVA para condomínio', () => {
   const r = calcular(base, t);
   assert.equal(r.estado, 'preco');
-  // médio: ((36 + 3) €/m² × 150 + 2 × 65) × 0,9 = 5382 € s/IVA
-  assert.equal(r.margem, 10);
-  assert.deepEqual(r.totalSemIva, { min: 4850, max: 5900 });
+  // médio: ((36 + 3) €/m² × 150 + 2 × 65) × 1 = 5980 € s/IVA
+  assert.equal(r.margem, 5);
+  assert.deepEqual(r.totalSemIva, { min: 5700, max: 6300 });
   assert.equal(r.iva, 23);
-  assert.deepEqual(r.m2ComIva, { min: 40, max: 49 });
-  assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 12, 'intervalo por m² estreito');
+  assert.deepEqual(r.m2ComIva, { min: 47, max: 51 });
+  assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 5, 'intervalo por m² estreito');
 });
 
 test('empresa sem habilitação IMPIC: IVA 23% (sem autoliquidação)', () => {
@@ -35,19 +35,21 @@ test('empresa com autoliquidação ativa: preço sem IVA', () => {
   assert.equal(calcular(base, t1).iva, 23, 'condomínio continua com IVA');
 });
 
-test('«Não sei» alarga a margem', () => {
-  const r = calcular({ ...base, material: 'nao_sei', suporte: 'nao_sei', remocao: 'nao_sei' }, t);
-  assert.equal(r.margem, 20);
-  assert.equal(r.naoSei, 3);
+test('«Não sei»: mínimo = tudo bom, máximo = pior caso', () => {
+  const ns = calcular({ ...base, suporte: 'nao_sei', remocao: 'nao_sei' }, t);
+  const bom = calcular({ ...base, suporte: 'bom', remocao: 'nenhuma' }, t);
+  const pior = calcular({ ...base, suporte: 'degradado', remocao: 'tela_antiga' }, t);
+  assert.equal(ns.naoSei, 2);
+  assert.equal(ns.totalSemIva.min, bom.totalSemIva.min);
+  assert.ok(ns.totalSemIva.max >= pior.totalSemIva.max, 'o máximo cobre o pior caso');
 });
 
 test('economia de escala: €/m² desce com a área', () => {
-  const a = calcular({ ...base, area: 150 }, t).m2SemIva.max;
-  const b = calcular({ ...base, area: 600 }, t).m2SemIva.max;
-  const c = calcular({ ...base, area: 2000 }, t).m2SemIva.max;
+  const pm = (area) => calcular({ ...base, ralos: 0, area }, t).totalSemIva.max / area;
+  const a = pm(150), b = pm(600), c = pm(2000);
   assert.ok(a > b && b > c, `${a} > ${b} > ${c}`);
   assert.equal(fatorEscala(99, t), 1);
-  assert.equal(fatorEscala(1000, t), 0.82);
+  assert.equal(fatorEscala(1000, t), 0.97);
 });
 
 test('abaixo do mínimo não dá preço', () => {
@@ -116,8 +118,8 @@ test('todas as linhas têm origem', () => {
 });
 
 test('fator de preço de entrada reduz o preço', () => {
-  const t1 = lerPrecos(csv.replace(/config;fator_preco_entrada;([^;]*);0,9;0,9/, 'config;fator_preco_entrada;$1;1;1'));
-  assert.ok(calcular(base, t1).totalSemIva.max > calcular(base, t).totalSemIva.max);
+  const t1 = lerPrecos(csv.replace(/config;fator_preco_entrada;([^;]*);1;1/, 'config;fator_preco_entrada;$1;0,9;0,9'));
+  assert.ok(calcular(base, t1).totalSemIva.max < calcular(base, t).totalSemIva.max);
 });
 
 test('CSV com valores errados falha de forma clara', () => {
