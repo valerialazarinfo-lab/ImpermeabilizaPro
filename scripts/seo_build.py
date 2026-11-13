@@ -27,6 +27,7 @@ BIZ_ID = SITE + "/#negocio"
 SITE_ID = SITE + "/#website"
 PERSON_ID = SITE + "/#vinicius-nascimento"
 MAPS = "https://maps.google.com/maps?cid=17222012943464360492"
+REVIEW_URL = "https://g.page/r/CSxqX6SG4QDvEBM/review"
 PHONE = "+351930446198"
 PHONE_TXT = "930 446 198"
 EMAIL = "proimpermeabiliza@gmail.com"
@@ -437,7 +438,8 @@ def hub(path, with_legal):
         '<p><b>ImpermeabilizaPro</b><br>Vinícius Nascimento<br>Base: Sobral de Monte Agraço<br>'
         "Distritos de Lisboa, Santarém, Setúbal e Leiria</p>"
         f'<p><a href="tel:{PHONE}">{PHONE_TXT}</a><br><a href="mailto:{EMAIL}">{EMAIL}</a><br>'
-        f'<a href="{MAPS}" target="_blank" rel="noopener noreferrer">Ver no Google Maps</a></p></div>'
+        f'<a href="{MAPS}" target="_blank" rel="noopener noreferrer">Ver no Google Maps</a><br>'
+        f'<a href="{REVIEW_URL}" target="_blank" rel="noopener noreferrer">Já trabalhou connosco? Deixe uma avaliação</a></p></div>'
         f"</div>{legal}</div></section>\n<!-- seo:hub:end -->\n"
     )
 

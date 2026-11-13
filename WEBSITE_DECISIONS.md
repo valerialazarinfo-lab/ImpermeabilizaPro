@@ -127,3 +127,4 @@ The inherited assets/vinicius-nascimento.webp is invalid (both browser display a
 - 7 páginas de zona para os concelhos da ficha Google sem página: Arruda dos Vinhos, Alenquer, Vila Franca de Xira, Odivelas, Amadora, Lourinhã, Cadaval. Conteúdo próprio por concelho (freguesias, contexto técnico geral, FAQ). Sem obras ou números inventados.
 - Página `/obras/` com as 4 obras reais já publicadas (Ericeira, Gaia, Aroeira, Ílhavo), só com os factos que já estavam no site. Aroeira mantém "em execução"; não indicado concelho nem estado das outras por não estar confirmado.
 - Sitemap passa a 26 URLs. Verificado: JSON-LD, 1 H1, canonical, ligações internas, sem overflow em telemóvel e 1366px, script idempotente.
+- Link de avaliação Google (13-11-2026): https://g.page/r/CSxqX6SG4QDvEBM/review, também no bloco de contacto de todas as páginas.
