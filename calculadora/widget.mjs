@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-11';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-12';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -12,6 +12,7 @@ const ROTULOS = {
   superficie: ['O que vamos impermeabilizar?', ''],
   area: ['Área aproximada (m²)', 'Se tiver várias zonas na mesma morada, some as áreas.'],
   localizacao: ['Onde fica a obra?', ''],
+  fornecimento: ['Quem fornece o material?', ''],
   material: ['Material', 'Já vem a solução que recomendamos para esta superfície.'],
   suporte: ['Estado da superfície', ''],
   remocao: ['Há sistema antigo a remover?', ''],
@@ -22,9 +23,9 @@ const ROTULOS = {
   acabamento: ['Acabamento final', ''],
   urgencia: ['Prazo', ''],
 };
-const RAPIDAS = ['cliente', 'superficie', 'area', 'localizacao', 'suporte', 'remocao'];
+const RAPIDAS = ['cliente', 'superficie', 'area', 'localizacao', 'suporte', 'remocao', 'fornecimento'];
 const AFINAR = ['material', 'acesso', 'remates', 'ralos', 'isolamento', 'acabamento', 'urgencia'];
-const DEFEITOS = { material: 'nao_sei', acesso: 'facil', remates: 'normais', ralos: '0', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal' };
+const DEFEITOS = { fornecimento: 'nos', material: 'nao_sei', acesso: 'facil', remates: 'normais', ralos: '0', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal' };
 
 const el = (tag, attrs = {}, ...filhos) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (k === 'class') e.className = v; else if (k in e) e[k] = v; else e.setAttribute(k, v); } e.append(...filhos.filter((f) => f !== null && f !== undefined)); return e; };
 const eur = (v) => v.toLocaleString('pt-PT', { maximumFractionDigits: 0 }) + ' €';
@@ -39,7 +40,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-11', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261113-12', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -78,7 +79,7 @@ export async function montarCalculadora(raiz) {
   const desc = (g, d) => t[g][d[g]]?.descricao || '—';
   const mensagem = (d, r) => ['Olá, fiz a estimativa na calculadora do site ImpermeabilizaPro.', '',
     'Cliente: ' + desc('cliente', d), 'Superfície: ' + desc('superficie', d), 'Área: ' + (d.area || '—') + ' m²', 'Localização: ' + desc('localizacao', d),
-    'Material: ' + desc('material', d), 'Superfície/suporte: ' + desc('suporte', d), 'Remoção: ' + desc('remocao', d), 'Acesso: ' + desc('acesso', d),
+    'Material: ' + desc('material', d), 'Fornecimento: ' + desc('fornecimento', d), 'Superfície/suporte: ' + desc('suporte', d), 'Remoção: ' + desc('remocao', d), 'Acesso: ' + desc('acesso', d),
     'Ralos: ' + (d.ralos || 0), 'Remates: ' + desc('remates', d), 'Isolamento: ' + desc('isolamento', d), 'Acabamento: ' + desc('acabamento', d), 'Prazo: ' + desc('urgencia', d), '',
     r ? `Estimativa do site: ${intervalo(r.m2ComIva, '/m²')} · total ${intervalo(r.totalComIva)} ${r.autoliquidacao ? '(sem IVA, autoliquidação)' : 'com IVA'}.` : '',
     'Posso enviar fotografias e a planta/medições.'].join('\n');

@@ -41,9 +41,20 @@ IVA_LONGO = ("Para empresas e construtoras com IVA dedutível, os serviços de c
 MARGEM = cfg("margem_base_percentagem") / 100
 
 
+def linha(g, k):
+    """Linha do CSV; ("mo", material) = só mão de obra desse material (material × fator «cliente fornece»)."""
+    if g == "mo":
+        r = dict(CSV[("material", k)])
+        f = num(CSV[("fornecimento", "cliente")]["min"])
+        r.update(min=str(num(r["min"]) * f), max=str(num(r["max"]) * f), descricao="Só mão de obra: " + r["descricao"].lower().replace(" (sistema multicamada)", "") + " (material do cliente)",
+                 origem=r["origem"] + " · " + CSV[("fornecimento", "cliente")]["origem"])
+        return r
+    return CSV[(g, k)]
+
+
 def faixa(g, k):
     """Preço publicado: valor médio da linha × fator de entrada, ± a margem da calculadora (igual à calculadora)."""
-    r = CSV[(g, k)]
+    r = linha(g, k)
     medio = (num(r["min"]) + num(r["max"])) / 2 * FATOR
     return medio * (1 - MARGEM), medio * (1 + MARGEM)
 
@@ -54,18 +65,18 @@ def n0(v):
 
 def com_fonte(linhas):
     """Só publica valores com fonte: as linhas marcadas HIPÓTESE ficam só na calculadora."""
-    return [(g, k) for g, k in linhas if "HIPÓTESE" not in CSV[(g, k)]["origem"]]
+    return [(g, k) for g, k in linhas if "HIPÓTESE" not in linha(g, k)["origem"]]
 
 
 def tabela_precos(linhas, titulo="Preços de referência por m²"):
     rows = []
     for g, k in com_fonte(linhas):
-        r = CSV[(g, k)]
+        r = linha(g, k)
         a, b = faixa(g, k)
-        base = g == "material"
+        base = g in ("material", "mo")
         rot = {"suporte": "Superfície: ", "acesso": "Acesso: ", "remocao": "", "isolamento": "", "acabamento": ""}.get(g, "") + r["descricao"]
         s = "" if base else "+ "
-        rows.append(f'<tr><th scope="row">{e(rot)}<small>{"Material e mão de obra" if base else "Acréscimo"}</small></th>'
+        rows.append(f'<tr><th scope="row">{e(rot)}<small>{("Só mão de obra" if g == "mo" else "Material e mão de obra") if base else "Acréscimo"}</small></th>'
                     f"<td>{s}{n0(a)}–{n0(b)} €/m²</td><td>{s}{n0(a * (1 + IVA / 100))}–{n0(b * (1 + IVA / 100))} €/m²</td></tr>")
     return (f'<div class="price-table-wrap"><table class="price-table"><caption class="sr-only">{e(titulo)}</caption><thead><tr><th scope="col">Trabalho</th>'
             f'<th scope="col">Sem IVA</th><th scope="col">Com IVA ({IVA:.0f}%)</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>')
@@ -107,7 +118,8 @@ LINKS_SERV = [("/coberturas-planas/", "Coberturas planas"), ("/terracos/", "Terr
               ("/impermeabilizacao-condominios/", "Condomínios"), ("/empresas/", "Construtoras"), ("/precos-impermeabilizacao/", "Preços por m²")]
 PRECOS_TELA = [("material", "tela_1"), ("material", "tela_2"), ("remocao", "tela_antiga"), ("suporte", "degradado"), ("suporte", "pendentes"), ("acesso", "escadas")]
 PRECOS_TERRACO = [("material", "tela_1"), ("material", "tela_2"), ("material", "membrana_liquida"), ("remocao", "tela_antiga"), ("remocao", "sobre_ceramico"), ("suporte", "degradado"), ("suporte", "pendentes"), ("acesso", "escadas")]
-PRECOS_TODOS = PRECOS_TERRACO[:3] + [("material", "cimenticia")] + PRECOS_TERRACO[3:] + [("isolamento", "xps"), ("acabamento", "protecao_pesada")]
+PRECOS_MO = [("mo", "tela_1"), ("mo", "tela_2")]
+PRECOS_TODOS = PRECOS_TERRACO[:3] + PRECOS_MO + [("material", "cimenticia")] + PRECOS_TERRACO[3:] + [("isolamento", "xps"), ("acabamento", "protecao_pesada")]
 
 PAGINAS = {
     "coberturas-planas": dict(
@@ -144,7 +156,7 @@ PAGINAS = {
                 ("Remates na fundação", "Encontro com a sapata e juntas."), ("Coordenação com a obra", "Antes do aterro, no planeamento da construtora.")],
         texto=["Em obra nova, a impermeabilização de paredes enterradas tem de ser feita antes do aterro: depois, o acesso é muito mais caro. Trabalhamos no planeamento da construtora.",
                "Na obra da Aroeira, com mais de 3.000 m² de paredes enterradas, aplicámos tela Imperalum com armadura em poliéster."],
-        precos=[("material", "tela_1"), ("material", "tela_2"), ("material", "cimenticia"), ("suporte", "degradado")],
+        precos=[("material", "tela_1"), ("material", "tela_2"), ("mo", "tela_1"), ("material", "cimenticia"), ("suporte", "degradado")],
         faq=[("Fazem só a mão de obra?", "Sim. Trabalhamos com material e mão de obra ou só a execução, em subempreitada."), FAQ_MIN, FAQ_IVA],
         servico="Impermeabilização de caves e paredes enterradas", oferta=("material", "tela_1")),
     "tela-asfaltica": dict(
@@ -226,7 +238,7 @@ PAGINAS = {
                 ("Preços sem IVA", "Mostramos sempre o valor sem IVA, o que conta para a sua empresa."), ("Obras grandes", "Já executámos mais de 3.000 m² numa só obra.")],
         texto=["Envie as medições, a planta ou o mapa de quantidades e a data prevista. Respondemos com preço por m², o que está incluído e a disponibilidade.",
                "Procuramos parcerias com construtoras na região de Lisboa e Oeste: proposta rápida, preço por m² claro e cumprimento do planeamento da obra."],
-        precos=PRECOS_TELA[:2] + [("material", "membrana_liquida")], faq=[("Como é faturado o IVA?", IVA_LONGO), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material."), FAQ_MIN],
+        precos=PRECOS_TELA[:2] + PRECOS_MO + [("material", "membrana_liquida")], faq=[("Como é faturado o IVA?", IVA_LONGO), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material. A calculadora tem a opção «só mão de obra» e a tabela mostra o preço por m²."), FAQ_MIN],
         servico="Subempreitada de impermeabilização", oferta=("material", "tela_2"),
         wa="Olá, sou de uma construtora e queria uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]. Posso enviar medições."),
     "impermeabilizacao-condominios": dict(
@@ -315,7 +327,8 @@ for i, (slug, d) in enumerate(LOCAIS.items()):
 def figura(k):
     img, cap = F[k]
     w, h = (1200, 675) if img.startswith("caso-") else (600, 450)
-    return f'<figure><img src="/assets/{img}" alt="{e(cap)}" width="{w}" height="{h}" loading="lazy"><figcaption>{e(cap)}</figcaption></figure>'
+    ss = f' srcset="/assets/{img.replace(".webp", "-600.webp")} 600w, /assets/{img} 1200w" sizes="(max-width: 620px) 100vw, 40vw"' if img.startswith("caso-") else ""
+    return f'<figure><img src="/assets/{img}"{ss} alt="{e(cap)}" width="{w}" height="{h}" loading="lazy"><figcaption>{e(cap)}</figcaption></figure>'
 
 
 def minimo_span(t):
@@ -373,7 +386,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-11"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-12"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -391,7 +404,7 @@ def pagina(slug, p):
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
-<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-8">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(crumbs, ensure_ascii=False)}</script>
@@ -427,7 +440,7 @@ def sitemap():
 
 
 def llms():
-    linhas = [f"- {CSV[(g, k)]['descricao']}: {n0(faixa(g, k)[0])}–{n0(faixa(g, k)[1])} €/m² sem IVA" + (" (material e mão de obra)" if g == "material" else " (acréscimo)") for g, k in com_fonte(PRECOS_TODOS)]
+    linhas = [f"- {linha(g, k)['descricao']}: {n0(faixa(g, k)[0])}–{n0(faixa(g, k)[1])} €/m² sem IVA" + (" (material e mão de obra)" if g == "material" else (" (sem material)" if g == "mo" else " (acréscimo)")) for g, k in com_fonte(PRECOS_TODOS)]
     txt = f"""# ImpermeabilizaPro
 
 > Impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas, em Portugal (distritos de Lisboa, Santarém, Setúbal e Leiria). Base em Sobral de Monte Agraço. Responsável: Vinícius Nascimento (5 anos de experiência). Obras a partir de {MIN} m².
@@ -536,7 +549,7 @@ def pagina_artigo(caminho, a, tipo):
         lds.append({"@context": "https://schema.org", "@type": "WebPage", "name": a["h1"], "url": url, "description": a["desc"], "image": f"{SITE}/assets/{a['img']}",
                     "about": {"@type": "Service", "serviceType": "Impermeabilização", "provider": {"@id": NEGOCIO_ID}}})
         ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])
-        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" width="1200" height="675"></figure>'
+        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" srcset="/assets/{a["img"].replace(".webp", "-600.webp")} 600w, /assets/{a["img"]} 1200w" sizes="(max-width: 980px) 100vw, 55vw" width="1200" height="675"></figure>'
                   f'<div><h2>Ficha da obra</h2><table class="price-table h-ficha"><tbody>{ficha}</tbody></table><div class="h-texto">{"".join(f"<p>{e(t)}</p>" for t in a["texto"])}</div></div></div></section>')
         corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>{e(a.get("galeria_titulo", "Outras fotografias de obras semelhantes"))}</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
     else:
@@ -561,7 +574,7 @@ def pagina_artigo(caminho, a, tipo):
     hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
-    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-11\"></script>\n</body>\n</html>\n"
+    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-12\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):
@@ -575,7 +588,8 @@ def pagina_indice(tipo):
     for s, a in itens.items():
         img = a.get("img") or "g-foto-real-20260915-162859.webp"
         w, h = (1200, 675) if img.startswith("caso-") else (600, 450)
-        cards += f'<a class="h-servico" href="/{base}/{s}/"><img src="/assets/{img}" alt="" width="{w}" height="{h}" loading="lazy"><div><strong>{e(a["h1"])}</strong><span>{e(a["desc"])}</span></div></a>'
+        ss = f' srcset="/assets/{img.replace(".webp", "-600.webp")} 600w, /assets/{img} 1200w" sizes="(max-width: 620px) 100vw, 33vw"' if img.startswith("caso-") else ""
+        cards += f'<a class="h-servico" href="/{base}/{s}/"><img src="/assets/{img}"{ss} alt="" width="{w}" height="{h}" loading="lazy"><div><strong>{e(a["h1"])}</strong><span>{e(a["desc"])}</span></div></a>'
     crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": h1, "item": url}]}
     corpo = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
              f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › {h1}</p><h1>{h1}</h1><p class="h-sub">{e(desc)}</p></div></section>'
@@ -599,8 +613,9 @@ def cabeca(titulo, desc, url, lds):
 <meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0a2340">
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
+<link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
-<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-8">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
 {"".join(f'<script type="application/ld+json">{json.dumps(l, ensure_ascii=False)}</script>' for l in lds)}
 </head>

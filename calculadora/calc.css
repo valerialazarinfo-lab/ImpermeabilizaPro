@@ -24,3 +24,7 @@
 .calc-legal{font-size:.78rem;color:#5b6d7c;margin:0;line-height:1.45}
 @media(max-width:560px){.calc-grelha{grid-template-columns:1fr}.calc-acoes{grid-template-columns:1fr}}
 .calc-acoes .calc-email{grid-column:1/-1}
+/* Reserva o espaço da calculadora antes de carregar (evita a página «saltar», CLS) */
+.calc[data-modo="rapido"] [data-calc-form]{min-height:674px}
+.calc[data-modo="completo"] [data-calc-form]{min-height:1331px}
+@media(min-width:561px){.calc[data-modo="rapido"] [data-calc-form]{min-height:440px}.calc[data-modo="completo"] [data-calc-form]{min-height:800px}}
