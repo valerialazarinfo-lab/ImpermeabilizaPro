@@ -44,9 +44,14 @@ def n0(v):
     return f"{v:,.0f}".replace(",", " ")
 
 
+def com_fonte(linhas):
+    """Só publica valores com fonte: as linhas marcadas HIPÓTESE ficam só na calculadora."""
+    return [(g, k) for g, k in linhas if "HIPÓTESE" not in CSV[(g, k)]["origem"]]
+
+
 def tabela_precos(linhas, titulo="Preços de referência por m²"):
     rows = []
-    for g, k in linhas:
+    for g, k in com_fonte(linhas):
         r = CSV[(g, k)]
         a, b = faixa(g, k)
         base = g == "material"
@@ -190,7 +195,7 @@ PAGINAS = {
         texto=["Numa parede enterrada, a água vem do terreno e a solução é pelo lado de fora, antes do aterro. Numa parede exterior, a chuva batida entra por fissuras e juntas: aí usamos membranas cimentícias ou líquidas."],
         precos=[("material", "cimenticia"), ("material", "membrana_liquida"), ("material", "tela_1"), ("suporte", "degradado")],
         faq=[("Fazem fachadas de prédios?", "Só até ao 1.º piso, sem andaimes de grande altura."), FAQ_MIN, FAQ_IVA],
-        servico="Impermeabilização de paredes", oferta=("material", "cimenticia")),
+        servico="Impermeabilização de paredes", oferta=("material", "membrana_liquida")),
     "casas-de-banho": dict(
         titulo="Impermeabilização de Casas de Banho | ImpermeabilizaPro",
         desc="Impermeabilização de casas de banho e zonas húmidas interiores antes do revestimento. Serviço à parte, orçamentado depois de vermos fotografias.",
@@ -326,7 +331,7 @@ def pagina(slug, p):
         fr = f'<p><strong>Freguesias do concelho:</strong> {e("; ".join(d["freg"]))}.</p>' if d["freg"] else "<p><strong>Toda a cidade de Lisboa</strong>, sujeito às condições de acesso da obra.</p>"
         local = fr
     precos = ""
-    if p["precos"]:
+    if com_fonte(p["precos"]):
         precos = (f'<section class="h-sec soft" id="precos"><div class="wrap"><h2>Preços de referência por m²</h2><p class="h-lead">Material e mão de obra, para obras a partir de <span data-minimo-obra>{MIN}</span> m² com acesso fácil. Preços de entrada, abaixo das referências de mercado.</p>'
                   f'{tabela_precos(p["precos"])}<p class="calc-legal">Valores indicativos, não são orçamento. A calculadora junta os acréscimos e o desconto por área. Atualizado em {HOJE}.</p></div></section>')
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{minimo_span(a)}</p></details>" for q, a in p["faq"])
@@ -399,7 +404,7 @@ def sitemap():
 
 
 def llms():
-    linhas = [f"- {CSV[(g, k)]['descricao']}: {n0(faixa(g, k)[0])}–{n0(faixa(g, k)[1])} €/m² sem IVA" + (" (material e mão de obra)" if g == "material" else " (acréscimo)") for g, k in PRECOS_TODOS]
+    linhas = [f"- {CSV[(g, k)]['descricao']}: {n0(faixa(g, k)[0])}–{n0(faixa(g, k)[1])} €/m² sem IVA" + (" (material e mão de obra)" if g == "material" else " (acréscimo)") for g, k in com_fonte(PRECOS_TODOS)]
     txt = f"""# ImpermeabilizaPro
 
 > Impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas, em Portugal (distritos de Lisboa, Santarém, Setúbal e Leiria). Base em Sobral de Monte Agraço. Responsável: Vinícius Nascimento (5 anos de experiência). Obras a partir de {MIN} m².
