@@ -327,7 +327,8 @@ for i, (slug, d) in enumerate(LOCAIS.items()):
 def figura(k):
     img, cap = F[k]
     w, h = (1200, 675) if img.startswith("caso-") else (600, 450)
-    return f'<figure><img src="/assets/{img}" alt="{e(cap)}" width="{w}" height="{h}" loading="lazy"><figcaption>{e(cap)}</figcaption></figure>'
+    ss = f' srcset="/assets/{img.replace(".webp", "-600.webp")} 600w, /assets/{img} 1200w" sizes="(max-width: 620px) 100vw, 40vw"' if img.startswith("caso-") else ""
+    return f'<figure><img src="/assets/{img}"{ss} alt="{e(cap)}" width="{w}" height="{h}" loading="lazy"><figcaption>{e(cap)}</figcaption></figure>'
 
 
 def minimo_span(t):
@@ -403,7 +404,7 @@ def pagina(slug, p):
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
-<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-8">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(crumbs, ensure_ascii=False)}</script>
@@ -548,7 +549,7 @@ def pagina_artigo(caminho, a, tipo):
         lds.append({"@context": "https://schema.org", "@type": "WebPage", "name": a["h1"], "url": url, "description": a["desc"], "image": f"{SITE}/assets/{a['img']}",
                     "about": {"@type": "Service", "serviceType": "Impermeabilização", "provider": {"@id": NEGOCIO_ID}}})
         ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])
-        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" width="1200" height="675"></figure>'
+        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" srcset="/assets/{a["img"].replace(".webp", "-600.webp")} 600w, /assets/{a["img"]} 1200w" sizes="(max-width: 980px) 100vw, 55vw" width="1200" height="675"></figure>'
                   f'<div><h2>Ficha da obra</h2><table class="price-table h-ficha"><tbody>{ficha}</tbody></table><div class="h-texto">{"".join(f"<p>{e(t)}</p>" for t in a["texto"])}</div></div></div></section>')
         corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>{e(a.get("galeria_titulo", "Outras fotografias de obras semelhantes"))}</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
     else:
@@ -587,7 +588,8 @@ def pagina_indice(tipo):
     for s, a in itens.items():
         img = a.get("img") or "g-foto-real-20260915-162859.webp"
         w, h = (1200, 675) if img.startswith("caso-") else (600, 450)
-        cards += f'<a class="h-servico" href="/{base}/{s}/"><img src="/assets/{img}" alt="" width="{w}" height="{h}" loading="lazy"><div><strong>{e(a["h1"])}</strong><span>{e(a["desc"])}</span></div></a>'
+        ss = f' srcset="/assets/{img.replace(".webp", "-600.webp")} 600w, /assets/{img} 1200w" sizes="(max-width: 620px) 100vw, 33vw"' if img.startswith("caso-") else ""
+        cards += f'<a class="h-servico" href="/{base}/{s}/"><img src="/assets/{img}"{ss} alt="" width="{w}" height="{h}" loading="lazy"><div><strong>{e(a["h1"])}</strong><span>{e(a["desc"])}</span></div></a>'
     crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": h1, "item": url}]}
     corpo = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
              f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › {h1}</p><h1>{h1}</h1><p class="h-sub">{e(desc)}</p></div></section>'
@@ -611,8 +613,9 @@ def cabeca(titulo, desc, url, lds):
 <meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0a2340">
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
+<link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
-<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-8">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
 {"".join(f'<script type="application/ld+json">{json.dumps(l, ensure_ascii=False)}</script>' for l in lds)}
 </head>
