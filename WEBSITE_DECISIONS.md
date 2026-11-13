@@ -121,3 +121,9 @@ The inherited assets/vinicius-nascimento.webp is invalid (both browser display a
 - Publicações da ficha (13-11-2026): nova publicação aprovada e visível, sem telhados, com botão "Ligar agora" (930 446 198). Eliminadas (13-11-2026, texto confirmado antes de apagar) as duas antigas que anunciavam telhados (o Google não tem "Arquivar"). Início dos textos eliminados, para histórico: "Tem infiltrações num telhado, terraço, parede ou cobertura? Na ImpermeabilizaPro avaliamos a…" (2-10-2026) e "Infiltrações em terraços, telhados, varandas ou paredes? A ImpermeabilizaPro executa trabalhos…".
 - Fotos da ficha (13-11-2026): a Valeria carregou 10 fotos reais de obra (JPG com nomes descritivos). Apagadas 3 cópias exatas (2 da parede com pinheiros, 1 da cobertura estreita com trabalhador), verificadas uma a uma. Mantidos pares com enquadramentos diferentes. Por fazer: quando as 2 fotos em "Pending" forem aprovadas, apagar as 2 versões antigas do terraço com clarabóia. Categorias e 7 serviços visíveis, sem rejeição. Data de abertura "maio de 2020" (não preenchida nesta sessão) por confirmar pela Valeria.
 - Horário 08:00–22:00 todos os dias confirmado pela Valeria (13-11-2026). Data de abertura: não é para preencher nem alterar; fica como o Google a tem.
+
+## Novas páginas — 13 de novembro de 2026
+
+- 7 páginas de zona para os concelhos da ficha Google sem página: Arruda dos Vinhos, Alenquer, Vila Franca de Xira, Odivelas, Amadora, Lourinhã, Cadaval. Conteúdo próprio por concelho (freguesias, contexto técnico geral, FAQ). Sem obras ou números inventados.
+- Página `/obras/` com as 4 obras reais já publicadas (Ericeira, Gaia, Aroeira, Ílhavo), só com os factos que já estavam no site. Aroeira mantém "em execução"; não indicado concelho nem estado das outras por não estar confirmado.
+- Sitemap passa a 26 URLs. Verificado: JSON-LD, 1 H1, canonical, ligações internas, sem overflow em telemóvel e 1366px, script idempotente.

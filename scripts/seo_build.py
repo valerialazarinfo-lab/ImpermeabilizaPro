@@ -48,8 +48,16 @@ ZONES = [
     ("/impermeabilizacao-loures/", "Loures"),
     ("/impermeabilizacao-lisboa/", "Lisboa"),
     ("/impermeabilizacao-sintra/", "Sintra"),
+    ("/impermeabilizacao-arruda-dos-vinhos/", "Arruda dos Vinhos"),
+    ("/impermeabilizacao-alenquer/", "Alenquer"),
+    ("/impermeabilizacao-vila-franca-de-xira/", "Vila Franca de Xira"),
+    ("/impermeabilizacao-odivelas/", "Odivelas"),
+    ("/impermeabilizacao-amadora/", "Amadora"),
+    ("/impermeabilizacao-lourinha/", "Lourinhã"),
+    ("/impermeabilizacao-cadaval/", "Cadaval"),
 ]
 GUIDES = [
+    ("/obras/", "Obras realizadas"),
     ("/impermeabilizacao-terraco-preco/", "Preço de impermeabilizar um terraço"),
     ("/tela-asfaltica-preco/", "Preço da tela asfáltica"),
     ("/humidade-parede-exterior/", "Humidade na parede exterior"),
@@ -60,7 +68,8 @@ GUIDES = [
 # and the private e-mail signature pages.
 PAGES = {"/": "Início"}
 PAGES.update({p: n for p, n, _ in SERVICES})
-PAGES.update({p: "Impermeabilização em " + n for p, n in ZONES})
+PREP = {"Amadora": "na", "Lourinhã": "na", "Cadaval": "no"}
+PAGES.update({p: f"Impermeabilização {PREP.get(n, 'em')} {n}" for p, n in ZONES})
 PAGES.update({p: n for p, n in GUIDES})
 LEGAL = {"/privacidade/": "Privacidade e cookies", "/informacoes-legais/": "Informações legais"}
 PAGES.update(LEGAL)
@@ -210,6 +219,83 @@ LOCAL = {
             ("Trabalham em Queluz, Cacém e Rio de Mouro?", "Sim, avaliamos pedidos em todo o concelho de Sintra, sujeitos à confirmação da localidade."),
             ("Tenho humidade numa parede. É infiltração?", "Nem sempre. Pode ser infiltração, humidade que sobe do terreno ou condensação. Envie fotografias da parede por dentro e por fora para uma primeira avaliação."),
             ("Fazem impermeabilização de varandas?", "Sim, incluindo os remates junto a soleiras, guardas e ralos, que são pontos frequentes de entrada de água."),
+        ],
+    },
+    "/impermeabilizacao-arruda-dos-vinhos/": {
+        "place": "Arruda dos Vinhos",
+        "intro": "Arruda dos Vinhos é concelho vizinho de Sobral de Monte Agraço, onde temos base. A proximidade facilita combinar a visita, acompanhar a preparação da base e voltar à obra quando for preciso.",
+        "zones": ["Arruda dos Vinhos (vila)", "Arranhó", "Cardosas", "Santiago dos Velhos"],
+        "context": "Em moradias, os terraços sobre divisões habitadas, os muros e as paredes enterradas são os pontos onde a humidade aparece com mais frequência. Antes de propor a solução, verificamos a base, os ralos, os remates e o escoamento da água.",
+        "faq": [
+            ("Fazem visitas em Arruda dos Vinhos?", "Sim. Estamos no concelho vizinho, por isso a visita para avaliar a obra é normalmente fácil de combinar. Pode começar por enviar fotografias pelo WhatsApp."),
+            ("Trabalham em Arranhó, Cardosas e Santiago dos Velhos?", "Sim, avaliamos pedidos em todas as freguesias do concelho."),
+            ("Fazem só a mão de obra?", "Sim. Podemos executar o trabalho completo, com materiais, ou apenas a mão de obra."),
+        ],
+    },
+    "/impermeabilizacao-alenquer/": {
+        "place": "Alenquer",
+        "intro": "Alenquer é concelho vizinho de Sobral de Monte Agraço, onde temos base. Avaliamos pedidos desde a vila até ao Carregado e às freguesias do interior do concelho.",
+        "zones": ["Alenquer (vila)", "Carregado", "Cadafais", "Abrigada", "Cabanas de Torres", "Aldeia Galega da Merceana", "Aldeia Gavinha", "Meca", "Olhalvo", "Ota", "Ribafria", "Pereiro de Palhacana", "Ventosa", "Vila Verde dos Francos"],
+        "context": "Em moradias e armazéns, as coberturas planas, os terraços e as paredes enterradas são os pontos que mais convém verificar. Avaliamos o estado da impermeabilização existente antes de decidir se basta reparar ou se é preciso renovar.",
+        "faq": [
+            ("Trabalham no Carregado?", "Sim, avaliamos pedidos em todo o concelho de Alenquer, incluindo o Carregado."),
+            ("Fazem impermeabilização de coberturas planas de armazéns?", "Sim, quando a cobertura é plana e o acesso é seguro. Não trabalhamos em telhados de telha nem em coberturas inclinadas."),
+            ("Quanto custa?", "Depende da área, do estado da base, dos remates, dos acessos e do sistema. Envie fotografias e a área aproximada para uma primeira avaliação sem compromisso."),
+        ],
+    },
+    "/impermeabilizacao-vila-franca-de-xira/": {
+        "place": "Vila Franca de Xira",
+        "intro": "Avaliamos pedidos em todo o concelho de Vila Franca de Xira, de Póvoa de Santa Iria e Alverca até Castanheira do Ribatejo, em moradias, prédios e condomínios.",
+        "zones": ["Vila Franca de Xira (cidade)", "Alverca do Ribatejo", "Sobralinho", "Póvoa de Santa Iria", "Forte da Casa", "Vialonga", "Alhandra", "São João dos Montes", "Calhandriz", "Castanheira do Ribatejo", "Cachoeiras"],
+        "context": "Em prédios, os terraços de cobertura e as varandas são origem frequente de infiltrações nos andares de baixo. Muitas vezes a água entra por remates, ralos ou juntas e não pela superfície toda, por isso localizamos a origem antes de propor a solução.",
+        "faq": [
+            ("Trabalham em Alverca e na Póvoa de Santa Iria?", "Sim, avaliamos pedidos em todas as freguesias do concelho."),
+            ("Fazem trabalhos para condomínios?", "Sim. Avaliamos terraços, coberturas planas e paredes e preparamos orçamento para a administração do condomínio."),
+            ("Tenho uma infiltração no teto vinda do terraço do vizinho. Podem avaliar?", "Sim. Com acesso ao terraço, avaliamos a origem e indicamos a solução e o valor."),
+        ],
+    },
+    "/impermeabilizacao-odivelas/": {
+        "place": "Odivelas",
+        "intro": "Avaliamos pedidos em todo o concelho de Odivelas, em moradias, prédios e condomínios.",
+        "zones": ["Odivelas", "Pontinha", "Famões", "Póvoa de Santo Adrião", "Olival Basto", "Ramada", "Caneças"],
+        "context": "Em prédios, as infiltrações vêm muitas vezes de terraços de cobertura, varandas e caleiras de platibanda. Avaliamos o suporte e os remates antes de decidir se a impermeabilização existente pode ser aproveitada.",
+        "faq": [
+            ("Trabalham na Pontinha, Ramada e Caneças?", "Sim, avaliamos pedidos em todas as freguesias do concelho de Odivelas."),
+            ("Fazem trabalhos para condomínios?", "Sim. Preparamos orçamento para a administração com a descrição da intervenção."),
+            ("Fazem impermeabilização de varandas?", "Sim, incluindo os remates junto a soleiras, guardas e ralos."),
+        ],
+    },
+    "/impermeabilizacao-amadora/": {
+        "place": "Amadora",
+        "intro": "Avaliamos pedidos em todo o concelho da Amadora, sobretudo em prédios, condomínios e moradias com terraço.",
+        "zones": ["Alfragide", "Águas Livres", "Encosta do Sol", "Falagueira-Venda Nova", "Mina de Água", "Venteira", "Reboleira", "Damaia", "Buraca", "Brandoa"],
+        "context": "Em zonas de prédios, os terraços de cobertura e as varandas são origem frequente de infiltrações. Localizamos a entrada de água antes de propor a solução, para não refazer o que não é preciso.",
+        "faq": [
+            ("Trabalham em todas as freguesias da Amadora?", "Sim, avaliamos pedidos em todo o concelho, sujeitos à confirmação da localidade."),
+            ("Fazem trabalhos para condomínios?", "Sim. Avaliamos terraços, coberturas planas e paredes e preparamos orçamento para a administração."),
+            ("Fazem trabalhos em telhados de telha?", "Não. Trabalhamos em terraços, varandas, coberturas planas, paredes e interiores."),
+        ],
+    },
+    "/impermeabilizacao-lourinha/": {
+        "place": "Lourinhã",
+        "intro": "Avaliamos pedidos em todo o concelho da Lourinhã, da vila às zonas junto à costa, como Ribamar, Areia Branca e Porto Dinheiro.",
+        "zones": ["Lourinhã (vila)", "Ribamar", "Areia Branca", "Atalaia", "Moita dos Ferreiros", "Reguengo Grande", "Santa Bárbara", "Vimeiro", "Miragaia", "Marteleira", "São Bartolomeu dos Galegos"],
+        "context": "Junto à costa, o vento, a maresia e o sol desgastam mais depressa as camadas de proteção dos terraços. Por isso damos atenção ao acabamento, aos remates e à drenagem.",
+        "faq": [
+            ("Trabalham na Areia Branca e em Ribamar?", "Sim, avaliamos pedidos em todo o concelho da Lourinhã, incluindo as zonas junto à costa."),
+            ("Fazem impermeabilização de moradias de férias?", "Sim. Podemos avaliar por fotografias e combinar o acesso à obra consigo."),
+            ("Que informação devo enviar?", "Fotografias da zona com infiltração ou da superfície, a localidade e, se souber, a área aproximada."),
+        ],
+    },
+    "/impermeabilizacao-cadaval/": {
+        "place": "Cadaval",
+        "intro": "Avaliamos pedidos em todo o concelho do Cadaval, em moradias, armazéns e explorações com coberturas planas, terraços ou paredes enterradas.",
+        "zones": ["Cadaval (vila)", "Pêro Moniz", "Alguber", "Peral", "Vermelha", "Vilar", "Painho", "Figueiros", "Lamas", "Cercal"],
+        "context": "Em moradias rurais, os muros e as paredes encostadas ao terreno são pontos frequentes de humidade. Antes de impermeabilizar, distinguimos entre infiltração, humidade que sobe do terreno e condensação.",
+        "faq": [
+            ("Trabalham em todas as freguesias do Cadaval?", "Sim, avaliamos pedidos em todo o concelho, sujeitos à confirmação da localidade."),
+            ("Fazem impermeabilização de paredes enterradas?", "Sim, quando há acesso à face exterior da parede ou durante a obra."),
+            ("Fazem só a mão de obra?", "Sim. Podemos executar o trabalho completo ou apenas a mão de obra."),
         ],
     },
 }
@@ -384,7 +470,7 @@ def process(path):
     if 'rel="canonical"' not in s:
         s = s.replace("</head>", f'<link rel="canonical" href="{SITE}{path}">\n</head>', 1)
     if "/seo-hub.css" not in s:
-        s = s.replace("</head>", '<link rel="stylesheet" href="/seo-hub.css?v=20261113-1">\n</head>', 1)
+        s = s.replace("</head>", '<link rel="stylesheet" href="/seo-hub.css?v=20261113-2">\n</head>', 1)
     s = process_jsonld(s, path, title, desc)  # last: keeps the block right before </head>
     s = re.sub(r"<!-- seo:(hub|local):start -->.*?<!-- seo:\1:end -->\n?", "", s, flags=re.S)
     if path in LOCAL:
