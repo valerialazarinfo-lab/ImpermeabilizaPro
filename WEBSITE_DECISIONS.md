@@ -99,3 +99,15 @@ The inherited assets/vinicius-nascimento.webp is invalid (both browser display a
 - Historical data is preserved under the old names. New observed events remain available for funnel analysis but are not lead-success events.
 - `ip_contact_intent` remains removed from live tracking.
 - Confirmed contact conversions should be created from connected/qualified calls or imported real leads (WhatsApp, email, SMS, quote request) rather than from button clicks.
+
+## SEO local, entidade única e pesquisa por IA — 13 de novembro de 2026
+
+- `scripts/seo_build.py` é a fonte única dos dados públicos da empresa para SEO. Correr `python3 scripts/seo_build.py` depois de editar páginas; é idempotente (verificado com duas execuções seguidas sem diferenças).
+- Todas as páginas indexáveis partilham a mesma entidade `HomeAndConstructionBusiness` (`https://impermeabilizapro.pt/#negocio`) com Person (Vinícius Nascimento), WebSite, WebPage e BreadcrumbList. Os `Service` passam a apontar para essa entidade. Removidos os blocos de empresa duplicados e diferentes entre páginas (auditoria A22).
+- Sem morada de rua, horário, avaliações, preços, garantias ou certificações: só localidade-base (Sobral de Monte Agraço), contactos e ficha do Google Maps já publicados.
+- Nova página `/impermeabilizacao-sobral-de-monte-agraco/` (localidade-base da ficha Google Maps).
+- Páginas locais com conteúdo próprio: freguesias/localidades, contexto técnico geral e FAQ visível + FAQPage. Sem obras ou números inventados; a Ericeira usa a obra real já publicada.
+- Bloco de ligações internas (serviços, zonas, guias, contacto) em todas as páginas; páginas sem rodapé passam a ter ligações legais. Open Graph e canonical acrescentados onde faltavam.
+- `sitemap.xml` gerado (18 URLs, inclui simulador e Sobral; páginas legais e `/telhados/` ficam fora). `llms.txt` criado para assistentes de IA, incluindo o que NÃO é feito (telhados de telha/inclinados, grande altura).
+- Imagem principal (LCP) em WebP 1440px: 482 KB → 182 KB; slider da homepage com as mesmas fotos em WebP. Originais JPEG preservados (og:image continua JPEG). Cache de `script.js` atualizado.
+- Verificado localmente: JSON-LD válido, 1 H1, 1 canonical, sem IDs duplicados nem ligações internas partidas em 21 páginas; sem overflow horizontal em iPhone 13 e 1366px; sem erros JS. Não verificado: publicação no domínio (rede bloqueada nesta sessão), Search Console, Rich Results Test e Core Web Vitals reais.

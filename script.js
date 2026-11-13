@@ -593,12 +593,12 @@ callbackForms.forEach((callbackForm) => {
 const heroSlideImage = document.getElementById("heroSlideImage");
 if (heroSlideImage) {
   const heroImagePaths = [
-    "/assets/foto-real-20260915-162914.jpeg",
-    "/assets/foto-real-20260915-162859.jpeg",
+    "/assets/foto-real-20260915-162914-hero.webp",
+    "/assets/foto-real-20260915-162859-hero.webp",
     "/assets/caso-aroeira-3000m2.webp",
-    "/assets/foto-real-20260915-161418.jpeg",
-    "/assets/foto-real-20260915-161929.jpeg",
-    "/assets/foto-real-20260909-151643.jpeg",
+    "/assets/foto-real-20260915-161418-hero.webp",
+    "/assets/foto-real-20260915-161929-hero.webp",
+    "/assets/foto-real-20260909-151643-hero.webp",
   ];
   const heroImageAlts = [
     "Cobertura real impermeabilizada com tela asfáltica",
