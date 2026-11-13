@@ -1,23 +1,22 @@
-# Calculadora de estimativas V1
+# Calculadora de estimativas
 
-Estado: preparação interna. Não publicar estimativas sem validação técnica e fiscal.
+Página pública: `/calculadora/` (`index.html`). Motor: `motor.mjs`. Preços: `precos.csv` (fonte única, com a origem de cada valor).
 
-## Entrada
-Serviço, área aproximada em m², localidade, estado da base, preparação, remates, acessos, fotos opcionais, urgência e contacto com consentimento RGPD separado do marketing.
+## Como editar preços
+1. Abrir `precos.csv` no Excel/Google Sheets (separador `;`) ou num editor de texto.
+2. Alterar `min`/`max` e atualizar a coluna `origem` (ex.: «Obra X, nov. 2026»). Valores **sem IVA**.
+3. Correr `node --test calculadora/motor.test.mjs`.
+4. Mudar o `?v=` de `precos.csv` em `index.html` para os visitantes não verem a versão antiga em cache.
+
+## Mínimo de obra
+`python3 scripts/definir_minimo_obra.py 200` muda o mínimo em todo o site (CSV + todas as páginas). `--verificar` confirma que está alinhado.
 
 ## Regras
-- Intervalo base: área × preços mínimo/máximo por m² da configuração provisória.
-- Não duplicar preparação se já estiver incluída no serviço selecionado.
-- Considerar custo mínimo comercial de obra completa como critério de triagem; nunca forçar preços sem análise.
-- Acessos difíceis, infiltração sem diagnóstico, área desconhecida ou trabalhos excluídos: avaliação manual sem preço automático.
-- Valores base sem IVA; antes de exibir total final, confirmar tratamento fiscal aplicável. Não apresentar preços sem IVA como preço final a particulares.
-- Não confundir estimativa automática com orçamento vinculativo.
+- Abaixo do mínimo: aviso, sem preço.
+- Telhados inclinados/de telha e grande altura: excluídos (AGENTS.md).
+- Andaime, fora da zona, área enorme ou demasiados ralos: avaliação sem preço.
+- IVA à taxa normal (23%) por defeito; nota sobre a taxa reduzida.
+- O WhatsApp abre com a mensagem; nunca se diz que o pedido foi recebido.
 
-## Backend a verificar antes de implementar
-Verificar se Cloudflare Worker, D1, Turnstile, Resend e notificações já existem. Nunca publicar chaves ou preços internos confidenciais no frontend. Aplicar validação server-side, limitação de pedidos, consentimento, retenção de dados e testes ponta a ponta.
-
-## Testes obrigatórios
-Áreas 8, 40 e 100 m²; inputs inválidos; área desconhecida; preparação moderada; remates complexos; exclusões; IVA; envio duplicado; falha do email; dispositivos móveis; eventos analíticos com consentimento.
-
-## Aprovação
-Validar 3 casos reais com Vinícius, custos e margens antes de disponibilizar ao público. Não alterar main, DNS ou produção nesta fase.
+## Antes de dar como definitivo
+Valores marcados «HIPÓTESE» no CSV têm de ser confirmados pelo Vinícius com 3 obras reais (custos, margem, deslocação).
