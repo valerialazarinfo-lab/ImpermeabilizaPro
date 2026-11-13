@@ -115,7 +115,7 @@ FAQ_MIN = ("Qual é o mínimo de obra?", f"Trabalhamos em coberturas, terraços 
 FAQ_IVA = ("Os preços têm IVA?", IVA_LONGO)
 FAQ_ZONA = ("Em que zonas trabalham?", "A partir de Sobral de Monte Agraço, nos distritos de Lisboa, Santarém, Setúbal e Leiria. Outras zonas mediante confirmação.")
 LINKS_SERV = [("/coberturas-planas/", "Coberturas planas"), ("/terracos/", "Terraços"), ("/paredes/", "Caves e paredes enterradas"), ("/tela-asfaltica/", "Tela asfáltica"),
-              ("/impermeabilizacao-condominios/", "Condomínios"), ("/empresas/", "Construtoras"), ("/precos-impermeabilizacao/", "Preços por m²")]
+              ("/impermeabilizacao-condominios/", "Condomínios"), ("/empresas/", "Construtoras"), ("/precos-impermeabilizacao/", "Preços por m²"), ("/obras/", "Obras reais"), ("/guias/", "Guias")]
 PRECOS_TELA = [("material", "tela_1"), ("material", "tela_2"), ("remocao", "tela_antiga"), ("suporte", "degradado"), ("suporte", "pendentes"), ("acesso", "escadas")]
 PRECOS_TERRACO = [("material", "tela_1"), ("material", "tela_2"), ("material", "membrana_liquida"), ("remocao", "tela_antiga"), ("remocao", "sobre_ceramico"), ("suporte", "degradado"), ("suporte", "pendentes"), ("acesso", "escadas")]
 PRECOS_MO = [("mo", "tela_1"), ("mo", "tela_2")]
@@ -405,7 +405,7 @@ def pagina(slug, p):
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-8">
-<link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
+<link rel="stylesheet" href="/assets/b2b.css?v=20261113-6">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(crumbs, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
@@ -536,6 +536,42 @@ GUIAS = {
         faq=[("Uma ou duas camadas?", "Depende do projeto e da presença de água no terreno. Em zonas com água sob pressão usa-se normalmente sistema reforçado."), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material.")]),
 }
 
+GUIAS.update({
+    "coberturas-armazens-pavilhoes": dict(
+        titulo="Impermeabilização de Coberturas de Armazéns e Pavilhões | ImpermeabilizaPro",
+        desc="Como impermeabilizar a cobertura plana de um armazém ou pavilhão sem parar a atividade: sistema, fases, escoamento e preço por m².",
+        h1="Coberturas planas de armazéns e pavilhões: como impermeabilizar", sup="cobertura_plana", cliente="empresa",
+        resumo="Em coberturas planas de grande área, o que mais conta é o escoamento (pendentes, caleiras e ralos) e fazer a obra por fases, para o armazém continuar a trabalhar. A tela asfáltica em duas camadas é a solução mais usada.",
+        secoes=[("Antes de começar", ["Ver por onde entra a água: ralos entupidos, caleiras, juntas de dilatação e encontros com platibandas são os pontos habituais.", "Medir a área e confirmar o acesso à cobertura (escada fixa ou acesso interior). Não fazemos trabalhos em grande altura."]),
+                ("Por fases, sem parar a atividade", ["A cobertura é dividida em zonas. Cada zona fica impermeabilizada no mesmo dia ou protegida ao fim do dia, para não entrar água durante a obra.", "Os trabalhos são marcados para dias secos."]),
+                ("Escoamento", ["Água parada estraga qualquer sistema. Corrigir pendentes e aumentar ou desentupir ralos e caleiras faz parte da solução."]),
+                ("Sistema", ["Normalmente duas camadas de tela asfáltica, com a segunda autoprotegida com acabamento mineral. Em zonas com muitos equipamentos, membrana líquida à volta dos pontos difíceis."])],
+        precos=[("material", "tela_2"), ("mo", "tela_2"), ("suporte", "pendentes")],
+        faq=[("É preciso parar o armazém?", "Não. Trabalhamos por zonas e protegemos cada zona ao fim do dia."), ("Fazem coberturas de chapa?", "Fazemos coberturas planas. Telhados inclinados, de telha ou chapa, não fazemos.")]),
+    "planear-impermeabilizacao-obra-nova": dict(
+        titulo="Planear a Impermeabilização numa Obra Nova (para Construtoras)",
+        desc="Quando entra a impermeabilização no planeamento de uma obra nova, o que enviar para a proposta e como coordenar com as outras especialidades.",
+        h1="Como planear a impermeabilização numa obra nova", sup="terraco", cliente="empresa",
+        resumo="A impermeabilização tem momentos certos no planeamento: paredes enterradas antes do aterro, coberturas e terraços depois das lajes e antes dos pavimentos e caixilharias finais. Planear cedo evita refazer trabalho.",
+        secoes=[("Quando entra no planeamento", ["Paredes enterradas: depois da betonagem e antes do aterro.", "Coberturas e terraços: depois das lajes e das pendentes, antes da proteção, do pavimento e dos remates de caixilharia."]),
+                ("O que enviar para a proposta", ["Mapa de quantidades ou medições, plantas de cobertura e cortes, pormenores de remates (platibandas, soleiras, ralos) e a data prevista.", "Com isto respondemos com preço por m², total e o que está incluído; com material ou só mão de obra."]),
+                ("Coordenação com as outras especialidades", ["Ralos, tubos e passagens colocados antes da impermeabilização.", "Soleiras e caixilharias com altura suficiente para o remate subir acima do pavimento acabado.", "Evitar furar a impermeabilização depois de feita; se for preciso, avisar para rematar."]),
+                ("Verificar antes de tapar", ["É prática comum fazer um teste de alagamento (encher a cobertura com água e verificar) antes da proteção ou do pavimento."])],
+        precos=[("material", "tela_2"), ("mo", "tela_1"), ("mo", "tela_2")],
+        faq=[("Com quanto tempo de antecedência devo pedir?", "Assim que houver medições. Quanto mais cedo, mais fácil encaixar as datas no planeamento da obra."), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material.")]),
+    "manutencao-terraco-condominio": dict(
+        titulo="Manutenção do Terraço do Condomínio: Evitar Infiltrações",
+        desc="O que a administração de um condomínio deve verificar no terraço de cobertura para evitar infiltrações, e quando é altura de renovar a impermeabilização.",
+        h1="Manutenção do terraço do condomínio: o que verificar", sup="terraco", cliente="condominio",
+        resumo="A maior parte das infiltrações em terraços de cobertura começa em ralos entupidos e remates danificados. Uma verificação simples antes do outono e depois de tempestades evita muitas reparações.",
+        secoes=[("O que verificar", ["Ralos e caleiras limpos, sem folhas nem terra.", "Remates junto às platibandas, muretes e soleiras: sem fissuras nem tela descolada.", "Água parada depois da chuva: indica pendentes a corrigir.", "Plantas a crescer em juntas ou cantos: as raízes danificam a impermeabilização."]),
+                ("Quando fazer", ["Antes do outono e depois de tempestades fortes. Registar com fotografias, para comparar de ano para ano."]),
+                ("Sinais de que é preciso renovar", ["Manchas no teto do último andar depois da chuva, bolhas ou tela descolada em várias zonas, ou reparações repetidas no mesmo sítio."]),
+                ("Cuidados", ["Não furar o terraço para fixar antenas, toldos ou equipamentos sem rematar a impermeabilização.", "Não usar ferramentas cortantes na limpeza."])],
+        precos=[("material", "tela_2"), ("remocao", "tela_antiga"), ("acesso", "escadas")],
+        faq=[("A limpeza dos ralos é connosco?", "Não fazemos manutenções pequenas. Fazemos a renovação da impermeabilização a partir de 100 m²."), ("Quem paga a renovação?", "Em regra os condóminos, na proporção da permilagem, porque o terraço de cobertura é parte comum. Veja o guia sobre o terraço do condomínio.")]),
+})
+
 
 def pagina_artigo(caminho, a, tipo):
     url = f"{SITE}/{caminho}/"
@@ -597,7 +633,7 @@ def pagina_indice(tipo):
     return cabeca(f"{h1} | ImpermeabilizaPro", desc, url, [crumbs]) + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
 
 
-def cabeca(titulo, desc, url, lds):
+def cabeca(titulo, desc, url, lds, robots="index,follow,max-image-preview:large", extra_head=""):
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -606,8 +642,8 @@ def cabeca(titulo, desc, url, lds):
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{e(titulo)}</title>
 <meta name="description" content="{e(desc)}">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="canonical" href="{url}">
+<meta name="robots" content="{robots}">
+<link rel="canonical" href="{url}">{extra_head}
 <meta property="og:type" content="article"><meta property="og:locale" content="pt_PT"><meta property="og:url" content="{url}">
 <meta property="og:title" content="{e(titulo)}"><meta property="og:description" content="{e(desc)}">
 <meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
@@ -616,7 +652,7 @@ def cabeca(titulo, desc, url, lds):
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-8">
-<link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
+<link rel="stylesheet" href="/assets/b2b.css?v=20261113-6">
 {"".join(f'<script type="application/ld+json">{json.dumps(l, ensure_ascii=False)}</script>' for l in lds)}
 </head>
 <body class="pagina-b2b">
@@ -687,12 +723,86 @@ h2{{font-size:24px;margin:0 0 4px;color:#0a2340}}.lead{{color:#4a5e6f;margin:0 0
     (RAIZ / "apresentacao").mkdir(exist_ok=True)
     (RAIZ / "apresentacao" / "index.html").write_text(html_, encoding="utf-8")
 
+
+# ---------------------------------------------------------------- páginas legais e /telhados/
+REVIEW_URL = "https://g.page/r/CSxqX6SG4QDvEBM/review"
+
+PRIVACIDADE = [
+    ("Quem trata os dados", [
+        "ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição. Até ao registo da sociedade, o responsável pelo tratamento é Vinícius Nascimento. A denominação, o NIF e a sede da sociedade serão indicados aqui logo após o registo.",
+        'Contacto para privacidade: <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a> · <a href="tel:+351930446198">930 446 198</a>.']),
+    ("Calculadora de preço", [
+        "As respostas à calculadora (tipo de cliente, superfície, área, localização, estado da superfície e outras) são usadas no seu navegador para calcular a estimativa. Não são enviadas para nenhuma base de dados do site.",
+        "Se aceitar os cookies de medição, registamos apenas categorias de utilização: que a calculadora foi usada, o tipo de cliente, o tipo de superfície, o escalão de área (por exemplo, 200 a 499 m²), a zona e se a estimativa teve preço. Nunca registamos a localidade escrita, a área exata, o texto das mensagens nem dados de contacto."]),
+    ("WhatsApp, email e telefone", [
+        "Os botões de WhatsApp e de email abrem a sua aplicação com uma mensagem já preenchida com as respostas da calculadora. Só recebemos essa informação se carregar em Enviar. Quando nos contacta, usamos os dados que fornecer para responder, avaliar a obra e preparar uma proposta.",
+        "Se aceitar a medição, registamos o clique num botão de WhatsApp, telefone ou email. Esse clique indica apenas que tentou abrir o canal; não confirma que uma mensagem foi enviada ou uma chamada atendida."]),
+    ("Cookies e medição", [
+        "O site usa armazenamento essencial para guardar a sua escolha de cookies. Com o seu consentimento, carrega a Google tag (Google Analytics e Google Ads) para medir visitas e campanhas. Pode aceitar ou manter apenas os essenciais, e mudar a escolha em «Gerir cookies», no rodapé. Recusar não impede o uso do site nem dos contactos.",
+        "A escolha fica guardada neste navegador durante seis meses. Com consentimento, os parâmetros de campanha (UTM e identificadores de clique) são guardados durante a sessão para perceber a origem das visitas."]),
+    ("Ligações externas", [
+        f'A ligação «Deixe a sua avaliação no Google» abre o Google, que trata os dados segundo a sua própria política. A apresentação em PDF e a tabela de preços são ficheiros públicos e não recolhem dados.']),
+    ("Finalidades e fundamento", [
+        "Responder a pedidos e preparar propostas: diligências pré-contratuais a seu pedido. Executar obras e cumprir obrigações fiscais: execução de contrato e obrigação legal. Medição e publicidade: consentimento, que pode retirar a qualquer momento em «Gerir cookies»."]),
+    ("Conservação", [
+        "As respostas da calculadora não são guardadas pelo site. As mensagens recebidas são conservadas pelo tempo necessário ao pedido, à relação contratual e às obrigações legais (por exemplo, faturação)."]),
+    ("Os seus direitos", [
+        'Pode pedir acesso, retificação, apagamento, limitação, portabilidade ou oposição, quando aplicável, através de <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a>. Pode retirar o consentimento sem afetar o tratamento anterior. Tem direito a apresentar reclamação à <a href="https://www.cnpd.pt/" target="_blank" rel="noopener noreferrer">Comissão Nacional de Proteção de Dados</a>.']),
+    ("Serviços utilizados", [
+        'O site é publicado através do GitHub Pages, que regista dados técnicos de acesso (incluindo o endereço IP) para disponibilizar e proteger o serviço. Com consentimento, a Google tag carrega o Google Analytics e o Google Ads. Ao abrir o WhatsApp, o email ou o Google, passa a usar esses serviços. Consulte as políticas da <a href="https://docs.github.com/pt/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub</a>, da <a href="https://policies.google.com/privacy?hl=pt-PT" target="_blank" rel="noopener noreferrer">Google</a> e do <a href="https://www.whatsapp.com/legal/privacy-policy-eea" target="_blank" rel="noopener noreferrer">WhatsApp</a>, incluindo transferências internacionais.']),
+]
+
+LEGAIS = [
+    ("Quem somos", [
+        "ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição, com base em Sobral de Monte Agraço. A denominação, o NIF e a sede serão indicados aqui logo após o registo. Vinícius Nascimento é o responsável técnico.",
+        'Contacto: <a href="tel:+351930446198">930 446 198</a> (chamada para a rede móvel nacional, telefone e WhatsApp) · <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a>.']),
+    ("Preços, estimativas e propostas", [
+        "Os preços do site e da calculadora são estimativas indicativas por m². Não são uma proposta nem um orçamento vinculativo. O valor, os trabalhos incluídos, o prazo, as condições de pagamento e os impostos aplicáveis são definidos na proposta escrita para cada obra, depois de vermos fotografias ou a obra.",
+        f"Trabalhamos em coberturas, terraços e outras áreas planas a partir de {MIN} m². Não fazemos pequenas reparações, telhados de telha ou inclinados, nem trabalhos em grande altura.",
+        "IVA: aplicamos a taxa legal (23%, ou 6% nas obras de habitação em que a lei o permite)."]),
+    ("Fotografias e informação técnica", [
+        "As fotografias mostram obras reais. A solução para cada obra depende da avaliação da superfície, dos remates e do sistema existente; as imagens e os textos não substituem essa avaliação."]),
+    ("Reclamações e litígios de consumo", [
+        'Para apresentar uma reclamação, contacte-nos pelos meios acima. Pode também usar o <a href="https://www.livroreclamacoes.pt/Inicio/" target="_blank" rel="noopener noreferrer">Livro de Reclamações Eletrónico</a>.',
+        'Em caso de litígio de consumo, o consumidor pode recorrer a uma entidade de resolução alternativa de litígios de consumo. A lista das entidades está disponível no <a href="https://www.consumidor.gov.pt/" target="_blank" rel="noopener noreferrer">Portal do Consumidor</a>. O <a href="https://www.cniacc.pt/" target="_blank" rel="noopener noreferrer">CNIACC</a> (Centro Nacional de Informação e Arbitragem de Conflitos de Consumo) tem competência a nível nacional.']),
+    ("Dados pessoais", [
+        'Consulte a <a href="/privacidade/">Política de privacidade e cookies</a>.']),
+]
+
+
+def pagina_texto(slug, titulo, desc, h1, secoes, robots="noindex,follow", canonical=None, extra_head="", aviso=""):
+    url = f"{SITE}/{slug}/"
+    sec = "".join(f'<h2 id="{"cookies" if t.startswith("Cookies") else re.sub(r"[^a-z]+", "-", t.lower()).strip("-")}">{e(t)}</h2>' + "".join(f"<p>{p}</p>" for p in ps) for t, ps in secoes)
+    corpo = (f'<section class="h-hero slim h-hero-texto"><div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › {e(h1)}</p><h1>{e(h1)}</h1><p class="h-sub">{e(desc)}</p></div></section>'
+             f'<section class="h-sec"><div class="wrap narrow h-artigo">{aviso}{sec}<p class="calc-legal">Atualizado em {HOJE}.</p></div></section>')
+    head = cabeca(titulo, desc, canonical or url, [], robots=robots, extra_head=extra_head)
+    return head + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
+
+
+def gerar_legais():
+    paginas = {
+        "privacidade": pagina_texto("privacidade", "Política de Privacidade e Cookies | ImpermeabilizaPro",
+                                    "Como o site ImpermeabilizaPro trata informação quando usa a calculadora, navega ou nos contacta.", "Privacidade e cookies", PRIVACIDADE),
+        "informacoes-legais": pagina_texto("informacoes-legais", "Informações Legais e Contactos | ImpermeabilizaPro",
+                                           "Quem somos, como funcionam os preços e as propostas, reclamações e litígios de consumo.", "Informações legais e contactos", LEGAIS),
+        "telhados": pagina_texto("telhados", "Telhados de Telha: Não Fazemos | ImpermeabilizaPro",
+                                 "Não fazemos telhados de telha ou inclinados. Fazemos impermeabilização de coberturas planas, terraços e caves.", "Telhados de telha: não fazemos",
+                                 [("O que fazemos", ['Impermeabilização de <a href="/coberturas-planas/">coberturas planas</a>, <a href="/terracos/">terraços</a> e <a href="/paredes/">caves e paredes enterradas</a>, a partir de ' + f"{MIN} m²."]),
+                                  ("O que não fazemos", ["Telhados de telha ou inclinados, trabalhos em grande altura e pequenas reparações."])],
+                                 canonical=f"{SITE}/coberturas-planas/", extra_head='<meta http-equiv="refresh" content="4;url=/coberturas-planas/">',
+                                 aviso='<p class="h-resumo">Esta página antiga mudou. Vai ser encaminhado para <a href="/coberturas-planas/">coberturas planas</a> em poucos segundos.</p>'),
+    }
+    for slug, html_ in paginas.items():
+        (RAIZ / slug).mkdir(exist_ok=True)
+        (RAIZ / slug / "index.html").write_text(html_, encoding="utf-8")
+
 if __name__ == "__main__":
     for slug, p in PAGINAS.items():
         d = RAIZ / slug
         d.mkdir(exist_ok=True)
         (d / "index.html").write_text(pagina(slug, p), encoding="utf-8")
     gerar_obras_guias()
+    gerar_legais()
     apresentacao()
     tabela_home()
     sitemap()
