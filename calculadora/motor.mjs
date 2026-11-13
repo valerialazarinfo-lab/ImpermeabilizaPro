@@ -51,6 +51,9 @@ export function calcular(entrada, t) {
   const area = Number(String(entrada.area ?? '').replace(',', '.'));
   const minimo = minimoObra(t);
   const sup = t.superficie[entrada.superficie];
+  if (sup?.regras.includes('servico_a_parte')) {
+    return { estado: 'avaliacao', motivo: 'As casas de banho e zonas interiores são um serviço à parte: o orçamento é feito depois de vermos fotografias. O mínimo de m² não se aplica.' };
+  }
   if (sup?.regras.includes('excluido')) return { estado: 'excluido', motivo: `${sup.descricao}: este trabalho não é feito pela ImpermeabilizaPro.` };
   if (!Number.isFinite(area) || area <= 0) return { estado: 'invalido', motivo: 'Indique a área aproximada em m².' };
   if (area < minimo) return { estado: 'abaixo_minimo', minimo, motivo: `O mínimo de obra é ${minimo} m².` };

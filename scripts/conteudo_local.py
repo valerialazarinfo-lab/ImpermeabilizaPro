@@ -69,7 +69,7 @@ def bloco(chave, d):
     faq = [
         (f"Fazem obras de impermeabilização em {n}?", f"Sim. Trabalhamos a partir de Sobral de Monte Agraço e avaliamos obras em {n}. Confirmamos a deslocação com a localidade e fotografias."),
         (f"Quanto custa impermeabilizar em {n}?", "Depende da superfície, do material, do estado do suporte, dos acessos e dos remates. A calculadora do site dá um intervalo por m² e o total com IVA; o valor final é confirmado após avaliação."),
-        ("Há um mínimo de obra?", f"Sim, fazemos obras a partir de {MIN} m². Se tiver várias zonas na mesma morada, as áreas somam-se."),
+        ("Há um mínimo de obra?", f"Sim. Em coberturas, terraços e outras áreas planas fazemos obras a partir de {MIN} m²; não fazemos pequenas reparações. Se tiver várias zonas na mesma morada, as áreas somam-se."),
     ]
     faq_html = "".join(f"<details><summary>{h(q)}</summary><p>{h(a).replace(f'{MIN} m²', f'<span data-minimo-obra>{MIN}</span> m²')}</p></details>" for q, a in faq)
     ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}

@@ -50,7 +50,13 @@ test('andaime e fora da zona: avaliação sem preço', () => {
 });
 
 test('material incompatível com a superfície é recusado', () => {
-  assert.equal(calcular({ ...base, superficie: 'casa_banho', material: 'tela_2' }, t).estado, 'invalido');
+  assert.equal(calcular({ ...base, superficie: 'parede_exterior', material: 'tela_2' }, t).estado, 'invalido');
+});
+
+test('casa de banho: serviço à parte, sem preço e sem mínimo', () => {
+  const r = calcular({ ...base, superficie: 'casa_banho', area: 8 }, t);
+  assert.equal(r.estado, 'avaliacao');
+  assert.match(r.motivo, /serviço à parte/);
 });
 
 test('«Não sei» usa o intervalo dos materiais aceites', () => {

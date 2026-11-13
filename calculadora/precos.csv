@@ -14,7 +14,7 @@ superficie;terraco;Terraço transitável;1;1;fator;materiais:tela_1|tela_2|membr
 superficie;varanda;Varanda;1,1;1,25;fator;materiais:membrana_liquida|cimenticia|tela_1;HIPÓTESE: mais remates e soleiras por m² do que num terraço
 superficie;cave;Cave, garagem ou parede enterrada;1,05;1,2;fator;materiais:tela_1|tela_2|cimenticia|membrana_liquida;HIPÓTESE. Referência de mercado: parede de cave ~35 €/m² (prummo.app, IVA não indicado)
 superficie;parede_exterior;Parede exterior / fachada (até 1.º piso);0,7;0,9;fator;materiais:cimenticia|membrana_liquida;HIPÓTESE. Mercado: fachada elastomérica 10–18 €/m² s/IVA (impermeabilizar.pt), 50–90 €/m² (habitissimo.pt)
-superficie;casa_banho;Casa de banho ou zona interior;1,2;1,4;fator;materiais:cimenticia|membrana_liquida;HIPÓTESE: muitos cantos e remates por m²
+superficie;casa_banho;Casa de banho ou zona interior (serviço à parte);0;0;fator;servico_a_parte;Decisão do negócio (2026-11-13): serviço à parte, orçamentado após avaliação; o mínimo de m² não se aplica
 superficie;telhado_inclinado;Telhado de telha ou inclinado;0;0;fator;excluido;Regra do negócio (AGENTS.md): não fazemos telhados de telha/inclinados
 material;tela_1;Tela asfáltica, 1 camada;22;32;€/m²;;impermeabilizar.pt 22–38 €/m² s/IVA (terraço em betão); pom-lda.pt 25–35 €/m² (suporte bom); bluepeak.pt 15–25 €/m² — consultado 2026-11-13 via pesquisa
 material;tela_2;Tela asfáltica, 2 camadas (sistema multicamada);30;42;€/m²;;impermeabilizar.pt 28–42 €/m² s/IVA (multicamada SOPREMA) — consultado 2026-11-13 via pesquisa
