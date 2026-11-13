@@ -21,9 +21,10 @@ if (
   ["telhados", "terracos", "paredes"].includes(params.get("servico"))
 ) {
   const legacy = params.get("servico");
+  const destination = legacy === "telhados" ? "coberturas-planas" : legacy;
   params.delete("servico");
   location.replace(
-    `/${legacy}/${params.size ? "?" + params.toString() : ""}${location.hash}`,
+    `/${destination}/${params.size ? "?" + params.toString() : ""}${location.hash}`,
   );
 }
 const service = document.body.dataset.service || "geral";
@@ -87,8 +88,8 @@ function track(event, extra = {}) {
     ...attribution,
     ...extra,
   };
-  // Keep the event names already imported into Google Ads as SECONDARY conversions.
-  // Clicks are observations, not confirmed contacts; verification_status records this.
+  // Channel clicks are observations, not confirmed contacts. Account-side
+  // conversion settings must be checked separately; verification_status records this.
   // Send each website event once, directly to this GA4 property.
   window.gtag("event", event, { ...payload, send_to: GA4_ID });
   return true;
@@ -111,6 +112,18 @@ function trackOncePerSession(event, key, extra = {}) {
   if (!claimSessionOnce(key)) return false;
   return track(event, { ...extra, event_scope: "one_per_session" });
 }
+
+// Funil da calculadora: só categorias (tipo de cliente, superfície, escalão de área, estado do resultado).
+// Nunca envia localidade, texto livre nem a área exata. Diagnóstico: não é um contacto nem um lead.
+window.addEventListener("ip:calc", (ev) => {
+  const d = (ev && ev.detail) || {};
+  const limpo = {};
+  for (const k of ["estado", "cliente", "superficie", "escalao_area", "localizacao", "nao_sei", "margem"]) {
+    if (d[k] !== undefined && d[k] !== null) limpo["calc_" + k] = String(d[k]).slice(0, 40);
+  }
+  if (d.tipo === "inicio") trackOncePerSession("ip_calc_start", "ip_calc_start");
+  if (d.tipo === "resultado") trackOncePerSession("ip_calc_result", "ip_calc_result_" + [d.estado, d.cliente, d.superficie, d.escalao_area].join("_"), limpo);
+});
 
 function replaceWebsitePhoneNumber(formattedNumber, mobileNumber) {
   if (consent !== "accepted") return;
@@ -567,7 +580,7 @@ callbackForms.forEach((callbackForm) => {
     const whatsappUrl =
       "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(lines.join("\n"));
 
-    // Use the same imported secondary event and session key as other WhatsApp opens.
+    // Use the same click-observation event and session key as other WhatsApp opens.
     trackOncePerSession("ip_whatsapp_click", "ip_whatsapp_click_observed_counted", {
       placement: "callback_request",
       contact_action: "whatsapp",
