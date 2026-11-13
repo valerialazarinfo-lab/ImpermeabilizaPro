@@ -16,6 +16,8 @@ cliente;empresa;Empresa ou construtora;0;0;iva;autoliquidacao;CIVA art. 2.º n.�
 cliente;condominio;Condomínio ou administração de prédio;0;0;iva;;IVA à taxa legal (condomínios não liquidam IVA)
 cliente;particular;Particular (moradia ou prédio próprio);0;0;iva;;IVA à taxa legal
 cliente;outra;Outra entidade (pública, IPSS, associação);0;0;iva;;IVA à taxa legal; confirmar regime no orçamento
+fornecimento;nos;Nós (material e mão de obra);1;1;fator;;Referência base
+fornecimento;cliente;O cliente (só mão de obra);0,53;0,53;fator;nota;Rácio de uma obra real (2026): preço com material do cliente ÷ preço com material. Confirmar com o Vinícius (pergunta 24)
 escala;100;De 100 a 199 m²;1;1;fator;;Referência base
 escala;200;De 200 a 499 m²;0,99;0,99;fator;;Decisão (2026-11-13): cerca de 90% do custo é variável (tela e aplicação), por isso o desconto por área é pequeno
 escala;500;De 500 a 999 m²;0,98;0,98;fator;;Idem: custo maioritariamente variável

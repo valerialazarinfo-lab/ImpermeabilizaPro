@@ -11,7 +11,7 @@
  *   IVA: taxa legal; autoliquidação para empresas só com config autoliquidacao_ativa = 1 (exige alvará/certificado IMPIC).
  */
 
-export const PERGUNTAS = ['cliente', 'superficie', 'material', 'suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
+export const PERGUNTAS = ['cliente', 'superficie', 'material', 'fornecimento', 'suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
 const EXTRAS = ['suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
 
 /** Lê o CSV (separador «;», decimal com vírgula ou ponto, linhas começadas por «#» ignoradas). */
@@ -104,7 +104,7 @@ export function calcular(entrada, t) {
   const fatorPreco = cfg(t, 'fator_preco_entrada');
   const escala = fatorEscala(area, t);
   const semIvaLado = (lado) => {
-    const porM2 = (lado === 'baixo' ? matBaixo : matAlto) * med(esc.superficie) + extras.filter((i) => i.unidade === '€/m²').reduce((s, i) => s + valor(i, lado), 0);
+    const porM2 = (lado === 'baixo' ? matBaixo : matAlto) * med(esc.superficie) * med(esc.fornecimento) + extras.filter((i) => i.unidade === '€/m²').reduce((s, i) => s + valor(i, lado), 0);
     const fator = extras.filter((i) => i.unidade === '%').reduce((f, i) => f * (1 + valor(i, lado) / 100), 1);
     return (porM2 * area * escala + ralos * med(t.extra.ralo)) * fator * fatorPreco;
   };
@@ -137,6 +137,7 @@ function notaDe(i) {
   if (i.chave === 'nao_sei') return `${i.grupo === 'suporte' ? 'Estado do suporte' : 'Remoção do sistema antigo'} por confirmar: com fotografias o intervalo fica mais estreito.`;
   if (i.chave === 'ceramico_novo') return 'O pavimento cerâmico novo não está incluído: é orçamentado à parte.';
   if (i.chave === 'levantar_ceramico') return 'Inclui levantar o pavimento existente, não a colocação de pavimento novo.';
+  if (i.grupo === 'fornecimento') return 'Só mão de obra: o material é fornecido e entregue na obra pelo cliente, segundo a lista que enviamos.';
   if (i.chave === 'urgente') return 'Com água a entrar, pode ser preciso localizar a origem antes de impermeabilizar.';
   return i.descricao;
 }

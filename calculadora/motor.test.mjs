@@ -5,7 +5,7 @@ import { lerPrecos, calcular, minimoObra, fatorEscala } from './motor.mjs';
 
 const csv = readFileSync(new URL('./precos.csv', import.meta.url), 'utf8');
 const t = lerPrecos(csv);
-const base = { cliente: 'condominio', superficie: 'cobertura_plana', area: 150, material: 'tela_2', suporte: 'bom', remocao: 'nenhuma', acesso: 'facil', ralos: 2, remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal', localizacao: 'zona_base' };
+const base = { cliente: 'condominio', superficie: 'cobertura_plana', area: 150, material: 'tela_2', fornecimento: 'nos', suporte: 'bom', remocao: 'nenhuma', acesso: 'facil', ralos: 2, remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal', localizacao: 'zona_base' };
 
 test('mínimo de obra lido do CSV', () => assert.equal(minimoObra(t), 100));
 
@@ -120,6 +120,14 @@ test('todas as linhas têm origem', () => {
 test('fator de preço de entrada reduz o preço', () => {
   const t1 = lerPrecos(csv.replace(/config;fator_preco_entrada;([^;]*);1;1/, 'config;fator_preco_entrada;$1;0,9;0,9'));
   assert.ok(calcular(base, t1).totalSemIva.max < calcular(base, t).totalSemIva.max);
+});
+
+test('só mão de obra: preço do sistema × 0,53, extras iguais', () => {
+  const com = calcular({ ...base, ralos: 0, remates: 'poucos' }, t);
+  const mo = calcular({ ...base, ralos: 0, remates: 'poucos', fornecimento: 'cliente' }, t);
+  assert.equal(mo.estado, 'preco');
+  assert.ok(Math.abs(mo.totalSemIva.max / com.totalSemIva.max - 0.53) < 0.02);
+  assert.ok(mo.notas.some((n) => /Só mão de obra/.test(n)));
 });
 
 test('CSV com valores errados falha de forma clara', () => {
