@@ -335,6 +335,13 @@ def minimo_span(t):
     return e(t).replace(f"{MIN} m²", f'<span data-minimo-obra>{MIN}</span> m²')
 
 
+def og_img(chave):
+    """Imagem de partilha (1200×630) gerada por scripts/gerar_imagens.py; se faltar, usa a foto geral."""
+    if chave and (RAIZ / "assets" / "og" / f"{chave}.jpg").exists():
+        return f"{SITE}/assets/og/{chave}.jpg"
+    return f"{SITE}/assets/foto-real-20260915-162914.jpeg"
+
+
 def pagina(slug, p):
     url = f"{SITE}/{slug}/"
     wa = WA_BASE + urllib.parse.quote(p.get("wa", "Olá, gostaria de pedir uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]."))
@@ -399,7 +406,7 @@ def pagina(slug, p):
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:locale" content="pt_PT"><meta property="og:url" content="{url}">
 <meta property="og:title" content="{e(p["titulo"])}"><meta property="og:description" content="{e(p["desc"])}">
-<meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{og_img((p.get('fotos') or [None])[0])}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0a2340">
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
@@ -611,7 +618,8 @@ def pagina_artigo(caminho, a, tipo):
     hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
-    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-12\"></script>\n</body>\n</html>\n"
+    chave_og = {"caso-aroeira-3000m2.webp": "aroeira", "caso-gaia-440m2.webp": "gaia_caso", "caso-ericeira-200m2.webp": "ericeira"}.get(a.get("img", ""))
+    return cabeca(a["titulo"], a["desc"], url, lds, imagem=og_img(chave_og) if chave_og else None) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-12\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):
@@ -634,7 +642,7 @@ def pagina_indice(tipo):
     return cabeca(f"{h1} | ImpermeabilizaPro", desc, url, [crumbs]) + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
 
 
-def cabeca(titulo, desc, url, lds, robots="index,follow,max-image-preview:large", extra_head=""):
+def cabeca(titulo, desc, url, lds, robots="index,follow,max-image-preview:large", extra_head="", imagem=None):
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -647,7 +655,7 @@ def cabeca(titulo, desc, url, lds, robots="index,follow,max-image-preview:large"
 <link rel="canonical" href="{url}">{extra_head}
 <meta property="og:type" content="article"><meta property="og:locale" content="pt_PT"><meta property="og:url" content="{url}">
 <meta property="og:title" content="{e(titulo)}"><meta property="og:description" content="{e(desc)}">
-<meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{imagem or og_img(None)}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0a2340">
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
@@ -780,6 +788,19 @@ def pagina_texto(slug, titulo, desc, h1, secoes, robots="noindex,follow", canoni
     return head + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
 
 
+def pagina_404():
+    servicos = "".join(f'<a href="{u}">{e(t)}</a>' for u, t in LINKS_SERV)
+    corpo = ('<section class="h-hero slim h-hero-texto"><div class="wrap"><h1>Esta página não existe</h1><p class="h-sub">O endereço pode ter mudado. Veja o preço da sua obra ou escolha o serviço.</p></div></section>'
+             '<section class="h-sec"><div class="wrap"><div class="calc" data-calc data-modo="rapido" style="max-width:760px;margin:0 auto"><h2>Preço por m² em 30 segundos</h2>'
+             '<form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form><div class="calc-res" data-calc-result aria-live="polite"></div>'
+             '<div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_404" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
+             '<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div></div>'
+             f'<h2 style="margin-top:28px;font-size:1.2rem">Serviços</h2><div class="h-links">{servicos}</div></div></section>')
+    head = cabeca("Página não encontrada | ImpermeabilizaPro", "Esta página não existe. Veja o preço por m² da sua obra ou escolha o serviço.", SITE + "/", [], robots="noindex,follow")
+    fim = '</main>\n<footer></footer>\n<script type="module" src="/calculadora/widget.mjs?v=20261113-12"></script>\n</body>\n</html>\n'
+    (RAIZ / "404.html").write_text(head + '<main id="conteudo">\n' + corpo + '\n' + fim, encoding="utf-8")
+
+
 def gerar_legais():
     paginas = {
         "privacidade": pagina_texto("privacidade", "Política de Privacidade e Cookies | ImpermeabilizaPro",
@@ -804,6 +825,7 @@ if __name__ == "__main__":
         (d / "index.html").write_text(pagina(slug, p), encoding="utf-8")
     gerar_obras_guias()
     gerar_legais()
+    pagina_404()
     apresentacao()
     tabela_home()
     sitemap()

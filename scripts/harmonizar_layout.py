@@ -22,9 +22,17 @@ FOOTER = (RAIZ / "scripts/partials/footer.html").read_text(encoding="utf-8").str
 
 RX_HEADER = re.compile(r'<header class="header">.*?</header>\s*(<div class="min-obra-bar".*?</div>)?', re.S)
 RX_FIM = re.compile(r"<footer>.*?(?=</body>)", re.S)
+ICONES = ('<link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">'
+          '<link rel="icon" href="/assets/favicon-48.png" sizes="48x48" type="image/png">'
+          '<link rel="icon" href="/assets/favicon-192.png" sizes="192x192" type="image/png">'
+          '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">')
+RX_ICONES = re.compile(r'(?:<link rel="(?:icon|apple-touch-icon)"[^>]*>\s*)+')
 
 
 def paginas():
+    extra = RAIZ / "404.html"
+    if extra.exists():
+        yield extra
     for p in sorted(RAIZ.glob("**/index.html")):
         rel = p.relative_to(RAIZ)
         if ".git" in rel.parts or (rel.parts[0] in IGNORAR and len(rel.parts) > 1):
@@ -33,6 +41,7 @@ def paginas():
 
 
 def aplicar(texto):
+    texto = RX_ICONES.sub(ICONES + "\n", texto, count=1)
     m = RX_HEADER.search(texto)
     if not m:
         raise ValueError("sem <header class=\"header\">")
