@@ -28,6 +28,8 @@ Fala com a Valeria em português de Portugal. Esta skill é só para o site. Cus
 | Página inicial | `index.html` (a tabela de preços é inserida pelo gerador) |
 | Estilos | `assets/b2b.css`, `calculadora/calc.css`, `style.css` (limpo; não acrescentar regras antigas) |
 | Mínimo de obra | `python3 scripts/definir_minimo_obra.py <m²>` |
+| Ícones (favicon, Apple) e imagens de partilha 1200×630 | `python3 scripts/gerar_imagens.py` (fotos reais; nova chave em `F` do gerador = acrescentar em `OG`) |
+| Página de erro | `404.html`, gerada por `pagina_404()` no gerador |
 
 ## Fluxo de cada alteração
 1. `git fetch origin main` e criar ramo novo `claude/<tema>` a partir de `origin/main` (outras conversas também publicam: partir sempre do `main` atual).
