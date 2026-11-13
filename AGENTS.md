@@ -7,3 +7,6 @@ Foco: serviço real de impermeabilização em Portugal, apresentado como empresa
 Este repositório é **público**: nunca inserir informações privadas de clientes, propostas/orçamentos confidenciais, passwords, segredos, APIs ou backups.
 
 O backend de receção automática está preparado, não confirmado como ativo. Nunca comunicar "pedido recebido" sem persistência confirmada. Manter contactos WhatsApp/email funcionais. Não enviar mensagens a clientes reais nem ativar serviços pagos sem autorização. Fazer pequenos commits, testar e distinguir alterações de código de publicação verificada.
+
+
+Processo completo (fontes, geração, testes, publicação): `.claude/skills/site-impermeabilizapro/SKILL.md`.
