@@ -74,3 +74,4 @@
 @media(max-width:980px){.h-obra{grid-template-columns:1fr}.h-servicos-3{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.h-servicos-3{grid-template-columns:1fr}}
 .h-caso-link{text-decoration:none;color:inherit;display:block}.h-caso-link:hover .h-caso{border-color:#0c7357}
+.h-galeria-5{grid-template-columns:repeat(5,1fr)}@media(max-width:980px){.h-galeria-5{grid-template-columns:repeat(3,1fr)}}@media(max-width:620px){.h-galeria-5{grid-template-columns:1fr 1fr}.h-galeria-5 figure:first-child{grid-column:1/-1}}

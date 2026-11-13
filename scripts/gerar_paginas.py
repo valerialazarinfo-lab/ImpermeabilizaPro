@@ -73,12 +73,12 @@ def oferta(g, k):
 
 # ---------------------------------------------------------------- fotografias reais
 F = {
-    "gaia_largo": ("g-foto-real-20260915-162859.webp", "Terraço com acabamento mineral em obra nova"),
+    "gaia_largo": ("g-foto-real-20260915-162859.webp", "Vila Nova de Gaia: terraço de 440 m² com acabamento mineral"),
     "gaia_rolo": ("g-telhado-real-04.webp", "Primeira camada de tela em cobertura plana"),
-    "gaia_obra": ("g-foto-real-20260915-162840.webp", "Terraço em obra nova"),
-    "gaia_vista": ("g-foto-real-20260915-161005.webp", "Cobertura plana em obra de construção"),
-    "gaia_juntas": ("g-foto-real-20260915-161418.webp", "Sobreposição das faixas de tela"),
-    "gaia_remate": ("g-foto-real-20260915-161929.webp", "Remate junto à platibanda"),
+    "gaia_obra": ("g-foto-real-20260915-162840.webp", "Vila Nova de Gaia: terraço sobre garagem em obra nova"),
+    "gaia_vista": ("g-foto-real-20260915-161005.webp", "Vila Nova de Gaia: vista geral da obra"),
+    "gaia_juntas": ("g-foto-real-20260915-161418.webp", "Vila Nova de Gaia: sobreposição das faixas de tela"),
+    "gaia_remate": ("g-foto-real-20260915-161929.webp", "Vila Nova de Gaia: remate junto à platibanda"),
     "cobertura_mineral": ("g-obra-real-cobertura-02.webp", "Cobertura plana com acabamento mineral"),
     "cobertura_remates": ("g-telhado-real-01.webp", "Cobertura plana com remates laterais"),
     "cobertura_ralo": ("g-telhado-real-02.webp", "Cobertura com tela aplicada e remates"),
@@ -374,7 +374,7 @@ def pagina(slug, p):
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
-<link rel="stylesheet" href="/assets/b2b.css?v=20261113-3">
+<link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(crumbs, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
@@ -451,7 +451,7 @@ OBRAS = {
         ficha=[("Local", "Vila Nova de Gaia"), ("Área", "440 m²"), ("Tipo", "Terraço sobre garagem"), ("Sistema", "Duas camadas de tela asfáltica"), ("Acabamento", "Mineral em xisto")],
         texto=["Um terraço sobre garagem tem de aguentar água parada, variações de temperatura e, muitas vezes, passagem. Por isso usámos duas camadas de tela.",
                "A segunda camada tem acabamento mineral em xisto, que protege a tela do sol quando fica à vista."],
-        galeria=["gaia_largo", "gaia_rolo", "gaia_juntas", "gaia_remate"], sup="terraco"),
+        galeria=["gaia_largo", "gaia_obra", "gaia_vista", "gaia_juntas", "gaia_remate"], galeria_titulo="Fotografias da obra", sup="terraco"),
     "ericeira-terraco-cobertura-200m2": dict(
         titulo="Obra: Terraço de Cobertura na Ericeira, cerca de 200 m² | ImpermeabilizaPro",
         desc="Impermeabilização de um terraço de cobertura com cerca de 200 m² na Ericeira (Mafra): tela com fibra de vidro e acabamento mineral em xisto.",
@@ -520,7 +520,7 @@ def pagina_artigo(caminho, a, tipo):
         ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])
         corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" width="1200" height="675"></figure>'
                   f'<div><h2>Ficha da obra</h2><table class="price-table h-ficha"><tbody>{ficha}</tbody></table><div class="h-texto">{"".join(f"<p>{e(t)}</p>" for t in a["texto"])}</div></div></div></section>')
-        corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>Outras fotografias de obras semelhantes</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
+        corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>{e(a.get("galeria_titulo", "Outras fotografias de obras semelhantes"))}</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
     else:
         lds.append({"@context": "https://schema.org", "@type": "Article", "headline": a["h1"], "description": a["desc"], "url": url, "inLanguage": "pt-PT", "dateModified": HOJE,
                     "author": {"@type": "Person", "name": "Vinícius Nascimento"}, "publisher": {"@id": NEGOCIO_ID}, "image": f"{SITE}/assets/foto-real-20260915-162914.jpeg"})
@@ -583,7 +583,7 @@ def cabeca(titulo, desc, url, lds):
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="stylesheet" href="/style.css?v=20261113-limpo">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
-<link rel="stylesheet" href="/assets/b2b.css?v=20261113-3">
+<link rel="stylesheet" href="/assets/b2b.css?v=20261113-4">
 {"".join(f'<script type="application/ld+json">{json.dumps(l, ensure_ascii=False)}</script>' for l in lds)}
 </head>
 <body class="pagina-b2b">
