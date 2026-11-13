@@ -23,39 +23,8 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);
 gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",wait_for_update:500});
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Início","item":"https://impermeabilizapro.pt/"},{"@type":"ListItem","position":2,"name":"Calculadora","item":"https://impermeabilizapro.pt/calculadora/"}]}</script>
-<style>
-.calc-page .calc-hero{background:linear-gradient(135deg,#082540,#16476b);color:#fff;padding:46px 0 70px}
-.calc-page .calc-hero h1{font-size:clamp(1.9rem,4.2vw,2.9rem);line-height:1.12;margin:10px 0 12px;max-width:820px}
-.calc-page .calc-hero p{max-width:700px;color:#d7e7f3;line-height:1.6}
-.calc-page .calc-hero .eyebrow{color:#9fd3bf}
-.calc-wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;margin-top:-44px;align-items:start}
-.calc-card{background:#fff;border:1px solid #d9e2e9;border-radius:16px;padding:clamp(18px,3.5vw,32px);box-shadow:0 12px 35px #0a234014}
-.calc-steps{counter-reset:passo;display:grid;gap:18px}
-.calc-q{border:0;margin:0;padding:0}
-.calc-q legend,.calc-q>label{font-weight:750;color:#122943;margin-bottom:7px;display:block}
-.calc-q legend::before,.calc-q>label::before{counter-increment:passo;content:counter(passo) ". ";color:#0c7357}
-.calc-q small{display:block;color:#5b6d7c;font-weight:400;margin-top:3px;line-height:1.45}
-.calc-q select,.calc-q input{font:inherit;width:100%;min-height:48px;padding:11px 12px;border:1px solid #aebeca;border-radius:9px;background:#fff;color:#122943}
-.calc-q select:focus,.calc-q input:focus{outline:none;border-color:#16785a;box-shadow:0 0 0 3px #16785a33}
-.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.calc-min{background:#fff6e5;border:1px solid #efc775;border-radius:12px;padding:12px 14px;color:#5c3d00;font-size:.95rem;margin:0 0 18px}
-.calc-result{position:sticky;top:92px}
-.calc-result h2{font-size:1.25rem;margin:0 0 6px}
-.calc-big{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:850;color:#085e49;line-height:1.15;margin:12px 0 4px}
-.calc-sub{color:#33495c;margin:0 0 14px}
-.calc-table{width:100%;border-collapse:collapse;font-size:.93rem;margin:12px 0}
-.calc-table th,.calc-table td{padding:8px 4px;border-bottom:1px solid #e3e9ee;text-align:left}
-.calc-table td:last-child{text-align:right;white-space:nowrap}
-.calc-warn{border-left:4px solid #b67e19;background:#fff9ed;padding:12px 14px;border-radius:6px;margin:12px 0;line-height:1.5}
-.calc-stop{border-left-color:#b3261e;background:#fdeceb}
-.calc-legal{font-size:.84rem;color:#5b6d7c;line-height:1.5}
-.calc-actions{display:grid;gap:10px;margin-top:14px}
-.calc-actions .btn{text-align:center;justify-content:center}
-.calc-help{margin-top:26px}
-.calc-help ul{line-height:1.7;padding-left:20px}
-@media(max-width:900px){.calc-wrap{grid-template-columns:1fr}.calc-result{position:static}}
-@media(max-width:560px){.calc-row{grid-template-columns:1fr}.calc-page .calc-hero{padding:32px 0 62px}}
-</style>
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-4">
+<style>.calc-page .calc-hero{background:linear-gradient(135deg,#082540,#16476b);color:#fff;padding:40px 0 70px}.calc-page .calc-hero h1{font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.1;margin:8px 0 10px;color:#fff}.calc-page .calc-hero p{max-width:680px;color:#d7e7f3;line-height:1.55;margin:0}.calc-page .calc-hero .eyebrow{color:#9fd3bf}.calc-page .calc{max-width:760px;margin:-46px auto 0}.calc-help{max-width:760px;margin:26px auto 0;background:#fff;border:1px solid #dce4eb;border-radius:16px;padding:20px 24px}.calc-help ul{line-height:1.7;padding-left:20px}</style>
 </head>
 <body class="conversion-page calc-page" data-service="geral">
 <header class="header">
@@ -69,67 +38,23 @@ gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user
 </header>
 <div class="min-obra-bar" role="note" style="background:#fff6e5;border-bottom:1px solid #efc775;color:#5c3d00;font-size:.92rem;line-height:1.4;padding:8px 16px;text-align:center">Coberturas e áreas planas: obras a partir de <strong><span data-minimo-obra>100</span> m²</strong> · <a href="/calculadora/" style="color:#0a2340;font-weight:700">Calcule o preço por m² com IVA</a></div>
 <main id="conteudo">
-<section class="calc-hero">
-<div class="wrap">
-<p class="eyebrow">CALCULADORA · PREÇO POR M² COM IVA</p>
-<h1>Quanto custa impermeabilizar a sua obra?</h1>
-<p>Responda a 11 perguntas e veja logo um intervalo de preço por m² e o total, com IVA. É uma estimativa: o valor final é confirmado depois de vermos fotografias ou a obra.</p>
+<section class="calc-hero"><div class="wrap"><p class="eyebrow">CALCULADORA · PREÇO POR M²</p><h1>Quanto custa impermeabilizar a sua obra?</h1><p>Preço por m² e total, com ou sem IVA conforme o cliente. Coberturas e áreas planas a partir de <span data-minimo-obra>100</span> m².</p></div></section>
+<section class="section" style="padding-top:0"><div class="wrap">
+<div class="calc" data-calc data-modo="completo">
+<form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form>
+<div class="calc-res" data-calc-result aria-live="polite"></div>
+<div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a><a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a></div>
+<p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p>
+<noscript><p class="calc-aviso">A calculadora precisa de JavaScript. Ligue 930 446 198 ou use o WhatsApp.</p></noscript>
 </div>
-</section>
-<section class="section" style="padding-top:0">
-<div class="wrap calc-wrap">
-<form class="calc-card" id="calcForm" novalidate>
-<p class="calc-min"><strong>Mínimo de obra: <span data-minimo-obra>100</span> m²</strong> em coberturas, terraços e outras áreas planas. Não fazemos pequenas reparações. Se tiver várias zonas na mesma morada, some as áreas. Casas de banho são um serviço à parte, orçamentado após avaliação.</p>
-<div class="calc-steps">
-<div class="calc-q"><label for="superficie">Tipo de superfície</label><select id="superficie" name="superficie" required></select></div>
-<div class="calc-q"><label for="area">Área aproximada (m²)<small>Comprimento × largura. Se não souber, faça uma estimativa.</small></label><input id="area" name="area" type="number" inputmode="decimal" min="1" step="1" placeholder="Ex.: 150" required></div>
-<div class="calc-q"><label for="material">Material ou sistema<small>Se não souber, escolha «Não sei» e mostramos o intervalo das soluções possíveis.</small></label><select id="material" name="material" required></select></div>
-<div class="calc-row">
-<div class="calc-q"><label for="suporte">Estado do suporte</label><select id="suporte" name="suporte" required></select></div>
-<div class="calc-q"><label for="remocao">Remoção do sistema antigo</label><select id="remocao" name="remocao" required></select></div>
-</div>
-<div class="calc-q"><label for="acesso">Acessos e altura</label><select id="acesso" name="acesso" required></select></div>
-<div class="calc-row">
-<div class="calc-q"><label for="ralos">Número de ralos<small>Pontos de escoamento a tratar.</small></label><input id="ralos" name="ralos" type="number" inputmode="numeric" min="0" step="1" value="0"></div>
-<div class="calc-q"><label for="remates">Remates<small>Muretes, soleiras, tubos, caleiras, claraboias.</small></label><select id="remates" name="remates" required></select></div>
-</div>
-<div class="calc-row">
-<div class="calc-q"><label for="isolamento">Isolamento térmico</label><select id="isolamento" name="isolamento" required></select></div>
-<div class="calc-q"><label for="acabamento">Acabamento final</label><select id="acabamento" name="acabamento" required></select></div>
-</div>
-<div class="calc-row">
-<div class="calc-q"><label for="urgencia">Urgência</label><select id="urgencia" name="urgencia" required></select></div>
-<div class="calc-q"><label for="localizacao">Localização da obra</label><select id="localizacao" name="localizacao" required></select></div>
-</div>
-<div class="calc-q"><label for="localidade">Localidade<small>Opcional. Só serve para a mensagem de WhatsApp.</small></label><input id="localidade" name="localidade" maxlength="80" autocomplete="address-level2" placeholder="Ex.: Torres Vedras"></div>
-</div>
-<noscript><p class="calc-warn">A calculadora precisa de JavaScript. Pode pedir o orçamento pelo WhatsApp ou ligar para 930 446 198.</p></noscript>
-</form>
-<aside class="calc-card calc-result" id="resultado" aria-live="polite">
-<h2>A sua estimativa</h2>
-<div id="resultadoCorpo"><p class="calc-sub">Preencha a área e as perguntas. O resultado atualiza-se automaticamente.</p></div>
-<div class="calc-actions" id="acoes" hidden>
-<a class="btn whatsapp big" id="calcWa" data-placement="calculadora" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Enviar estimativa pelo WhatsApp</a>
-<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar 930 446 198</a>
-<p class="calc-legal">O WhatsApp abre com a mensagem preenchida. O pedido só nos chega quando carregar em <strong>Enviar</strong> na conversa. Pode juntar fotografias.</p>
-</div>
-<p class="calc-legal">Estimativa indicativa, não é um orçamento nem uma proposta vinculativa. IVA à taxa que a lei manda aplicar: por defeito a taxa normal (<span id="ivaTxt">23</span>%). Em obras de reparação ou conservação de habitações em que os materiais não passem de 20% do valor, a lei prevê 6% (verba 2.27 do CIVA); se for o seu caso, aplicamos no orçamento.</p>
-</aside>
-</div>
-<div class="wrap calc-help">
-<div class="calc-card">
-<h2>Como calculamos</h2>
-<ul>
-<li>Partimos de um preço por m² para cada material, já com material e mão de obra, e ajustamos ao tipo de superfície.</li>
-<li>Somamos o que costuma mudar o preço: preparação do suporte, remoção do sistema antigo, remates, ralos, isolamento e acabamento.</li>
-<li>Ajustamos aos acessos, à urgência e à distância a Sobral de Monte Agraço.</li>
-<li>Telhados de telha ou inclinados e trabalhos em grande altura não são feitos por nós: nesses casos a calculadora não dá preço.</li>
-<li>Quanto maior a obra, mais baixo tende a ser o preço por m². Por isso trabalhamos a partir de <span data-minimo-obra>100</span> m².</li>
-</ul>
-<p class="calc-legal">Os valores de referência estão numa tabela pública e editável (<a href="/calculadora/precos.csv">precos.csv</a>), com a origem de cada valor.</p>
-</div>
-</div>
-</section>
+<div class="calc-help"><h2>Como calculamos</h2><ul>
+<li>Preço por m² do material (com mão de obra), ajustado à superfície e às suas respostas.</li>
+<li>Quanto maior a área, mais baixo o preço por m².</li>
+<li>O intervalo é de ±10%; cada «Não sei» alarga-o um pouco.</li>
+<li>Empresas com IVA dedutível: autoliquidação, preço sem IVA. Condomínios e particulares: IVA à taxa legal (23%, ou 6% quando a lei o permite).</li>
+<li>Não fazemos pequenas reparações, telhados de telha nem trabalhos em grande altura.</li>
+</ul><p class="calc-legal">Tabela de valores de referência, com a origem de cada um: <a href="/calculadora/precos.csv">precos.csv</a>.</p></div>
+</div></section>
 </main>
 <footer>
 <div class="wrap footer-main">
@@ -143,105 +68,6 @@ gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user
 <div class="mobile-contact is-hidden" id="mobileContact"><a class="wa-direct" data-placement="mobile_sticky" href="https://wa.me/351930446198?text=Ol%C3%A1%2C%20gostaria%20de%20pedir%20uma%20avalia%C3%A7%C3%A3o%20para%20uma%20impermeabiliza%C3%A7%C3%A3o.%20A%20obra%20fica%20em%20%5Blocalidade%5D.%20Posso%20enviar%20fotografias." rel="noopener noreferrer" target="_blank">WhatsApp</a><a data-track="phone_mobile" href="tel:+351930446198">Ligar</a></div>
 <div aria-label="Preferências de cookies" class="cookie" id="cookie" role="region"><p>Usamos cookies de medição para perceber o desempenho do site e dos anúncios. <a href="/privacidade/">Saber mais</a></p><div><button id="essential" type="button">Só essenciais</button><button id="accept" type="button">Aceitar</button></div></div>
 <script defer src="/script.js?v=20261113-layout1"></script>
-<script type="module">
-import {lerPrecos, calcular, minimoObra} from '/calculadora/motor.mjs?v=20261113-3';
-const form = document.getElementById('calcForm');
-const corpo = document.getElementById('resultadoCorpo');
-const acoes = document.getElementById('acoes');
-const wa = document.getElementById('calcWa');
-const eur = (v, d = 0) => v.toLocaleString('pt-PT', {minimumFractionDigits: d, maximumFractionDigits: d}) + ' €';
-const intervalo = (o, d) => o.min === o.max ? eur(o.min, d) : eur(o.min, d) + ' a ' + eur(o.max, d);
-const el = (tag, attrs = {}, text = '') => { const e = document.createElement(tag); Object.assign(e, attrs); if (text) e.textContent = text; return e; };
-let tabela;
-try {
-  const resp = await fetch('/calculadora/precos.csv?v=20261113-3', {cache: 'no-cache'});
-  if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  tabela = lerPrecos(await resp.text());
-} catch (e) {
-  corpo.replaceChildren(el('p', {className: 'calc-warn calc-stop'}, 'Não foi possível carregar a tabela de preços. Peça a estimativa pelo WhatsApp ou ligue 930 446 198.'));
-  throw e;
-}
-document.getElementById('ivaTxt').textContent = tabela.config.iva_percentagem.min;
-document.querySelectorAll('[data-minimo-obra]').forEach((s) => { s.textContent = minimoObra(tabela); });
-for (const grupo of ['superficie', 'material', 'suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao']) {
-  const sel = form.elements[grupo];
-  sel.replaceChildren(el('option', {value: ''}, 'Selecione'));
-  for (const item of Object.values(tabela[grupo])) sel.append(el('option', {value: item.chave}, item.descricao));
-}
-// Respostas por defeito que não mudam o preço, para o visitante só ter de escolher o essencial.
-const defeitos = {material: 'nao_sei', acesso: 'facil', remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal'};
-for (const [k, v] of Object.entries(defeitos)) if (tabela[k]?.[v]) form.elements[k].value = v;
-const pre = new URLSearchParams(location.search);
-for (const k of ['superficie', 'area']) if (pre.get(k) && form.elements[k]) form.elements[k].value = pre.get(k);
-
-function linhaMensagem(r, d) {
-  const desc = (g) => tabela[g][d[g]]?.descricao || '—';
-  return ['Olá, fiz a estimativa na calculadora do site ImpermeabilizaPro.', '',
-    'Superfície: ' + desc('superficie'), 'Área: ' + d.area + ' m²', 'Material: ' + desc('material'),
-    'Suporte: ' + desc('suporte'), 'Remoção do sistema antigo: ' + desc('remocao'), 'Acessos: ' + desc('acesso'),
-    'Ralos: ' + (d.ralos || 0), 'Remates: ' + desc('remates'), 'Isolamento: ' + desc('isolamento'),
-    'Acabamento: ' + desc('acabamento'), 'Urgência: ' + desc('urgencia'), 'Localização: ' + desc('localizacao'),
-    'Localidade: ' + (d.localidade?.trim() || 'não indicada'), '',
-    r ? 'Estimativa do site: ' + intervalo(r.m2ComIva, 2) + '/m² · total ' + intervalo(r.totalComIva) + ' com IVA.' : '',
-    'Posso enviar fotografias.'].filter((l, i, a) => l !== '' || a[i - 1] !== '').join('\n');
-}
-function atualizar() {
-  const d = Object.fromEntries(new FormData(form));
-  acoes.hidden = true;
-  if (!d.area) { corpo.replaceChildren(el('p', {className: 'calc-sub'}, 'Indique a área aproximada para ver a estimativa.')); return; }
-  const r = calcular(d, tabela);
-  if (r.estado === 'abaixo_minimo') {
-    corpo.replaceChildren(
-      el('p', {className: 'calc-warn calc-stop'}, `A área indicada (${d.area} m²) está abaixo do nosso mínimo de obra de ${r.minimo} m². Não apresentamos estimativa para obras desta dimensão.`),
-      el('p', {className: 'calc-legal'}, `Se houver outras zonas a impermeabilizar na mesma morada (terraço, varanda, cave…), some as áreas: se o total chegar a ${r.minimo} m², a calculadora mostra o preço.`));
-    return;
-  }
-  if (r.estado === 'excluido') {
-    corpo.replaceChildren(el('p', {className: 'calc-warn calc-stop'}, r.motivo), el('p', {className: 'calc-legal'}, 'Trabalhamos em coberturas planas, terraços, varandas, caves, paredes e zonas interiores, sem trabalhos em grande altura.'));
-    return;
-  }
-  if (r.estado === 'invalido') {
-    const rotulo = r.falta ? form.querySelector(`label[for="${r.falta}"]`)?.firstChild?.textContent.trim() : '';
-    corpo.replaceChildren(el('p', {className: 'calc-warn'}, rotulo ? `Falta escolher: ${rotulo}.` : r.motivo));
-    return;
-  }
-  if (r.estado === 'avaliacao') {
-    corpo.replaceChildren(el('p', {className: 'calc-warn'}, r.motivo), el('p', {className: 'calc-legal'}, 'Envie-nos fotografias e dizemos-lhe se conseguimos fazer a obra e qual a solução.'));
-    wa.href = 'https://wa.me/351930446198?text=' + encodeURIComponent(linhaMensagem(null, d));
-    acoes.hidden = false;
-    return;
-  }
-  const tabelaRes = el('table', {className: 'calc-table'});
-  const linhas = [['Preço por m² sem IVA', intervalo(r.m2SemIva, 2)], ['Total sem IVA', intervalo(r.totalSemIva)], ['IVA (' + r.iva + '%)', 'incluído acima'], ['Área', r.area.toLocaleString('pt-PT') + ' m²']];
-  for (const [a, b] of linhas) { const tr = el('tr'); tr.append(el('th', {scope: 'row'}, a), el('td', {}, b)); tabelaRes.append(tr); }
-  const filhos = [
-    el('p', {className: 'calc-sub'}, 'Preço por m², com IVA'),
-    el('p', {className: 'calc-big'}, intervalo(r.m2ComIva, 2) + '/m²'),
-    el('p', {className: 'calc-sub'}, 'Total estimado com IVA: '),
-    el('p', {className: 'calc-big'}, intervalo(r.totalComIva)),
-    tabelaRes,
-  ];
-  for (const n of r.notas) filhos.push(el('p', {className: 'calc-warn'}, n));
-  corpo.replaceChildren(...filhos);
-  wa.href = 'https://wa.me/351930446198?text=' + encodeURIComponent(linhaMensagem(r, d));
-  acoes.hidden = false;
-}
-// Só mostra os materiais que usamos na superfície escolhida.
-function filtrarMateriais() {
-  const sup = tabela.superficie[form.elements.superficie.value];
-  const aceites = (sup?.regras || []).filter((r) => r.startsWith('materiais:')).flatMap((r) => r.slice(10).split('|'));
-  for (const o of form.elements.material.options) {
-    const ok = !o.value || o.value === 'nao_sei' || !aceites.length || aceites.includes(o.value);
-    o.hidden = !ok; o.disabled = !ok;
-  }
-  if (form.elements.material.selectedOptions[0]?.disabled) form.elements.material.value = 'nao_sei';
-}
-form.elements.superficie.addEventListener('change', filtrarMateriais);
-filtrarMateriais();
-form.addEventListener('input', atualizar);
-form.addEventListener('change', atualizar);
-form.addEventListener('submit', (e) => { e.preventDefault(); atualizar(); });
-atualizar();
-</script>
+<script type="module" src="/calculadora/widget.mjs?v=20261113-4"></script>
 </body>
 </html>

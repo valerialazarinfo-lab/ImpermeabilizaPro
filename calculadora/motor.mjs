@@ -1,16 +1,16 @@
 /*
- * Motor da calculadora de estimativas ImpermeabilizaPro.
- * Não contém preços: todos os valores vêm de precos.csv (fonte única).
- * Funciona no navegador (import) e em Node (testes: node --test calculadora/).
+ * Motor da calculadora ImpermeabilizaPro. Não contém preços: tudo vem de precos.csv (fonte única).
+ * Funciona no navegador (import) e em Node (testes: node --test calculadora/motor.test.mjs).
  *
- * Para o mínimo e para o máximo do intervalo:
- *   €/m² sem IVA = material × fator da superfície + soma das respostas em €/m²
- *   subtotal     = €/m² × área + ralos × €/ralo
- *   total s/ IVA = subtotal × produto de (1 + %) das respostas em %
- *   total c/ IVA = total s/ IVA × (1 + IVA)
+ * Cálculo (valor médio de cada linha = (min + max) / 2):
+ *   €/m²   = material × fator da superfície + soma das respostas em €/m²
+ *   total  = (€/m² × área × fator de escala + ralos × €/ralo) × produto de (1 + %)
+ *   intervalo = total × (1 ± margem); margem = base + extra por cada «Não sei» (até ao máximo)
+ *   IVA: empresa com IVA dedutível → autoliquidação (preço sem IVA); restantes → taxa legal.
  */
 
-export const PERGUNTAS = ['superficie', 'material', 'suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
+export const PERGUNTAS = ['cliente', 'superficie', 'material', 'suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
+const EXTRAS = ['suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
 
 /** Lê o CSV (separador «;», decimal com vírgula ou ponto, linhas começadas por «#» ignoradas). */
 export function lerPrecos(texto) {
@@ -22,7 +22,6 @@ export function lerPrecos(texto) {
     if (!linha || linha.startsWith('#')) continue;
     let cols = linha.split(';').map((c) => c.trim());
     if (!cab) { cab = cols; continue; }
-    // Um «;» dentro da última coluna (origem) não parte a linha.
     if (cols.length > cab.length) cols = [...cols.slice(0, cab.length - 1), cols.slice(cab.length - 1).join('; ')];
     const r = Object.fromEntries(cab.map((h, i) => [h, cols[i] ?? '']));
     if (!r.grupo || !r.chave) throw new Error('Linha sem grupo/chave: ' + linha);
@@ -33,20 +32,27 @@ export function lerPrecos(texto) {
     }
     (t[r.grupo] ||= {})[r.chave] = item;
   }
-  for (const k of ['minimo_obra_m2', 'iva_percentagem', 'area_maxima_m2', 'ralos_maximo']) {
+  for (const k of ['minimo_obra_m2', 'iva_percentagem', 'area_maxima_m2', 'ralos_maximo', 'margem_base_percentagem', 'margem_nao_sei_percentagem', 'margem_maxima_percentagem']) {
     if (!t.config?.[k]) throw new Error('Falta config;' + k + ' em precos.csv');
   }
   if (!t.extra?.ralo) throw new Error('Falta extra;ralo em precos.csv');
+  if (!t.escala) throw new Error('Falta o grupo escala em precos.csv');
   for (const g of PERGUNTAS) if (!t[g]) throw new Error('Falta o grupo ' + g + ' em precos.csv');
   return t;
 }
 
 export const minimoObra = (t) => t.config.minimo_obra_m2.min;
+const med = (i) => (i.min + i.max) / 2;
 const arred = (v, passo) => Math.round(v / passo) * passo;
+const cfg = (t, k) => t.config[k].min;
 
-/**
- * estado: 'preco' | 'abaixo_minimo' | 'avaliacao' | 'excluido' | 'invalido'
- */
+export function fatorEscala(area, t) {
+  let melhor = null;
+  for (const e of Object.values(t.escala)) if (area >= Number(e.chave) && (!melhor || Number(e.chave) > Number(melhor.chave))) melhor = e;
+  return melhor ? med(melhor) : 1;
+}
+
+/** estado: 'preco' | 'abaixo_minimo' | 'avaliacao' | 'excluido' | 'invalido' */
 export function calcular(entrada, t) {
   const area = Number(String(entrada.area ?? '').replace(',', '.'));
   const minimo = minimoObra(t);
@@ -55,10 +61,10 @@ export function calcular(entrada, t) {
     return { estado: 'avaliacao', motivo: 'As casas de banho e zonas interiores são um serviço à parte: o orçamento é feito depois de vermos fotografias. O mínimo de m² não se aplica.' };
   }
   if (sup?.regras.includes('excluido')) return { estado: 'excluido', motivo: `${sup.descricao}: este trabalho não é feito pela ImpermeabilizaPro.` };
-  if (!Number.isFinite(area) || area <= 0) return { estado: 'invalido', motivo: 'Indique a área aproximada em m².' };
+  if (!Number.isFinite(area) || area <= 0) return { estado: 'invalido', falta: 'area', motivo: 'Indique a área aproximada em m².' };
   if (area < minimo) return { estado: 'abaixo_minimo', minimo, motivo: `O mínimo de obra é ${minimo} m².` };
-  if (area > t.config.area_maxima_m2.min) {
-    return { estado: 'avaliacao', motivo: `Para áreas acima de ${t.config.area_maxima_m2.min.toLocaleString('pt-PT')} m² preparamos sempre um orçamento à medida.` };
+  if (area > cfg(t, 'area_maxima_m2')) {
+    return { estado: 'avaliacao', motivo: `Para áreas acima de ${cfg(t, 'area_maxima_m2').toLocaleString('pt-PT')} m² preparamos sempre uma proposta à medida.` };
   }
 
   const esc = {};
@@ -74,45 +80,52 @@ export function calcular(entrada, t) {
   }
   const ralosTxt = String(entrada.ralos ?? '').trim();
   const ralos = ralosTxt === '' ? 0 : Number(ralosTxt);
-  if (!Number.isInteger(ralos) || ralos < 0) return { estado: 'invalido', motivo: 'Indique o número de ralos (0 se não houver).' };
-  if (ralos > t.config.ralos_maximo.min) return { estado: 'avaliacao', motivo: 'Muitos ralos ou pontos de escoamento: precisamos de ver a obra.' };
+  if (!Number.isInteger(ralos) || ralos < 0) return { estado: 'invalido', falta: 'ralos', motivo: 'Indique o número de ralos (0 se não houver).' };
+  if (ralos > cfg(t, 'ralos_maximo')) return { estado: 'avaliacao', motivo: 'Muitos ralos ou pontos de escoamento: precisamos de ver a obra.' };
 
   const aceites = esc.superficie.regras.filter((r) => r.startsWith('materiais:')).flatMap((r) => r.slice(10).split('|'));
-  let mat = esc.material;
-  if (mat.chave === 'nao_sei') {
+  let matMed;
+  if (esc.material.chave === 'nao_sei') {
     const op = aceites.map((k) => t.material[k]).filter(Boolean);
     if (!op.length) return { estado: 'avaliacao', motivo: 'Precisamos de ver a obra para indicar a solução.' };
-    mat = { min: Math.min(...op.map((o) => o.min)), max: Math.max(...op.map((o) => o.max)) };
-  } else if (aceites.length && !aceites.includes(mat.chave)) {
-    return { estado: 'invalido', motivo: `${mat.descricao} não é a solução que usamos em ${esc.superficie.descricao.toLowerCase()}. Escolha outro material ou «Não sei».` };
+    matMed = (Math.min(...op.map((o) => o.min)) + Math.max(...op.map((o) => o.max))) / 2;
+  } else if (aceites.length && !aceites.includes(esc.material.chave)) {
+    return { estado: 'invalido', falta: 'material', motivo: `${esc.material.descricao} não é a solução que usamos em ${esc.superficie.descricao.toLowerCase()}. Escolha outro material ou «Não sei».` };
+  } else {
+    matMed = med(esc.material);
   }
 
-  const extrasM2 = PERGUNTAS.slice(2).map((g) => esc[g]).filter((i) => i.unidade === '€/m²');
-  const pct = PERGUNTAS.slice(2).map((g) => esc[g]).filter((i) => i.unidade === '%');
-  const iva = t.config.iva_percentagem.min;
-  const lado = (l) => {
-    const m2 = mat[l] * esc.superficie[l] + extrasM2.reduce((s, i) => s + i[l], 0);
-    const fator = pct.reduce((f, i) => f * (1 + i[l] / 100), 1);
-    const semIva = (m2 * area + ralos * t.extra.ralo[l]) * fator;
-    return { semIva, comIva: semIva * (1 + iva / 100) };
-  };
-  const a = lado('min');
-  const b = lado('max');
+  const extras = EXTRAS.map((g) => esc[g]);
+  const porM2 = matMed * med(esc.superficie) + extras.filter((i) => i.unidade === '€/m²').reduce((s, i) => s + med(i), 0);
+  const fator = extras.filter((i) => i.unidade === '%').reduce((f, i) => f * (1 + med(i) / 100), 1);
+  const escala = fatorEscala(area, t);
+  const semIva = (porM2 * area * escala + ralos * med(t.extra.ralo)) * fator;
+
+  const naoSei = PERGUNTAS.filter((g) => esc[g].regras.includes('nao_sei')).length;
+  const margem = Math.min(cfg(t, 'margem_maxima_percentagem'), cfg(t, 'margem_base_percentagem') + naoSei * cfg(t, 'margem_nao_sei_percentagem')) / 100;
+  const autoliquidacao = esc.cliente.regras.includes('autoliquidacao');
+  const iva = autoliquidacao ? 0 : cfg(t, 'iva_percentagem');
+  const m2 = (v) => ({ min: Math.round((v * (1 - margem)) / area), max: Math.round((v * (1 + margem)) / area) });
+  const tot = (v) => ({ min: arred(v * (1 - margem), 50), max: arred(v * (1 + margem), 50) });
   return {
     estado: 'preco',
     area,
     ralos,
     iva,
-    m2SemIva: { min: arred(a.semIva / area, 0.5), max: arred(b.semIva / area, 0.5) },
-    m2ComIva: { min: arred(a.comIva / area, 0.5), max: arred(b.comIva / area, 0.5) },
-    totalSemIva: { min: arred(a.semIva, 10), max: arred(b.semIva, 10) },
-    totalComIva: { min: arred(a.comIva, 10), max: arred(b.comIva, 10) },
-    notas: PERGUNTAS.map((g) => esc[g]).filter((i) => i.regras.includes('nota')).map((i) => notaDe(i)),
+    autoliquidacao,
+    margem: Math.round(margem * 100),
+    naoSei,
+    escala,
+    m2SemIva: m2(semIva),
+    m2ComIva: m2(semIva * (1 + iva / 100)),
+    totalSemIva: tot(semIva),
+    totalComIva: tot(semIva * (1 + iva / 100)),
+    notas: PERGUNTAS.map((g) => esc[g]).filter((i) => i.regras.includes('nota')).map(notaDe),
   };
 }
 
 function notaDe(i) {
-  if (i.chave === 'nao_sei') return `${i.grupo === 'suporte' ? 'Estado do suporte' : 'Remoção'} por confirmar: o intervalo está alargado até vermos fotografias.`;
+  if (i.chave === 'nao_sei') return `${i.grupo === 'suporte' ? 'Estado do suporte' : 'Remoção do sistema antigo'} por confirmar: com fotografias o intervalo fica mais estreito.`;
   if (i.chave === 'ceramico_novo') return 'O pavimento cerâmico novo não está incluído: é orçamentado à parte.';
   if (i.chave === 'levantar_ceramico') return 'Inclui levantar o pavimento existente, não a colocação de pavimento novo.';
   if (i.chave === 'urgente') return 'Com água a entrar, pode ser preciso localizar a origem antes de impermeabilizar.';

@@ -1,22 +1,45 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { lerPrecos, calcular, minimoObra } from './motor.mjs';
+import { lerPrecos, calcular, minimoObra, fatorEscala } from './motor.mjs';
 
 const csv = readFileSync(new URL('./precos.csv', import.meta.url), 'utf8');
 const t = lerPrecos(csv);
-const base = { superficie: 'cobertura_plana', area: 150, material: 'tela_2', suporte: 'bom', remocao: 'nenhuma', acesso: 'facil', ralos: 2, remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal', localizacao: 'zona_base' };
+const base = { cliente: 'condominio', superficie: 'cobertura_plana', area: 150, material: 'tela_2', suporte: 'bom', remocao: 'nenhuma', acesso: 'facil', ralos: 2, remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal', localizacao: 'zona_base' };
 
 test('mínimo de obra lido do CSV', () => assert.equal(minimoObra(t), 100));
 
-test('caso base: 150 m² de cobertura com tela dupla', () => {
+test('caso base: intervalo estreito (±10%) com IVA para condomínio', () => {
   const r = calcular(base, t);
   assert.equal(r.estado, 'preco');
-  // (30+2)×150 + 2×40 = 4880 ; (42+4)×150 + 2×90 = 7080 ; ×1,23
-  assert.deepEqual(r.totalSemIva, { min: 4880, max: 7080 });
-  assert.deepEqual(r.totalComIva, { min: 6000, max: 8710 });
-  assert.ok(r.m2ComIva.min < r.m2ComIva.max);
+  // médio: (36 + 3) €/m² × 150 + 2 × 65 = 5980 € s/IVA
+  assert.equal(r.margem, 10);
+  assert.deepEqual(r.totalSemIva, { min: 5400, max: 6600 });
   assert.equal(r.iva, 23);
+  assert.deepEqual(r.m2ComIva, { min: 44, max: 54 });
+  assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 12, 'intervalo por m² estreito');
+});
+
+test('empresa: autoliquidação, preço sem IVA', () => {
+  const r = calcular({ ...base, cliente: 'empresa' }, t);
+  assert.equal(r.autoliquidacao, true);
+  assert.equal(r.iva, 0);
+  assert.deepEqual(r.m2ComIva, r.m2SemIva);
+});
+
+test('«Não sei» alarga a margem', () => {
+  const r = calcular({ ...base, material: 'nao_sei', suporte: 'nao_sei', remocao: 'nao_sei' }, t);
+  assert.equal(r.margem, 20);
+  assert.equal(r.naoSei, 3);
+});
+
+test('economia de escala: €/m² desce com a área', () => {
+  const a = calcular({ ...base, area: 150 }, t).m2SemIva.max;
+  const b = calcular({ ...base, area: 600 }, t).m2SemIva.max;
+  const c = calcular({ ...base, area: 2000 }, t).m2SemIva.max;
+  assert.ok(a > b && b > c, `${a} > ${b} > ${c}`);
+  assert.equal(fatorEscala(99, t), 1);
+  assert.equal(fatorEscala(1000, t), 0.82);
 });
 
 test('abaixo do mínimo não dá preço', () => {
@@ -39,6 +62,12 @@ test('área inválida, vazia ou negativa', () => {
 
 test('aceita vírgula decimal', () => assert.equal(calcular({ ...base, area: '120,5' }, t).estado, 'preco'));
 
+test('falta o tipo de cliente: indica a pergunta', () => {
+  const r = calcular({ ...base, cliente: '' }, t);
+  assert.equal(r.estado, 'invalido');
+  assert.equal(r.falta, 'cliente');
+});
+
 test('telhado inclinado e grande altura: excluídos', () => {
   assert.equal(calcular({ ...base, superficie: 'telhado_inclinado' }, t).estado, 'excluido');
   assert.equal(calcular({ ...base, acesso: 'grande_altura' }, t).estado, 'excluido');
@@ -57,13 +86,6 @@ test('casa de banho: serviço à parte, sem preço e sem mínimo', () => {
   const r = calcular({ ...base, superficie: 'casa_banho', area: 8 }, t);
   assert.equal(r.estado, 'avaliacao');
   assert.match(r.motivo, /serviço à parte/);
-});
-
-test('«Não sei» usa o intervalo dos materiais aceites', () => {
-  const r = calcular({ ...base, material: 'nao_sei' }, t);
-  const tela1 = calcular({ ...base, material: 'tela_1' }, t);
-  const tela2 = calcular({ ...base, material: 'tela_2' }, t);
-  assert.ok(r.totalSemIva.min <= tela1.totalSemIva.min && r.totalSemIva.max >= tela2.totalSemIva.max);
 });
 
 test('cada agravamento sobe o preço', () => {

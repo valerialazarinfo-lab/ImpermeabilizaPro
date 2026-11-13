@@ -1,0 +1,25 @@
+/* Calculadora (página inicial e /calculadora/) */
+.calc{background:#fff;color:#122943;border-radius:18px;box-shadow:0 22px 50px #04152a40;padding:clamp(18px,3vw,28px);display:grid;gap:16px}
+.calc h2{font-size:1.25rem;margin:0;color:#0a2340}
+.calc-grelha{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.calc-campo{display:flex;flex-direction:column;gap:5px;min-width:0}
+.calc-campo label{font-weight:750;font-size:.9rem}
+.calc-campo small{display:block;font-weight:400;color:#5b6d7c;font-size:.78rem;margin-top:2px}
+.calc-campo select,.calc-campo input{font:inherit;font-size:1rem;width:100%;min-height:46px;padding:9px 11px;border:1px solid #aebeca;border-radius:9px;background:#fff;color:#122943}
+.calc-campo select:focus,.calc-campo input:focus{outline:none;border-color:#16785a;box-shadow:0 0 0 3px #16785a33}
+.calc-afinar{border-top:1px solid #e1e8ee;padding-top:10px}
+.calc-afinar summary{cursor:pointer;font-weight:750;color:#0c7357;padding:6px 0}
+.calc-afinar .calc-grelha{margin-top:10px}
+.calc-res{background:#f2f8f6;border:1px solid #b5d4c9;border-radius:14px;padding:16px 18px;min-height:110px}
+.calc-rotulo{margin:0;font-size:.85rem;color:#33495c;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.calc-m2{margin:4px 0 0;font-size:clamp(1.9rem,4.5vw,2.6rem);font-weight:850;color:#085e49;line-height:1.1}
+.calc-iva{margin:2px 0 10px;color:#33495c;font-size:.9rem}
+.calc-linhas p{display:flex;justify-content:space-between;gap:10px;margin:0;padding:7px 0;border-top:1px solid #d5e6df;font-size:.95rem}
+.calc-nota{font-size:.82rem;color:#4a5e6f;margin:8px 0 0;line-height:1.45}
+.calc-vazio{margin:0;color:#33495c}
+.calc-aviso{border-left:4px solid #b67e19;background:#fff9ed;padding:10px 12px;border-radius:6px;margin:0;line-height:1.45}
+.calc-stop{border-left-color:#b3261e;background:#fdeceb}
+.calc-acoes{display:grid;grid-template-columns:1fr auto;gap:10px}
+.calc-acoes .btn{justify-content:center;text-align:center}
+.calc-legal{font-size:.78rem;color:#5b6d7c;margin:0;line-height:1.45}
+@media(max-width:560px){.calc-grelha{grid-template-columns:1fr}.calc-acoes{grid-template-columns:1fr}}
