@@ -73,9 +73,9 @@ def oferta(g, k):
 
 # ---------------------------------------------------------------- fotografias reais
 F = {
-    "gaia_largo": ("g-foto-real-20260915-162859.webp", "Terraço de 440 m² em Vila Nova de Gaia, acabamento mineral"),
+    "gaia_largo": ("g-foto-real-20260915-162859.webp", "Terraço com acabamento mineral em obra nova"),
     "gaia_rolo": ("g-telhado-real-04.webp", "Primeira camada de tela em cobertura plana"),
-    "gaia_obra": ("g-foto-real-20260915-162840.webp", "Terraço em obra nova, Vila Nova de Gaia"),
+    "gaia_obra": ("g-foto-real-20260915-162840.webp", "Terraço em obra nova"),
     "gaia_vista": ("g-foto-real-20260915-161005.webp", "Cobertura plana em obra de construção"),
     "gaia_juntas": ("g-foto-real-20260915-161418.webp", "Sobreposição das faixas de tela"),
     "gaia_remate": ("g-foto-real-20260915-161929.webp", "Remate junto à platibanda"),
@@ -372,7 +372,7 @@ def pagina(slug, p):
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20260919-local4">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
-<link rel="stylesheet" href="/assets/b2b.css?v=20261113-2">
+<link rel="stylesheet" href="/assets/b2b.css?v=20261113-3">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(crumbs, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
@@ -401,7 +401,7 @@ def tabela_home():
 
 
 def sitemap():
-    urls = ["", "calculadora/"] + [f"{s}/" for s in PAGINAS]
+    urls = ["", "calculadora/"] + [f"{s}/" for s in PAGINAS] + ["obras/"] + [f"obras/{s}/" for s in OBRAS] + ["guias/"] + [f"guias/{s}/" for s in GUIAS]
     corpo = "".join(f"  <url><loc>{SITE}/{u}</loc><lastmod>{HOJE}</lastmod></url>\n" for u in urls)
     (RAIZ / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{corpo}</urlset>\n', encoding="utf-8")
 
@@ -427,15 +427,183 @@ def llms():
 ## Páginas
 - [Calculadora de preço por m²]({SITE}/calculadora/)
 - [Preços de impermeabilização por m²]({SITE}/precos-impermeabilizacao/)
-""" + "\n".join(f"- [{p['h1']}]({SITE}/{s}/)" for s, p in PAGINAS.items() if s != "precos-impermeabilizacao") + "\n"
+""" + "\n".join(f"- [{p['h1']}]({SITE}/{s}/)" for s, p in PAGINAS.items() if s != "precos-impermeabilizacao") + "\n\n## Obras reais\n" + "\n".join(f"- [{a['h1']}]({SITE}/obras/{s}/): " + "; ".join(f"{k}: {v}" for k, v in a["ficha"]) for s, a in OBRAS.items()) + "\n\n## Guias\n" + "\n".join(f"- [{a['h1']}]({SITE}/guias/{s}/): {a['resumo']}" for s, a in GUIAS.items()) + "\n"
     (RAIZ / "llms.txt").write_text(txt, encoding="utf-8")
 
+
+
+# ---------------------------------------------------------------- obras reais e guias
+OBRAS = {
+    "aroeira-paredes-enterradas": dict(
+        titulo="Obra: Paredes Enterradas na Aroeira, mais de 3.000 m² | ImpermeabilizaPro",
+        desc="Impermeabilização de mais de 3.000 m² de paredes enterradas na Aroeira, com tela Imperalum com armadura em poliéster.",
+        h1="Paredes enterradas na Aroeira", img="caso-aroeira-3000m2.webp",
+        ficha=[("Local", "Aroeira"), ("Área", "Mais de 3.000 m²"), ("Tipo", "Paredes enterradas"), ("Sistema", "Tela Imperalum com armadura em poliéster"), ("Estado", "Em execução")],
+        texto=["Obra nova com grande área de paredes em contacto com o terreno. A tela é aplicada antes do aterro, no planeamento da construtora.",
+               "Numa parede enterrada, a água vem do terreno e exerce pressão: a impermeabilização tem de ser contínua, bem soldada nas sobreposições e rematada junto à fundação."],
+        galeria=["parede_maquina", "parede_imperalum", "parede_fundacao"], sup="cave"),
+    "gaia-terraco-garagem-440m2": dict(
+        titulo="Obra: Terraço sobre Garagem em Vila Nova de Gaia, 440 m² | ImpermeabilizaPro",
+        desc="Impermeabilização de um terraço sobre garagem com 440 m² em Vila Nova de Gaia: duas camadas de tela e acabamento mineral em xisto.",
+        h1="Terraço sobre garagem em Vila Nova de Gaia", img="caso-gaia-440m2.webp",
+        ficha=[("Local", "Vila Nova de Gaia"), ("Área", "440 m²"), ("Tipo", "Terraço sobre garagem"), ("Sistema", "Duas camadas de tela asfáltica"), ("Acabamento", "Mineral em xisto")],
+        texto=["Um terraço sobre garagem tem de aguentar água parada, variações de temperatura e, muitas vezes, passagem. Por isso usámos duas camadas de tela.",
+               "A segunda camada tem acabamento mineral em xisto, que protege a tela do sol quando fica à vista."],
+        galeria=["gaia_largo", "gaia_rolo", "gaia_juntas", "gaia_remate"], sup="terraco"),
+    "ericeira-terraco-cobertura-200m2": dict(
+        titulo="Obra: Terraço de Cobertura na Ericeira, cerca de 200 m² | ImpermeabilizaPro",
+        desc="Impermeabilização de um terraço de cobertura com cerca de 200 m² na Ericeira (Mafra): tela com fibra de vidro e acabamento mineral em xisto.",
+        h1="Terraço de cobertura na Ericeira", img="caso-ericeira-200m2.webp",
+        ficha=[("Local", "Ericeira (Mafra)"), ("Área", "Cerca de 200 m²"), ("Tipo", "Terraço de cobertura"), ("Sistema", "Tela com armadura em fibra de vidro"), ("Acabamento", "Mineral em xisto")],
+        texto=["Junto ao mar, o vento e a maresia desgastam mais depressa as superfícies expostas. O acabamento mineral protege a tela do sol e do desgaste.",
+               "Num terraço comprido com platibandas, os remates laterais são a parte mais importante: é por aí que a água entra mais vezes."],
+        galeria=["cobertura_remates", "cobertura_ralo", "murete"], sup="terraco"),
+}
+
+GUIAS = {
+    "tela-asfaltica-ou-membrana-liquida": dict(
+        titulo="Tela Asfáltica ou Membrana Líquida: Qual Escolher? | ImpermeabilizaPro",
+        desc="Tela asfáltica ou membrana líquida numa cobertura plana ou terraço: diferenças, quando usar cada uma e preço por m².",
+        h1="Tela asfáltica ou membrana líquida: qual escolher?", sup="cobertura_plana",
+        resumo="Em coberturas planas e terraços grandes, a tela asfáltica em duas camadas é normalmente a opção mais económica e robusta. A membrana líquida compensa quando há muitos remates, equipamentos ou formas irregulares.",
+        secoes=[("Tela asfáltica", ["Rolos de betume modificado com armadura (poliéster ou fibra de vidro), soldados a maçarico, em uma ou duas camadas.", "Boa em áreas grandes e regulares. Com acabamento mineral pode ficar à vista; sem acabamento, precisa de proteção."]),
+                ("Membrana líquida", ["Produto aplicado a rolo, trincha ou projeção, que forma uma película contínua sem juntas.", "Boa em superfícies com muitos tubos, maciços, caleiras ou claraboias, onde soldar tela à volta de cada ponto é demorado."]),
+                ("O que pesa mais do que o material", ["Preparação da superfície, remoção do sistema antigo, pendentes e remates. Um bom material mal rematado infiltra.", "A durabilidade depende do produto concreto: peça sempre a ficha técnica do sistema proposto."])],
+        precos=[("material", "tela_1"), ("material", "tela_2"), ("material", "membrana_liquida")],
+        faq=[("Posso aplicar membrana líquida sobre tela antiga?", "Depende do estado e da compatibilidade dos produtos. Se a tela antiga estiver descolada ou com bolhas, tem de ser removida."), ("Qual dura mais?", "Depende do produto, da espessura e da exposição. Compare as fichas técnicas dos sistemas propostos.")]),
+    "impermeabilizar-terraco-condominio": dict(
+        titulo="Impermeabilizar o Terraço do Condomínio: Quem Paga e Como Aprovar",
+        desc="O terraço de cobertura é parte comum do prédio. Quem paga a impermeabilização, como aprovar em assembleia e o que pedir nas propostas.",
+        h1="Impermeabilizar o terraço do condomínio: quem paga e como aprovar", sup="terraco", cliente="condominio",
+        resumo="O terraço de cobertura é parte comum do prédio, mesmo quando só uma fração o usa. A obra é normalmente decidida em assembleia e paga pelos condóminos na proporção da permilagem, com exceções.",
+        secoes=[("O terraço é parte comum", ["O Código Civil considera partes comuns «o telhado ou os terraços de cobertura, ainda que destinados ao uso de qualquer fração» (art. 1421.º, n.º 1, alínea b))."]),
+                ("Quem paga", ["As despesas de conservação das partes comuns são pagas pelos condóminos na proporção do valor das frações (art. 1424.º, n.º 1).", "Há regras próprias para partes comuns que servem só alguns condóminos (art. 1424.º, n.º 3). Em caso de dúvida, confirme com a administração ou um jurista."]),
+                ("Urgências", ["Reparações indispensáveis e urgentes podem ser feitas por iniciativa de qualquer condómino quando o administrador não o faça (art. 1427.º)."]),
+                ("Como preparar a assembleia", ["Fotografias e descrição das infiltrações.", "Duas ou três propostas comparáveis: mesma área, mesmo sistema, mesmos remates.", "Preço por m² e total com IVA, prazo, condições de pagamento e garantia escrita."])],
+        precos=[("material", "tela_2"), ("remocao", "tela_antiga"), ("acesso", "escadas")],
+        faq=[("O condómino do último andar paga tudo?", "Em regra não: o terraço de cobertura é parte comum. Há exceções para partes de uso exclusivo; confirme com a administração."), ("Que IVA se aplica?", "A taxa legal: 23%, ou 6% em obras de reparação em habitação quando a lei o permite.")]),
+    "comparar-orcamentos-impermeabilizacao": dict(
+        titulo="Como Comparar Orçamentos de Impermeabilização (Checklist)",
+        desc="O que deve constar num orçamento de impermeabilização para comparar propostas: área, sistema, remoção, remates, acabamento, prazo, garantia e IVA.",
+        h1="Como comparar orçamentos de impermeabilização", sup=None,
+        resumo="Dois orçamentos só são comparáveis se tiverem a mesma área, o mesmo sistema e os mesmos trabalhos incluídos. Use esta lista antes de decidir.",
+        secoes=[("O que tem de estar escrito", ["Área medida em m² e como foi medida.", "Sistema e produto: tela de uma ou duas camadas, membrana líquida ou cimentícia, com marca e ficha técnica.", "Preparação: limpeza, regularização, primário e remoção do sistema antigo.", "Ralos, remates, platibandas, soleiras e juntas incluídos.", "Acabamento: mineral, pintura UV, proteção pesada ou pavimento.", "Prazo, condições de pagamento, garantia escrita e IVA."]),
+                ("Sinais de alerta", ["Preço por m² muito abaixo sem explicar a preparação.", "Proposta sem marca nem sistema.", "Remates e ralos «a orçamentar depois»."])],
+        precos=[("material", "tela_1"), ("material", "tela_2"), ("material", "membrana_liquida")],
+        faq=[("Porque é que os preços variam tanto?", "Sobretudo pela preparação, remoção do sistema antigo, remates e acessos, não tanto pelo material."), ("Vale a pena a proposta mais barata?", "Só se incluir o mesmo que as outras. Compare linha a linha.")]),
+    "paredes-enterradas-obra-nova": dict(
+        titulo="Impermeabilização de Paredes Enterradas em Obra Nova: Quando e Como",
+        desc="Quando impermeabilizar paredes enterradas numa obra nova, que sistema usar e o que coordenar com a construtora antes do aterro.",
+        h1="Paredes enterradas em obra nova: quando e como impermeabilizar", sup="cave", cliente="empresa",
+        resumo="A impermeabilização de paredes enterradas faz-se pelo lado de fora, depois da betonagem e antes do aterro. Depois do aterro, a reparação é muito mais cara.",
+        secoes=[("Quando", ["Com as paredes betonadas e secas, antes do aterro.", "Combinar com a construtora a sequência: impermeabilização, proteção e drenagem, aterro."]),
+                ("Como", ["Limpeza e regularização da parede, primário e tela asfáltica com armadura em poliéster, soldada a maçarico, com sobreposições.", "Remate no encontro com a fundação e nas juntas de betonagem.", "Proteção da tela antes do aterro, para não ser danificada."]),
+                ("Drenagem", ["Em terrenos com água, a impermeabilização é complementada por drenagem junto à fundação, definida no projeto."])],
+        precos=[("material", "tela_1"), ("material", "tela_2")],
+        faq=[("Uma ou duas camadas?", "Depende do projeto e da presença de água no terreno. Em zonas com água sob pressão usa-se normalmente sistema reforçado."), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material.")]),
+}
+
+
+def pagina_artigo(caminho, a, tipo):
+    url = f"{SITE}/{caminho}/"
+    crumbs_nome, crumbs_url = ("Obras", "/obras/") if tipo == "obra" else ("Guias", "/guias/")
+    crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Início", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": crumbs_nome, "item": SITE + crumbs_url},
+        {"@type": "ListItem", "position": 3, "name": a["h1"], "item": url}]}
+    lds = [crumbs]
+    corpo = ""
+    if tipo == "obra":
+        lds.append({"@context": "https://schema.org", "@type": "WebPage", "name": a["h1"], "url": url, "description": a["desc"], "image": f"{SITE}/assets/{a['img']}",
+                    "about": {"@type": "Service", "serviceType": "Impermeabilização", "provider": {"@id": NEGOCIO_ID}}})
+        ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])
+        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" width="1200" height="675"></figure>'
+                  f'<div><h2>Ficha da obra</h2><table class="price-table h-ficha"><tbody>{ficha}</tbody></table><div class="h-texto">{"".join(f"<p>{e(t)}</p>" for t in a["texto"])}</div></div></div></section>')
+        corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>Outras fotografias de obras semelhantes</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
+    else:
+        lds.append({"@context": "https://schema.org", "@type": "Article", "headline": a["h1"], "description": a["desc"], "url": url, "inLanguage": "pt-PT", "dateModified": HOJE,
+                    "author": {"@type": "Person", "name": "Vinícius Nascimento"}, "publisher": {"@id": NEGOCIO_ID}, "image": f"{SITE}/assets/foto-real-20260915-162914.jpeg"})
+        lds.append({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in a["faq"]]})
+        sec = "".join(f'<h2>{e(t)}</h2>' + (f'<ul>{"".join(f"<li>{e(x)}</li>" for x in ps)}</ul>' if len(ps) > 1 else f"<p>{e(ps[0])}</p>") for t, ps in a["secoes"])
+        tab = f'<h2>Preço por m² (referência)</h2>{tabela_precos(a["precos"])}' if com_fonte(a["precos"]) else ""
+        faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(r)}</p></details>" for q, r in a["faq"])
+        corpo += (f'<section class="h-sec"><div class="wrap narrow h-artigo"><p class="h-resumo"><strong>Resumo:</strong> {e(a["resumo"])}</p>{sec}{tab}'
+                  f'<p class="calc-legal">Atualizado em {HOJE}. Informação geral; não substitui o projeto nem aconselhamento jurídico.</p></div></section>'
+                  f'<section class="h-sec soft h-faq"><div class="wrap narrow"><h2>Perguntas frequentes</h2>{faq}</div></section>')
+    attrs = (f' data-superficie="{a["sup"]}"' if a.get("sup") else "") + (f' data-cliente="{a["cliente"]}"' if a.get("cliente") else "")
+    calc = (f'<section class="h-sec" id="pedido"><div class="wrap"><div class="calc" data-calc data-modo="rapido"{attrs} style="max-width:760px;margin:0 auto"><h2>{"Tem uma obra semelhante? Veja o preço por m²" if tipo == "obra" else "Quanto custaria na sua obra?"}</h2>'
+            f'<form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form><div class="calc-res" data-calc-result aria-live="polite"></div>'
+            f'<div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_{tipo}" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
+            f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div>'
+            f'<p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p></div></div></section>')
+    outros = OBRAS if tipo == "obra" else GUIAS
+    links = "".join(f'<a href="/{"obras" if tipo == "obra" else "guias"}/{s}/">{e(o["h1"])}</a>' for s, o in outros.items() if f"/{s}" not in caminho)
+    corpo += calc + f'<section class="h-sec soft"><div class="wrap"><h2 style="font-size:1.2rem">{"Outras obras" if tipo == "obra" else "Outros guias"}</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Serviços</h2><div class="h-links">{"".join(f"<a href=\"{u}\">{e(t)}</a>" for u, t in LINKS_SERV)}</div></div></section>'
+    hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
+            f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
+            f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
+    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-7\"></script>\n</body>\n</html>\n"
+
+
+def pagina_indice(tipo):
+    itens = OBRAS if tipo == "obra" else GUIAS
+    base = "obras" if tipo == "obra" else "guias"
+    h1 = "Obras reais" if tipo == "obra" else "Guias de impermeabilização"
+    desc = ("Obras de impermeabilização realizadas: paredes enterradas, terraços e coberturas, com área, sistema e fotografias reais." if tipo == "obra"
+            else "Guias práticos para construtoras e condomínios: escolher o sistema, comparar orçamentos, aprovar a obra em assembleia.")
+    url = f"{SITE}/{base}/"
+    cards = ""
+    for s, a in itens.items():
+        img = a.get("img") or "g-foto-real-20260915-162859.webp"
+        w, h = (1200, 675) if img.startswith("caso-") else (600, 450)
+        cards += f'<a class="h-servico" href="/{base}/{s}/"><img src="/assets/{img}" alt="" width="{w}" height="{h}" loading="lazy"><div><strong>{e(a["h1"])}</strong><span>{e(a["desc"])}</span></div></a>'
+    crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": h1, "item": url}]}
+    corpo = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
+             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › {h1}</p><h1>{h1}</h1><p class="h-sub">{e(desc)}</p></div></section>'
+             f'<section class="h-sec"><div class="wrap"><div class="h-servicos h-servicos-3">{cards}</div><p style="margin-top:24px"><a class="btn whatsapp big" href="/calculadora/">Calcular o preço da minha obra</a></p></div></section>')
+    return cabeca(f"{h1} | ImpermeabilizaPro", desc, url, [crumbs]) + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
+
+
+def cabeca(titulo, desc, url, lds):
+    return f'''<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>{e(titulo)}</title>
+<meta name="description" content="{e(desc)}">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="article"><meta property="og:locale" content="pt_PT"><meta property="og:url" content="{url}">
+<meta property="og:title" content="{e(titulo)}"><meta property="og:description" content="{e(desc)}">
+<meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a2340">
+<link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
+<link rel="stylesheet" href="/style.css?v=20260919-local4">
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
+<link rel="stylesheet" href="/assets/b2b.css?v=20261113-3">
+{"".join(f'<script type="application/ld+json">{json.dumps(l, ensure_ascii=False)}</script>' for l in lds)}
+</head>
+<body class="pagina-b2b">
+<header class="header"></header>
+'''
+
+
+def gerar_obras_guias():
+    for tipo, itens, base in (("obra", OBRAS, "obras"), ("guia", GUIAS, "guias")):
+        (RAIZ / base).mkdir(exist_ok=True)
+        (RAIZ / base / "index.html").write_text(pagina_indice(tipo), encoding="utf-8")
+        for s, a in itens.items():
+            d = RAIZ / base / s
+            d.mkdir(exist_ok=True)
+            (d / "index.html").write_text(pagina_artigo(f"{base}/{s}", a, tipo), encoding="utf-8")
 
 if __name__ == "__main__":
     for slug, p in PAGINAS.items():
         d = RAIZ / slug
         d.mkdir(exist_ok=True)
         (d / "index.html").write_text(pagina(slug, p), encoding="utf-8")
+    gerar_obras_guias()
     tabela_home()
     sitemap()
     llms()
