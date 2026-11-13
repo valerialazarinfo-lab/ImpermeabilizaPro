@@ -14,3 +14,8 @@ jobs:
         with:
           node-version: 20
       - run: python3 scripts/verificar_site.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Scripts compatíveis com Python 3.11
+        run: for f in scripts/*.py; do python -m py_compile "$f"; done
