@@ -12,11 +12,11 @@ test('mínimo de obra lido do CSV', () => assert.equal(minimoObra(t), 100));
 test('caso base: intervalo estreito (±10%) com IVA para condomínio', () => {
   const r = calcular(base, t);
   assert.equal(r.estado, 'preco');
-  // médio: (36 + 3) €/m² × 150 + 2 × 65 = 5980 € s/IVA
+  // médio: ((36 + 3) €/m² × 150 + 2 × 65) × 0,9 = 5382 € s/IVA
   assert.equal(r.margem, 10);
-  assert.deepEqual(r.totalSemIva, { min: 5400, max: 6600 });
+  assert.deepEqual(r.totalSemIva, { min: 4850, max: 5900 });
   assert.equal(r.iva, 23);
-  assert.deepEqual(r.m2ComIva, { min: 44, max: 54 });
+  assert.deepEqual(r.m2ComIva, { min: 40, max: 49 });
   assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 12, 'intervalo por m² estreito');
 });
 
@@ -105,6 +105,11 @@ test('área acima do máximo automático vai para avaliação', () => assert.equ
 
 test('todas as linhas têm origem', () => {
   for (const g of Object.values(t)) for (const i of Object.values(g)) assert.ok(i.origem.length > 5, `${i.grupo}/${i.chave}`);
+});
+
+test('fator de preço de entrada reduz o preço', () => {
+  const t1 = lerPrecos(csv.replace(/config;fator_preco_entrada;([^;]*);0,9;0,9/, 'config;fator_preco_entrada;$1;1;1'));
+  assert.ok(calcular(base, t1).totalSemIva.max > calcular(base, t).totalSemIva.max);
 });
 
 test('CSV com valores errados falha de forma clara', () => {

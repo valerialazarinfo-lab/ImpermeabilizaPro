@@ -4,7 +4,7 @@
  *
  * Cálculo (valor médio de cada linha = (min + max) / 2):
  *   €/m²   = material × fator da superfície + soma das respostas em €/m²
- *   total  = (€/m² × área × fator de escala + ralos × €/ralo) × produto de (1 + %)
+ *   total  = (€/m² × área × fator de escala + ralos × €/ralo) × produto de (1 + %) × fator de preço de entrada
  *   intervalo = total × (1 ± margem); margem = base + extra por cada «Não sei» (até ao máximo)
  *   IVA: empresa com IVA dedutível → autoliquidação (preço sem IVA); restantes → taxa legal.
  */
@@ -32,7 +32,7 @@ export function lerPrecos(texto) {
     }
     (t[r.grupo] ||= {})[r.chave] = item;
   }
-  for (const k of ['minimo_obra_m2', 'iva_percentagem', 'area_maxima_m2', 'ralos_maximo', 'margem_base_percentagem', 'margem_nao_sei_percentagem', 'margem_maxima_percentagem']) {
+  for (const k of ['minimo_obra_m2', 'fator_preco_entrada', 'iva_percentagem', 'area_maxima_m2', 'ralos_maximo', 'margem_base_percentagem', 'margem_nao_sei_percentagem', 'margem_maxima_percentagem']) {
     if (!t.config?.[k]) throw new Error('Falta config;' + k + ' em precos.csv');
   }
   if (!t.extra?.ralo) throw new Error('Falta extra;ralo em precos.csv');
@@ -99,7 +99,7 @@ export function calcular(entrada, t) {
   const porM2 = matMed * med(esc.superficie) + extras.filter((i) => i.unidade === '€/m²').reduce((s, i) => s + med(i), 0);
   const fator = extras.filter((i) => i.unidade === '%').reduce((f, i) => f * (1 + med(i) / 100), 1);
   const escala = fatorEscala(area, t);
-  const semIva = (porM2 * area * escala + ralos * med(t.extra.ralo)) * fator;
+  const semIva = (porM2 * area * escala + ralos * med(t.extra.ralo)) * fator * cfg(t, 'fator_preco_entrada');
 
   const naoSei = PERGUNTAS.filter((g) => esc[g].regras.includes('nao_sei')).length;
   const margem = Math.min(cfg(t, 'margem_maxima_percentagem'), cfg(t, 'margem_base_percentagem') + naoSei * cfg(t, 'margem_nao_sei_percentagem')) / 100;

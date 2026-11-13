@@ -9,6 +9,7 @@ config;minimo_obra_m2;Mínimo de obra;100;100;m²;;Decisão comercial (pedido de
 config;iva_percentagem;IVA;23;23;%;;Taxa normal do Continente (CIVA art. 18.º). A taxa de 6% (verba 2.27) só se aplica em certas reparações em habitação com materiais ≤ 20% — por isso não é usada por defeito
 config;area_maxima_m2;Área máxima com preço automático;3000;3000;m²;;HIPÓTESE: acima disto orçamento sempre à medida
 config;ralos_maximo;Ralos máximos com preço automático;20;20;un;;HIPÓTESE
+config;fator_preco_entrada;Fator de preço de entrada (aplicado a tudo);0,9;0,9;fator;;Decisão comercial (2026-11-13): preços cerca de 10% abaixo das referências de mercado para criar parcerias. Para voltar ao preço de mercado: 1
 config;margem_base_percentagem;Margem do intervalo (±);10;10;%;;Decisão de apresentação: intervalo estreito à volta do valor médio
 config;margem_nao_sei_percentagem;Margem extra por cada «Não sei» (±);4;4;%;;Decisão de apresentação: mais incerteza quando falta informação
 config;margem_maxima_percentagem;Margem máxima (±);20;20;%;;Decisão de apresentação

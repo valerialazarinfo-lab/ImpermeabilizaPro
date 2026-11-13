@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-4';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-5';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -38,7 +38,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-4', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261113-5', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -59,6 +59,7 @@ export async function montarCalculadora(raiz) {
   const afinar = el('details', { class: 'calc-afinar', open: modo === 'completo' }, el('summary', {}, 'Afinar o preço (opcional)'), el('div', { class: 'calc-grelha' }, ...AFINAR.map(campo)));
   form.replaceChildren(el('div', { class: 'calc-grelha' }, ...RAPIDAS.map(campo)), afinar);
   const pre = new URLSearchParams(location.search);
+  for (const k of ['superficie', 'cliente']) if (raiz.dataset[k] && form.elements[k]) form.elements[k].value = raiz.dataset[k];
   for (const k of ['superficie', 'area', 'cliente']) if (pre.get(k) && form.elements[k]) form.elements[k].value = pre.get(k);
 
   const filtrar = () => {
