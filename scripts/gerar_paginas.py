@@ -38,9 +38,14 @@ IVA_CURTO = "Autoliquidação para empresas; taxa legal para os restantes." if A
 IVA_LONGO = ("Para empresas e construtoras com IVA dedutível, os serviços de construção civil são faturados com autoliquidação (o preço é sem IVA). Para condomínios e particulares aplica-se o IVA à taxa legal: 23%, ou 6% quando a lei o permite." if AUTOLIQ else "Aplicamos o IVA à taxa legal: 23%, ou 6% nas obras de habitação em que a lei o permite. Para empresas com IVA dedutível, o valor que conta é o preço sem IVA, que mostramos sempre.")
 
 
+MARGEM = cfg("margem_base_percentagem") / 100
+
+
 def faixa(g, k):
+    """Preço publicado: valor médio da linha × fator de entrada, ± a margem da calculadora (igual à calculadora)."""
     r = CSV[(g, k)]
-    return num(r["min"]) * FATOR, num(r["max"]) * FATOR
+    medio = (num(r["min"]) + num(r["max"])) / 2 * FATOR
+    return medio * (1 - MARGEM), medio * (1 + MARGEM)
 
 
 def n0(v):
@@ -355,7 +360,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-7"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-8"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -543,7 +548,7 @@ def pagina_artigo(caminho, a, tipo):
     hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
-    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-7\"></script>\n</body>\n</html>\n"
+    return cabeca(a["titulo"], a["desc"], url, lds) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-8\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):

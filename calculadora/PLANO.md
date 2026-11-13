@@ -15,7 +15,7 @@
 `python3 scripts/definir_minimo_obra.py 200` e depois os comandos do passo 3.
 
 ## Como o intervalo é calculado
-Valor médio de cada resposta ± 10%; cada «Não sei» acrescenta 4% (máximo ±20%). Desconto por área (grupo `escala`).
+Valor médio de cada resposta ± 5%; cada «Não sei» acrescenta 3% (máximo ±12%). As tabelas das páginas usam a mesma regra (valor médio ± 5%). Desconto por área (grupo `escala`).
 IVA: 23% para todos enquanto `config;autoliquidacao_ativa` = 0. Com alvará/certificado IMPIC válido, pôr 1: empresas passam a ver preço com autoliquidação (DL 97/2026).
 
 ## Conteúdo das páginas

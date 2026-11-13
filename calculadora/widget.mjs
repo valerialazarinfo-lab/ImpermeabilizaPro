@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-7';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-8';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -39,7 +39,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-7', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261113-8', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {

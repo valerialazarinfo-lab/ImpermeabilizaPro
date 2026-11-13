@@ -9,15 +9,15 @@ const base = { cliente: 'condominio', superficie: 'cobertura_plana', area: 150, 
 
 test('mínimo de obra lido do CSV', () => assert.equal(minimoObra(t), 100));
 
-test('caso base: intervalo estreito (±10%) com IVA para condomínio', () => {
+test('caso base: intervalo estreito (±5%) com IVA para condomínio', () => {
   const r = calcular(base, t);
   assert.equal(r.estado, 'preco');
   // médio: ((36 + 3) €/m² × 150 + 2 × 65) × 0,9 = 5382 € s/IVA
-  assert.equal(r.margem, 10);
-  assert.deepEqual(r.totalSemIva, { min: 4850, max: 5900 });
+  assert.equal(r.margem, 5);
+  assert.deepEqual(r.totalSemIva, { min: 5100, max: 5650 });
   assert.equal(r.iva, 23);
-  assert.deepEqual(r.m2ComIva, { min: 40, max: 49 });
-  assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 12, 'intervalo por m² estreito');
+  assert.deepEqual(r.m2ComIva, { min: 42, max: 46 });
+  assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 5, 'intervalo por m² estreito');
 });
 
 test('empresa sem habilitação IMPIC: IVA 23% (sem autoliquidação)', () => {
@@ -37,7 +37,7 @@ test('empresa com autoliquidação ativa: preço sem IVA', () => {
 
 test('«Não sei» alarga a margem', () => {
   const r = calcular({ ...base, material: 'nao_sei', suporte: 'nao_sei', remocao: 'nao_sei' }, t);
-  assert.equal(r.margem, 20);
+  assert.equal(r.margem, 12);
   assert.equal(r.naoSei, 3);
 });
 
