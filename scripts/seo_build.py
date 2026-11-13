@@ -66,6 +66,12 @@ LEGAL = {"/privacidade/": "Privacidade e cookies", "/informacoes-legais/": "Info
 PAGES.update(LEGAL)
 
 DISTRICTS = ["Lisboa", "Santarém", "Setúbal", "Leiria"]
+# Same service area as the Google Business Profile (proimpermeabiliza@gmail.com,
+# confirmed 13-11-2026). Keep both lists identical when either changes.
+GBP_AREAS = [
+    "Sobral de Monte Agraço", "Torres Vedras", "Arruda dos Vinhos", "Alenquer", "Mafra", "Loures",
+    "Lisboa", "Sintra", "Odivelas", "Vila Franca de Xira", "Lourinhã", "Cadaval", "Amadora",
+]
 
 BUSINESS = {
     "@type": "HomeAndConstructionBusiness",
@@ -95,7 +101,7 @@ BUSINESS = {
     "hasMap": MAPS,
     "sameAs": [MAPS],
     "areaServed": [{"@type": "AdministrativeArea", "name": "Distrito de " + d} for d in DISTRICTS]
-    + [{"@type": "City", "name": n.replace(" e Ericeira", "")} for _, n in ZONES],
+    + [{"@type": "City", "name": n} for n in GBP_AREAS],
     "knowsAbout": [
         "impermeabilização de terraços", "impermeabilização de varandas", "impermeabilização de coberturas planas",
         "impermeabilização de paredes enterradas", "humidade em paredes", "infiltrações", "tela asfáltica",

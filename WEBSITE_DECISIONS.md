@@ -111,3 +111,10 @@ The inherited assets/vinicius-nascimento.webp is invalid (both browser display a
 - `sitemap.xml` gerado (18 URLs, inclui simulador e Sobral; páginas legais e `/telhados/` ficam fora). `llms.txt` criado para assistentes de IA, incluindo o que NÃO é feito (telhados de telha/inclinados, grande altura).
 - Imagem principal (LCP) em WebP 1440px: 482 KB → 182 KB; slider da homepage com as mesmas fotos em WebP. Originais JPEG preservados (og:image continua JPEG). Cache de `script.js` atualizado.
 - Verificado localmente: JSON-LD válido, 1 H1, 1 canonical, sem IDs duplicados nem ligações internas partidas em 21 páginas; sem overflow horizontal em iPhone 13 e 1366px; sem erros JS. Não verificado: publicação no domínio (rede bloqueada nesta sessão), Search Console, Rich Results Test e Core Web Vitals reais.
+
+## Perfil da Empresa no Google — 13 de novembro de 2026
+
+- A ficha é gerida pela conta proimpermeabiliza@gmail.com (validada, só área de serviço, morada oculta). A conta lazarvaleria632 não tem acesso; os relatórios mensais chegam a valerialazarinfo@gmail.com.
+- Alterado pela Valeria com o Claude no Chrome: descrição nova sem telhados, link do site com `utm_source=google&utm_medium=organic&utm_campaign=gbp`, categorias secundárias "Empreiteiro" e "Serviço de reparação de danos causados pela água", 7 serviços iguais aos do site (removidos "telhados e coberturas", prevenção, renovação, manutenção). Área de serviço: 13 concelhos, incluindo Amadora. Horário (08:00 às 22:00, todos os dias) por confirmar com o Vinícius.
+- O site usa a mesma lista de 13 concelhos em `areaServed` (`GBP_AREAS` em `scripts/seo_build.py`).
+- Ponto de partida (relatório Google, outubro de 2026): 67 visualizações, 1 visita ao site, 0 chamadas, 0 cliques no chat. Indicador principal: chamadas + visitas ao site a partir da ficha.
