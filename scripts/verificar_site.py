@@ -4,7 +4,8 @@ import json, pathlib, re, subprocess, sys, urllib.parse
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
 erros, avisos = [], []
-paginas = sorted(p for p in RAIZ.rglob("*.html") if ".git" not in p.parts and "partials" not in p.parts and not p.name.startswith("google"))
+IGNORAR = {".git", "partials", "assinatura", "assinaturas"}  # assinaturas de email não são páginas do site
+paginas = sorted(p for p in RAIZ.rglob("*.html") if not (IGNORAR & set(p.relative_to(RAIZ).parts)) and not p.name.startswith("google"))
 
 for p in paginas:
     rel = p.relative_to(RAIZ)
