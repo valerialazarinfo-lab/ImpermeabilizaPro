@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-6';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-7';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -35,10 +35,11 @@ export async function montarCalculadora(raiz) {
   const res = raiz.querySelector('[data-calc-result]');
   const acoes = raiz.querySelector('#calcAcoes');
   const wa = raiz.querySelector('#calcWa');
+  const mail = raiz.querySelector('#calcEmail');
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-6', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261113-7', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -75,12 +76,26 @@ export async function montarCalculadora(raiz) {
     'Ralos: ' + (d.ralos || 0), 'Remates: ' + desc('remates', d), 'Isolamento: ' + desc('isolamento', d), 'Acabamento: ' + desc('acabamento', d), 'Prazo: ' + desc('urgencia', d), '',
     r ? `Estimativa do site: ${intervalo(r.m2ComIva, '/m²')} · total ${intervalo(r.totalComIva)} ${r.autoliquidacao ? '(sem IVA, autoliquidação)' : 'com IVA'}.` : '',
     'Posso enviar fotografias e a planta/medições.'].join('\n');
-  const mostrarAcoes = (d, r) => { wa.href = WA + encodeURIComponent(mensagem(d, r)); acoes.hidden = false; };
+  const mostrarAcoes = (d, r) => {
+    wa.href = WA + encodeURIComponent(mensagem(d, r));
+    if (mail) mail.href = 'mailto:proimpermeabiliza@gmail.com?subject=' + encodeURIComponent(`Pedido de proposta · ${desc('superficie', d)} · ${d.area || '?'} m²`) + '&body=' + encodeURIComponent(mensagem(d, r).replace('Posso enviar fotografias e a planta/medições.', 'Junto em anexo fotografias, planta ou medições.'));
+    acoes.hidden = false;
+  };
+  const escalao = (a) => { const n = Number(String(a).replace(',', '.')); return !n ? 'sem_area' : n < 100 ? '<100' : n < 200 ? '100-199' : n < 500 ? '200-499' : n < 1000 ? '500-999' : '1000+'; };
+  let ultimo = '', iniciou = false;
+  const medir = (d, r) => {
+    if (!iniciou) { iniciou = true; window.dispatchEvent(new CustomEvent('ip:calc', { detail: { tipo: 'inicio' } })); }
+    if (r.estado === 'invalido') return;
+    const det = { tipo: 'resultado', estado: r.estado, cliente: d.cliente || '', superficie: d.superficie || '', escalao_area: escalao(d.area), localizacao: d.localizacao || '', nao_sei: r.naoSei ?? '', margem: r.margem ?? '' };
+    const chave = [det.estado, det.cliente, det.superficie, det.escalao_area].join('|');
+    if (chave !== ultimo) { ultimo = chave; window.dispatchEvent(new CustomEvent('ip:calc', { detail: det })); }
+  };
 
   function atualizar() {
     const d = Object.fromEntries(new FormData(form));
     acoes.hidden = true;
     const r = calcular(d, t);
+    if (atualizar.interagiu) medir(d, r);
     if (r.estado === 'invalido') {
       const rot = r.falta && ROTULOS[r.falta] ? ROTULOS[r.falta][0] : '';
       res.replaceChildren(el('p', { class: 'calc-vazio' }, d.area || d.cliente || d.superficie ? (rot ? `Falta: ${rot}` : r.motivo) : 'Responda às 6 perguntas para ver o preço por m².'));
@@ -109,8 +124,9 @@ export async function montarCalculadora(raiz) {
     mostrarAcoes(d, r);
   }
   form.elements.superficie.addEventListener('change', filtrar);
-  form.addEventListener('input', atualizar);
-  form.addEventListener('change', atualizar);
+  const interagir = () => { atualizar.interagiu = true; atualizar(); };
+  form.addEventListener('input', interagir);
+  form.addEventListener('change', interagir);
   form.addEventListener('submit', (e) => { e.preventDefault(); atualizar(); });
   document.querySelectorAll('[data-minimo-obra]').forEach((s) => { s.textContent = minimoObra(t); });
   filtrar();

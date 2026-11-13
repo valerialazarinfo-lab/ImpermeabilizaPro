@@ -319,7 +319,7 @@ def pagina(slug, p):
         attrs = (f' data-superficie="{p["sup"]}"' if p.get("sup") else "") + (f' data-cliente="{p["cliente"]}"' if p.get("cliente") else "")
         calc = (f'<div class="calc" data-calc data-modo="rapido"{attrs}><h2>Preço por m² em 30 segundos</h2><form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form>'
                 f'<div class="calc-res" data-calc-result aria-live="polite"></div><div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_{slug}" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
-                f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a></div><p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p>'
+                f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div><p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p>'
                 f'<noscript><p class="calc-aviso">A calculadora precisa de JavaScript. Ligue 930 446 198 ou use o WhatsApp.</p></noscript></div>')
     else:
         calc = (f'<div class="calc"><h2>Peça o orçamento</h2><p>Envie fotografias, a fase da obra e a localidade.</p><div class="calc-acoes"><a class="btn whatsapp big wa-direct" data-placement="hero_{slug}" href="{wa}" target="_blank" rel="noopener noreferrer">Enviar fotografias pelo WhatsApp</a>'
@@ -353,7 +353,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-6"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-7"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -371,7 +371,7 @@ def pagina(slug, p):
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="/style.css?v=20260919-local4">
-<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-5">
+<link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-2">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(crumbs, ensure_ascii=False)}</script>

@@ -23,3 +23,4 @@
 .calc-acoes .btn{justify-content:center;text-align:center}
 .calc-legal{font-size:.78rem;color:#5b6d7c;margin:0;line-height:1.45}
 @media(max-width:560px){.calc-grelha{grid-template-columns:1fr}.calc-acoes{grid-template-columns:1fr}}
+.calc-acoes .calc-email{grid-column:1/-1}

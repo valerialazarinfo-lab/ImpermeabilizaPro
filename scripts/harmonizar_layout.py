@@ -13,7 +13,7 @@ import re
 import sys
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
-JS_VERSAO = "20261113-layout1"
+JS_VERSAO = "20261113-calc2"
 WA_PADRAO = ("https://wa.me/351930446198?text=Ol%C3%A1%2C%20gostaria%20de%20pedir%20uma%20avalia%C3%A7%C3%A3o%20para%20uma%20"
              "impermeabiliza%C3%A7%C3%A3o.%20A%20obra%20fica%20em%20%5Blocalidade%5D.%20Posso%20enviar%20fotografias.")
 IGNORAR = {"simulador"}

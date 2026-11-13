@@ -113,6 +113,18 @@ function trackOncePerSession(event, key, extra = {}) {
   return track(event, { ...extra, event_scope: "one_per_session" });
 }
 
+// Funil da calculadora: só categorias (tipo de cliente, superfície, escalão de área, estado do resultado).
+// Nunca envia localidade, texto livre nem a área exata. Diagnóstico: não é um contacto nem um lead.
+window.addEventListener("ip:calc", (ev) => {
+  const d = (ev && ev.detail) || {};
+  const limpo = {};
+  for (const k of ["estado", "cliente", "superficie", "escalao_area", "localizacao", "nao_sei", "margem"]) {
+    if (d[k] !== undefined && d[k] !== null) limpo["calc_" + k] = String(d[k]).slice(0, 40);
+  }
+  if (d.tipo === "inicio") trackOncePerSession("ip_calc_start", "ip_calc_start");
+  if (d.tipo === "resultado") trackOncePerSession("ip_calc_result", "ip_calc_result_" + [d.estado, d.cliente, d.superficie, d.escalao_area].join("_"), limpo);
+});
+
 function replaceWebsitePhoneNumber(formattedNumber, mobileNumber) {
   if (consent !== "accepted") return;
   const dialNumber = String(mobileNumber || "").replace(/[^+0-9]/g, "");
