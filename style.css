@@ -2164,7 +2164,7 @@ form textarea {
 .audience-grid .btn { margin-top:12px; }
 .client-field { display:block; margin-bottom:20px; }
 footer { background:#0a2340; color:#dae6f0; padding:48px 0 30px; }
-.footer-main { display:grid; grid-template-columns:1.1fr 1.2fr 1fr; gap:36px; }
+.footer-main { display:grid; grid-template-columns:1.1fr 1.2fr 1fr .7fr; gap:36px; }
 .footer-main h2 { font-size:16px; color:white; margin:0 0 16px; }
 .footer-main p { font-size:14px; line-height:1.75; color:#c5d4e3; }
 .footer-main small { display:block; margin:6px 0 14px; color:#c5d4e3; font-size:12px; }
