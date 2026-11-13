@@ -33,6 +33,9 @@ cfg = lambda k: num(CSV[("config", k)]["min"])
 MIN = int(cfg("minimo_obra_m2"))
 IVA = cfg("iva_percentagem")
 FATOR = cfg("fator_preco_entrada")
+AUTOLIQ = cfg("autoliquidacao_ativa") == 1
+IVA_CURTO = "Autoliquidação para empresas; taxa legal para os restantes." if AUTOLIQ else "IVA à taxa legal (23%); dedutível para empresas."
+IVA_LONGO = ("Para empresas e construtoras com IVA dedutível, os serviços de construção civil são faturados com autoliquidação (o preço é sem IVA). Para condomínios e particulares aplica-se o IVA à taxa legal: 23%, ou 6% quando a lei o permite." if AUTOLIQ else "Aplicamos o IVA à taxa legal: 23%, ou 6% nas obras de habitação em que a lei o permite. Para empresas com IVA dedutível, o valor que conta é o preço sem IVA, que mostramos sempre.")
 
 
 def faixa(g, k):
@@ -93,7 +96,7 @@ F = {
 
 # ---------------------------------------------------------------- conteúdo
 FAQ_MIN = ("Qual é o mínimo de obra?", f"Trabalhamos em coberturas, terraços e outras áreas planas a partir de {MIN} m². Não fazemos pequenas reparações. Várias zonas da mesma morada somam-se.")
-FAQ_IVA = ("Os preços têm IVA?", "Para empresas e construtoras com IVA dedutível, os serviços de construção civil são faturados com autoliquidação (o preço é sem IVA). Para condomínios e particulares aplica-se o IVA à taxa legal: 23%, ou 6% quando a lei o permite.")
+FAQ_IVA = ("Os preços têm IVA?", IVA_LONGO)
 FAQ_ZONA = ("Em que zonas trabalham?", "A partir de Sobral de Monte Agraço, nos distritos de Lisboa, Santarém, Setúbal e Leiria. Outras zonas mediante confirmação.")
 LINKS_SERV = [("/coberturas-planas/", "Coberturas planas"), ("/terracos/", "Terraços"), ("/paredes/", "Caves e paredes enterradas"), ("/tela-asfaltica/", "Tela asfáltica"),
               ("/impermeabilizacao-condominios/", "Condomínios"), ("/empresas/", "Construtoras"), ("/precos-impermeabilizacao/", "Preços por m²")]
@@ -158,7 +161,7 @@ PAGINAS = {
         sub="Preços por m² com e sem IVA, e o que faz o preço subir. Calcule o valor para a sua obra.",
         sup="terraco", fotos=["gaia_caso", "terraco_claraboia", "ericeira"], precos_topo=True,
         inclui=[("Material e mão de obra", "Os preços da tabela incluem os dois."), ("O que faz subir", "Remoção, regularização, pendentes e acessos."),
-                ("O que faz descer", "Áreas grandes e superfícies em bom estado."), ("IVA", "Autoliquidação para empresas; 23% para condomínios e particulares.")],
+                ("O que faz descer", "Áreas grandes e superfícies em bom estado."), ("IVA", IVA_CURTO)],
         texto=[f"Os valores são indicativos, para obras a partir de {MIN} m² com acesso fácil. O valor final é confirmado depois de vermos fotografias ou a obra."],
         precos=PRECOS_TERRACO, faq=[("Porque é que o preço por m² desce em áreas grandes?", "Os custos de montagem, deslocação e remates pesam menos quando a área é maior."), FAQ_IVA, FAQ_MIN],
         servico="Impermeabilização de terraços", oferta=("material", "tela_2")),
@@ -215,10 +218,10 @@ PAGINAS = {
         sub="Coberturas, terraços e paredes enterradas, com material e mão de obra ou só a execução. Integrados no planeamento da sua obra.",
         sup="terraco", cliente="empresa", fotos=["aroeira", "parede_maquina", "gaia_obra", "terraco_grua"],
         inclui=[("Proposta por m²", "A partir das medições ou do caderno de encargos."), ("Com material ou só execução", "Como for melhor para a obra."),
-                ("Faturação", "Autoliquidação do IVA em serviços de construção civil."), ("Obras grandes", "Já executámos mais de 3.000 m² numa só obra.")],
+                ("Preços sem IVA", "Mostramos sempre o valor sem IVA, o que conta para a sua empresa."), ("Obras grandes", "Já executámos mais de 3.000 m² numa só obra.")],
         texto=["Envie as medições, a planta ou o mapa de quantidades e a data prevista. Respondemos com preço por m², o que está incluído e a disponibilidade.",
                "Estamos a começar parcerias com construtoras na região de Lisboa e Oeste, com preços de entrada abaixo do mercado."],
-        precos=PRECOS_TELA[:2] + [("material", "membrana_liquida")], faq=[("Como é faturado o IVA?", "Nos serviços de construção civil para empresas com IVA dedutível aplica-se a autoliquidação: a fatura sai sem IVA e é o adquirente que o liquida."), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material."), FAQ_MIN],
+        precos=PRECOS_TELA[:2] + [("material", "membrana_liquida")], faq=[("Como é faturado o IVA?", IVA_LONGO), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material."), FAQ_MIN],
         servico="Subempreitada de impermeabilização", oferta=("material", "tela_2"),
         wa="Olá, sou de uma construtora e queria uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]. Posso enviar medições."),
     "impermeabilizacao-condominios": dict(
@@ -241,7 +244,7 @@ PAGINAS = {
         sub="Tabela de preços com e sem IVA, para obras a partir de 100 m². Para o valor da sua obra, use a calculadora.",
         sup=None, fotos=["gaia_largo", "aroeira", "ericeira"], precos_topo=True,
         inclui=[("Preço base", "Material e mão de obra por m²."), ("Acréscimos", "Somam-se quando se aplicam."),
-                ("Escala", "Acima de 200 m² o preço por m² desce."), ("IVA", "Autoliquidação para empresas; taxa legal para os restantes.")],
+                ("Escala", "Acima de 200 m² o preço por m² desce."), ("IVA", IVA_CURTO)],
         texto=[f"Os preços são indicativos para obras a partir de {MIN} m², com acesso fácil, na zona de Lisboa e Oeste. Estamos a criar parcerias e praticamos preços de entrada abaixo das referências de mercado."],
         precos=PRECOS_TODOS, faq=[FAQ_IVA, FAQ_MIN, ("O preço inclui deslocação?", "Na zona de Sobral de Monte Agraço e Oeste, sim. Para Lisboa, Santarém, Setúbal e Leiria pode haver um pequeno acréscimo, que a calculadora já inclui.")],
         servico="Impermeabilização", oferta=("material", "tela_1")),
@@ -350,7 +353,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-5"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-6"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -414,7 +417,7 @@ def llms():
 - Não faz: pequenas reparações, telhados de telha ou inclinados, trabalhos em grande altura.
 - Mínimo de obra: {MIN} m² em coberturas e áreas planas.
 - Obras reais: Aroeira (mais de 3.000 m² de paredes enterradas, tela Imperalum), Vila Nova de Gaia (terraço sobre garagem, 440 m², duas camadas), Ericeira (terraço de cobertura, cerca de 200 m²).
-- IVA: autoliquidação para empresas com IVA dedutível (serviços de construção civil); 23% para condomínios e particulares (6% quando a lei o permite).
+- IVA: {IVA_LONGO}
 - Contacto: +351 930 446 198 (telefone e WhatsApp), proimpermeabiliza@gmail.com.
 
 ## Preços indicativos (atualizado em {HOJE}, obras a partir de {MIN} m², acesso fácil)

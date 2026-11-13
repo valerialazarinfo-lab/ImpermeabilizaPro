@@ -10,10 +10,11 @@ config;iva_percentagem;IVA;23;23;%;;Taxa normal do Continente (CIVA art. 18.º).
 config;area_maxima_m2;Área máxima com preço automático;3000;3000;m²;;HIPÓTESE: acima disto orçamento sempre à medida
 config;ralos_maximo;Ralos máximos com preço automático;20;20;un;;HIPÓTESE
 config;fator_preco_entrada;Fator de preço de entrada (aplicado a tudo);0,9;0,9;fator;;Decisão comercial (2026-11-13): preços cerca de 10% abaixo das referências de mercado para criar parcerias. Para voltar ao preço de mercado: 1
+config;autoliquidacao_ativa;Autoliquidação do IVA para empresas (1 = sim, 0 = não);0;0;sim/não;;Desde 1-7-2026 só com alvará ou certificado IMPIC válido (DL 97/2026; Ofício-Circulado 25117/2026). Pôr 1 quando houver habilitação IMPIC
 config;margem_base_percentagem;Margem do intervalo (±);10;10;%;;Decisão de apresentação: intervalo estreito à volta do valor médio
 config;margem_nao_sei_percentagem;Margem extra por cada «Não sei» (±);4;4;%;;Decisão de apresentação: mais incerteza quando falta informação
 config;margem_maxima_percentagem;Margem máxima (±);20;20;%;;Decisão de apresentação
-cliente;empresa;Empresa ou construtora (com IVA dedutível);0;0;iva;autoliquidacao;CIVA art. 2.º n.º 1 al. j): serviços de construção civil a sujeitos passivos com direito à dedução — autoliquidação pelo adquirente (PIV 25140, PIV 26683, PIV 30688 da AT)
+cliente;empresa;Empresa ou construtora;0;0;iva;autoliquidacao;CIVA art. 2.º n.º 1 al. j): autoliquidação só se config;autoliquidacao_ativa = 1 (prestador com alvará/certificado IMPIC, desde 1-7-2026)
 cliente;condominio;Condomínio ou administração de prédio;0;0;iva;;IVA à taxa legal (condomínios não liquidam IVA)
 cliente;particular;Particular (moradia ou prédio próprio);0;0;iva;;IVA à taxa legal
 cliente;outra;Outra entidade (pública, IPSS, associação);0;0;iva;;IVA à taxa legal; confirmar regime no orçamento

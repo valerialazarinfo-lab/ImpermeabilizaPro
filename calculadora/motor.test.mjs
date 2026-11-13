@@ -20,11 +20,19 @@ test('caso base: intervalo estreito (±10%) com IVA para condomínio', () => {
   assert.ok(r.m2ComIva.max - r.m2ComIva.min <= 12, 'intervalo por m² estreito');
 });
 
-test('empresa: autoliquidação, preço sem IVA', () => {
+test('empresa sem habilitação IMPIC: IVA 23% (sem autoliquidação)', () => {
   const r = calcular({ ...base, cliente: 'empresa' }, t);
+  assert.equal(r.autoliquidacao, false);
+  assert.equal(r.iva, 23);
+});
+
+test('empresa com autoliquidação ativa: preço sem IVA', () => {
+  const t1 = lerPrecos(csv.replace(/config;autoliquidacao_ativa;([^;]*);0;0/, 'config;autoliquidacao_ativa;$1;1;1'));
+  const r = calcular({ ...base, cliente: 'empresa' }, t1);
   assert.equal(r.autoliquidacao, true);
   assert.equal(r.iva, 0);
   assert.deepEqual(r.m2ComIva, r.m2SemIva);
+  assert.equal(calcular(base, t1).iva, 23, 'condomínio continua com IVA');
 });
 
 test('«Não sei» alarga a margem', () => {

@@ -105,7 +105,7 @@ The inherited assets/vinicius-nascimento.webp is invalid (both browser display a
 Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, mínimo de 100 m² e melhorias do site inteiro»:
 - Público principal: construtoras, condomínios e empresas; obras grandes. Mínimo de 100 m² em coberturas e áreas planas (valor único em `calculadora/precos.csv`; mudar com `scripts/definir_minimo_obra.py`). Não fazer pequenas reparações. Casas de banho: serviço à parte, sem preço automático.
 - Preços de entrada ~10% abaixo das referências de mercado (`config;fator_preco_entrada` = 0,9) para criar parcerias. Valores base ainda por validar com obras reais.
-- IVA à taxa legal: autoliquidação para empresas com IVA dedutível (CIVA art. 2.º n.º 1 j); 23% para condomínios e particulares, com nota sobre os 6% (verba 2.27).
+- IVA à taxa legal (23%; 6% quando a lei permite). **Autoliquidação desligada** (`config;autoliquidacao_ativa` = 0): desde 1-7-2026 só se aplica com alvará/certificado IMPIC (DL 97/2026; Ofício-Circulado 25117/2026), que ainda não existe. Ligar quando houver habilitação.
 - Calculadora no topo de todas as páginas, com intervalo estreito (±10%, +4% por «Não sei», máx. ±20%) e desconto por área.
 - Páginas de serviço, preço e zona geradas por `scripts/gerar_paginas.py`; cabeçalho e rodapé por `scripts/partials/` + `scripts/harmonizar_layout.py`; verificação em `scripts/verificar_site.py` (também no GitHub Actions).
 - Novas páginas: condomínios, preços por m², Sobral de Monte Agraço, Alenquer, Arruda dos Vinhos, Vila Franca de Xira. `/simulador/` passou a `noindex` (foco em particulares e pequenas infiltrações).

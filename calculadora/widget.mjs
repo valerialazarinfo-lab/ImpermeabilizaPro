@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-5';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-6';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -38,7 +38,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-5', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261113-6', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -96,14 +96,14 @@ export async function montarCalculadora(raiz) {
       res.replaceChildren(el('p', { class: 'calc-aviso' }, r.motivo), el('p', { class: 'calc-nota' }, 'Envie fotografias e medidas pelo WhatsApp: respondemos com a solução e o valor.'));
       mostrarAcoes(d, null); return;
     }
-    const ivaTxt = r.autoliquidacao ? 'sem IVA · autoliquidação (empresa com IVA dedutível)' : `com IVA (${r.iva}%)`;
+    const ivaTxt = r.autoliquidacao ? 'sem IVA · autoliquidação (empresa com IVA dedutível)' : `com IVA (${r.iva}%)` + (d.cliente === 'empresa' ? ' · dedutível para empresas' : '');
     res.replaceChildren(
       el('p', { class: 'calc-rotulo' }, 'Preço estimado por m²'),
       el('p', { class: 'calc-m2' }, intervalo(r.m2ComIva, '/m²')),
       el('p', { class: 'calc-iva' }, ivaTxt),
       el('div', { class: 'calc-linhas' },
         el('p', {}, el('span', {}, `Total para ${r.area.toLocaleString('pt-PT')} m²`), el('b', {}, intervalo(r.totalComIva))),
-        r.autoliquidacao ? null : el('p', {}, el('span', {}, 'Sem IVA'), el('b', {}, intervalo(r.m2SemIva, '/m²')))),
+        r.autoliquidacao ? null : el('p', {}, el('span', {}, d.cliente === 'empresa' ? 'Sem IVA (o que conta para empresas)' : 'Sem IVA'), el('b', {}, intervalo(r.m2SemIva, '/m²')))),
       el('p', { class: 'calc-nota' }, r.naoSei ? `Intervalo de ±${r.margem}%: com ${r.naoSei} resposta(s) «Não sei». Abra «Afinar o preço» para o estreitar.` : `Intervalo de ±${r.margem}%. Valor final confirmado depois de vermos a obra.`),
       ...r.notas.map((n) => el('p', { class: 'calc-nota' }, n)));
     mostrarAcoes(d, r);

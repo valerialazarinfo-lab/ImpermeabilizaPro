@@ -16,7 +16,7 @@
 
 ## Como o intervalo é calculado
 Valor médio de cada resposta ± 10%; cada «Não sei» acrescenta 4% (máximo ±20%). Desconto por área (grupo `escala`).
-IVA por tipo de cliente: empresa com IVA dedutível → autoliquidação (sem IVA); condomínio/particular → 23%.
+IVA: 23% para todos enquanto `config;autoliquidacao_ativa` = 0. Com alvará/certificado IMPIC válido, pôr 1: empresas passam a ver preço com autoliquidação (DL 97/2026).
 
 ## Conteúdo das páginas
 Textos, fotografias e perguntas de cada página de serviço, preço e zona estão em `scripts/gerar_paginas.py` (PAGINAS, LOCAIS).

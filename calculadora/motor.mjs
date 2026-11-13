@@ -6,7 +6,7 @@
  *   €/m²   = material × fator da superfície + soma das respostas em €/m²
  *   total  = (€/m² × área × fator de escala + ralos × €/ralo) × produto de (1 + %) × fator de preço de entrada
  *   intervalo = total × (1 ± margem); margem = base + extra por cada «Não sei» (até ao máximo)
- *   IVA: empresa com IVA dedutível → autoliquidação (preço sem IVA); restantes → taxa legal.
+ *   IVA: taxa legal; autoliquidação para empresas só com config autoliquidacao_ativa = 1 (exige alvará/certificado IMPIC).
  */
 
 export const PERGUNTAS = ['cliente', 'superficie', 'material', 'suporte', 'remocao', 'acesso', 'remates', 'isolamento', 'acabamento', 'urgencia', 'localizacao'];
@@ -32,7 +32,7 @@ export function lerPrecos(texto) {
     }
     (t[r.grupo] ||= {})[r.chave] = item;
   }
-  for (const k of ['minimo_obra_m2', 'fator_preco_entrada', 'iva_percentagem', 'area_maxima_m2', 'ralos_maximo', 'margem_base_percentagem', 'margem_nao_sei_percentagem', 'margem_maxima_percentagem']) {
+  for (const k of ['minimo_obra_m2', 'autoliquidacao_ativa', 'fator_preco_entrada', 'iva_percentagem', 'area_maxima_m2', 'ralos_maximo', 'margem_base_percentagem', 'margem_nao_sei_percentagem', 'margem_maxima_percentagem']) {
     if (!t.config?.[k]) throw new Error('Falta config;' + k + ' em precos.csv');
   }
   if (!t.extra?.ralo) throw new Error('Falta extra;ralo em precos.csv');
@@ -42,6 +42,7 @@ export function lerPrecos(texto) {
 }
 
 export const minimoObra = (t) => t.config.minimo_obra_m2.min;
+export const autoliquidacaoAtiva = (t) => t.config.autoliquidacao_ativa.min === 1;
 const med = (i) => (i.min + i.max) / 2;
 const arred = (v, passo) => Math.round(v / passo) * passo;
 const cfg = (t, k) => t.config[k].min;
@@ -103,7 +104,7 @@ export function calcular(entrada, t) {
 
   const naoSei = PERGUNTAS.filter((g) => esc[g].regras.includes('nao_sei')).length;
   const margem = Math.min(cfg(t, 'margem_maxima_percentagem'), cfg(t, 'margem_base_percentagem') + naoSei * cfg(t, 'margem_nao_sei_percentagem')) / 100;
-  const autoliquidacao = esc.cliente.regras.includes('autoliquidacao');
+  const autoliquidacao = esc.cliente.regras.includes('autoliquidacao') && cfg(t, 'autoliquidacao_ativa') === 1;
   const iva = autoliquidacao ? 0 : cfg(t, 'iva_percentagem');
   const m2 = (v) => ({ min: Math.round((v * (1 - margem)) / area), max: Math.round((v * (1 + margem)) / area) });
   const tot = (v) => ({ min: arred(v * (1 - margem), 50), max: arred(v * (1 + margem), 50) });
