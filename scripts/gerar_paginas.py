@@ -372,7 +372,7 @@ def pagina(slug, p):
 <meta name="theme-color" content="#0a2340">
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
 <link rel="preload" as="image" href="/assets/foto-real-20260915-162914-800.webp" imagesrcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" imagesizes="100vw">
-<link rel="stylesheet" href="/style.css?v=20260919-local4">
+<link rel="stylesheet" href="/style.css?v=20261113-limpo">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-3">
 <script type="application/ld+json">{json.dumps(serv, ensure_ascii=False)}</script>
@@ -581,7 +581,7 @@ def cabeca(titulo, desc, url, lds):
 <meta property="og:image" content="{SITE}/assets/foto-real-20260915-162914.jpeg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0a2340">
 <link rel="icon" href="/assets/logo-impermeabilizapro.webp" type="image/webp">
-<link rel="stylesheet" href="/style.css?v=20260919-local4">
+<link rel="stylesheet" href="/style.css?v=20261113-limpo">
 <link rel="stylesheet" href="/calculadora/calc.css?v=20261113-7">
 <link rel="stylesheet" href="/assets/b2b.css?v=20261113-3">
 {"".join(f'<script type="application/ld+json">{json.dumps(l, ensure_ascii=False)}</script>' for l in lds)}
