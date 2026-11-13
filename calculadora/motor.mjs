@@ -61,7 +61,7 @@ export function calcular(entrada, t) {
   const esc = {};
   for (const g of PERGUNTAS) {
     esc[g] = t[g][entrada[g]];
-    if (!esc[g]) return { estado: 'invalido', motivo: 'Responda a todas as perguntas.' };
+    if (!esc[g]) return { estado: 'invalido', falta: g, motivo: 'Responda a todas as perguntas.' };
   }
   for (const g of PERGUNTAS) {
     if (esc[g].regras.includes('excluido')) return { estado: 'excluido', motivo: `${esc[g].descricao}: este trabalho não é feito pela ImpermeabilizaPro.` };

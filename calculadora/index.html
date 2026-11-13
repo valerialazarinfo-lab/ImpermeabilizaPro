@@ -144,7 +144,7 @@ gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user
 <div aria-label="Preferências de cookies" class="cookie" id="cookie" role="region"><p>Usamos cookies de medição para perceber o desempenho do site e dos anúncios. <a href="/privacidade/">Saber mais</a></p><div><button id="essential" type="button">Só essenciais</button><button id="accept" type="button">Aceitar</button></div></div>
 <script defer src="/script.js?v=20261113-layout1"></script>
 <script type="module">
-import {lerPrecos, calcular, minimoObra} from '/calculadora/motor.mjs?v=20261113-1';
+import {lerPrecos, calcular, minimoObra} from '/calculadora/motor.mjs?v=20261113-2';
 const form = document.getElementById('calcForm');
 const corpo = document.getElementById('resultadoCorpo');
 const acoes = document.getElementById('acoes');
@@ -169,7 +169,7 @@ for (const grupo of ['superficie', 'material', 'suporte', 'remocao', 'acesso', '
   for (const item of Object.values(tabela[grupo])) sel.append(el('option', {value: item.chave}, item.descricao));
 }
 // Respostas por defeito que não mudam o preço, para o visitante só ter de escolher o essencial.
-const defeitos = {material: 'nao_sei', suporte: 'nao_sei', remocao: 'nao_sei', acesso: 'facil', remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal'};
+const defeitos = {material: 'nao_sei', acesso: 'facil', remates: 'normais', isolamento: 'nao', acabamento: 'sem', urgencia: 'normal'};
 for (const [k, v] of Object.entries(defeitos)) if (tabela[k]?.[v]) form.elements[k].value = v;
 const pre = new URLSearchParams(location.search);
 for (const k of ['superficie', 'area']) if (pre.get(k) && form.elements[k]) form.elements[k].value = pre.get(k);
@@ -200,7 +200,11 @@ function atualizar() {
     corpo.replaceChildren(el('p', {className: 'calc-warn calc-stop'}, r.motivo), el('p', {className: 'calc-legal'}, 'Trabalhamos em coberturas planas, terraços, varandas, caves, paredes e zonas interiores, sem trabalhos em grande altura.'));
     return;
   }
-  if (r.estado === 'invalido') { corpo.replaceChildren(el('p', {className: 'calc-warn'}, r.motivo)); return; }
+  if (r.estado === 'invalido') {
+    const rotulo = r.falta ? form.querySelector(`label[for="${r.falta}"]`)?.firstChild?.textContent.trim() : '';
+    corpo.replaceChildren(el('p', {className: 'calc-warn'}, rotulo ? `Falta escolher: ${rotulo}.` : r.motivo));
+    return;
+  }
   if (r.estado === 'avaliacao') {
     corpo.replaceChildren(el('p', {className: 'calc-warn'}, r.motivo), el('p', {className: 'calc-legal'}, 'Envie-nos fotografias e dizemos-lhe se conseguimos fazer a obra e qual a solução.'));
     wa.href = 'https://wa.me/351930446198?text=' + encodeURIComponent(linhaMensagem(null, d));
