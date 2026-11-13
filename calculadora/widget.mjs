@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-8';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-11';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -12,7 +12,7 @@ const ROTULOS = {
   superficie: ['O que vamos impermeabilizar?', ''],
   area: ['Área aproximada (m²)', 'Se tiver várias zonas na mesma morada, some as áreas.'],
   localizacao: ['Onde fica a obra?', ''],
-  material: ['Material', 'Se não souber, deixe «Não sei».'],
+  material: ['Material', 'Já vem a solução que recomendamos para esta superfície.'],
   suporte: ['Estado da superfície', ''],
   remocao: ['Há sistema antigo a remover?', ''],
   acesso: ['Acesso', ''],
@@ -39,7 +39,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-8', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261113-11', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -68,7 +68,13 @@ export async function montarCalculadora(raiz) {
     const aceites = (sup?.regras || []).filter((r) => r.startsWith('materiais:')).flatMap((r) => r.slice(10).split('|'));
     for (const o of form.elements.material.options) { const ok = !o.value || o.value === 'nao_sei' || !aceites.length || aceites.includes(o.value); o.hidden = !ok; o.disabled = !ok; }
     if (form.elements.material.selectedOptions[0]?.disabled) form.elements.material.value = 'nao_sei';
+    // Material recomendado para a superfície, enquanto o visitante não escolher outro.
+    const rec = (sup?.regras || []).find((r) => r.startsWith('recomendado:'))?.slice(12);
+    if (rec && !materialEscolhido && t.material[rec]) form.elements.material.value = rec;
+    for (const o of form.elements.material.options) o.textContent = (t.material[o.value]?.descricao || o.textContent.replace(' (recomendado)', '')) + (o.value === rec ? ' (recomendado)' : '');
   };
+  let materialEscolhido = false;
+  form.elements.material.addEventListener('change', () => { materialEscolhido = true; });
   const desc = (g, d) => t[g][d[g]]?.descricao || '—';
   const mensagem = (d, r) => ['Olá, fiz a estimativa na calculadora do site ImpermeabilizaPro.', '',
     'Cliente: ' + desc('cliente', d), 'Superfície: ' + desc('superficie', d), 'Área: ' + (d.area || '—') + ' m²', 'Localização: ' + desc('localizacao', d),
@@ -119,7 +125,7 @@ export async function montarCalculadora(raiz) {
       el('div', { class: 'calc-linhas' },
         el('p', {}, el('span', {}, `Total para ${r.area.toLocaleString('pt-PT')} m²`), el('b', {}, intervalo(r.totalComIva))),
         r.autoliquidacao ? null : el('p', {}, el('span', {}, d.cliente === 'empresa' ? 'Sem IVA (o que conta para empresas)' : 'Sem IVA'), el('b', {}, intervalo(r.m2SemIva, '/m²')))),
-      el('p', { class: 'calc-nota' }, r.naoSei ? `Intervalo de ±${r.margem}%: com ${r.naoSei} resposta(s) «Não sei». Abra «Afinar o preço» para o estreitar.` : `Intervalo de ±${r.margem}%. Valor final confirmado depois de vermos a obra.`),
+      el('p', { class: 'calc-nota' }, r.naoSei ? `Com ${r.naoSei} resposta(s) «Não sei»: o mínimo é o preço se estiver tudo em bom estado e o máximo o pior caso. Responda para estreitar.` : `Intervalo de ±${r.margem}%. Valor final confirmado depois de vermos a obra.`),
       ...r.notas.map((n) => el('p', { class: 'calc-nota' }, n)));
     mostrarAcoes(d, r);
   }
