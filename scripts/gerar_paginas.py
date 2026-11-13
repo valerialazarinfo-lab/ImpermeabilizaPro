@@ -606,7 +606,8 @@ def pagina_artigo(caminho, a, tipo):
             f'<p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p></div></div></section>')
     outros = OBRAS if tipo == "obra" else GUIAS
     links = "".join(f'<a href="/{"obras" if tipo == "obra" else "guias"}/{s}/">{e(o["h1"])}</a>' for s, o in outros.items() if f"/{s}" not in caminho)
-    corpo += calc + f'<section class="h-sec soft"><div class="wrap"><h2 style="font-size:1.2rem">{"Outras obras" if tipo == "obra" else "Outros guias"}</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Serviços</h2><div class="h-links">{"".join(f"<a href=\"{u}\">{e(t)}</a>" for u, t in LINKS_SERV)}</div></div></section>'
+    servicos = "".join(f'<a href="{u}">{e(t)}</a>' for u, t in LINKS_SERV)
+    corpo += calc + f'<section class="h-sec soft"><div class="wrap"><h2 style="font-size:1.2rem">{"Outras obras" if tipo == "obra" else "Outros guias"}</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Serviços</h2><div class="h-links">{servicos}</div></div></section>'
     hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
