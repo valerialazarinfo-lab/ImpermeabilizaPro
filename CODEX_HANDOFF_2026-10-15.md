@@ -12,7 +12,7 @@ Website real, profissional, original, rápido e responsivo, mais útil do que ve
 - Esta verificação do GitHub **não comprova** o estado da publicação atual, o funcionamento do domínio, o relatório Search Console nem uma conversão real.
 
 ## Regras de serviço e comunicação
-- Profissional em nome individual, não apresentar falsamente como empresa formal.
+- (Atualizado a 13-11-2026) Apresentar como empresa: ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição. Não publicar denominação, NIF, alvará ou seguro antes de existirem.
 - Serviços: terraços e coberturas planas, varandas, caves, garagens, paredes/infiltrações, casas de banho e sistemas de membrana/tela asfáltica/cimentícia conforme caso.
 - **Não anunciar impermeabilização de telhados de telha/inclinados nem trabalhos de grande altura.** Auditar referências históricas a “telhados” no repositório e propor correções SEO/redirects sem quebrar URLs existentes; usar “coberturas planas” quando correto.
 - Trabalho completo ou só mão de obra; pedidos de orçamento com dados suficientes e contacto simples por WhatsApp.

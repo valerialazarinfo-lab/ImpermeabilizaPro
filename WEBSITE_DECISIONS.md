@@ -109,4 +109,5 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 - Calculadora no topo de todas as páginas, com intervalo estreito (±10%, +4% por «Não sei», máx. ±20%) e desconto por área.
 - Páginas de serviço, preço e zona geradas por `scripts/gerar_paginas.py`; cabeçalho e rodapé por `scripts/partials/` + `scripts/harmonizar_layout.py`; verificação em `scripts/verificar_site.py` (também no GitHub Actions).
 - Novas páginas: condomínios, preços por m², Sobral de Monte Agraço, Alenquer, Arruda dos Vinhos, Vila Franca de Xira. `/simulador/` passou a `noindex` (foco em particulares e pequenas infiltrações).
+- Apresentação como empresa (decisão da responsável, 13-11-2026): ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição. Denominação, NIF e sede só depois do registo; alvará IMPIC (classe 2 previsto) e seguro só depois de emitidos.
 - Sem avaliações, garantias, alvará ou seguro no site até existirem. Plano de visibilidade gratuita em `docs/plano-visibilidade.md`; perfil Google em `docs/google-perfil-empresa.md`.
