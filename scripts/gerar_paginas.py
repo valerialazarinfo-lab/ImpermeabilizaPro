@@ -852,7 +852,8 @@ def pagina_sobre():
     equipa = ""
     for nome, funcao, txt, img in pessoas:
         foto = f'<img src="/assets/{img}" alt="{e(nome)}" width="720" height="900" loading="lazy">' if img else ""
-        equipa += f'<div class="h-resp"{"" if img else " style=\"grid-template-columns:1fr\""}>{foto}<div><h3>{e(nome)}</h3><p class="h-lead"><strong>{e(funcao)}.</strong> {e(txt)}</p></div></div>'
+        estilo = "" if img else ' style="grid-template-columns:1fr"'
+        equipa += f'<div class="h-resp"{estilo}>{foto}<div><h3>{e(nome)}</h3><p class="h-lead"><strong>{e(funcao)}.</strong> {e(txt)}</p></div></div>'
     fazemos = [f"Coberturas planas, terraços e outras áreas planas a partir de {MIN} m², incluindo terraços sobre garagens e coberturas de armazéns e pavilhões.",
                "Caves e paredes enterradas em obra nova, antes do aterro.",
                "Tela asfáltica (uma ou duas camadas, com acabamento mineral quando fica à vista) e membranas líquidas.",
