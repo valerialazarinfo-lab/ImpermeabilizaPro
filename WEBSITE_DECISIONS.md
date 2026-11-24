@@ -131,3 +131,8 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 
 - IndexNow: chave pública em `/<chave>.txt` na raiz; `.github/workflows/indexnow.yml` envia, 2 minutos depois de cada push para `main`, só os URLs do sitemap cujas páginas mudaram. Gratuito, sem conta. Não substitui o Search Console nem o Bing Webmaster Tools.
 - Datas verdadeiras: `scripts/datas_reais.py` (depois do harmonizador) repõe páginas que só mudaram na data e põe no sitemap a data real da última alteração. Antes, todas as páginas mostravam a data do dia da geração.
+
+## Página «Terraço sobre garagem» — 24 November 2026
+
+- Nova página `/impermeabilizacao-terraco-garagem/` para pesquisas de infiltrações no teto da garagem (condomínios e construtoras). Só factos já publicados: obra de Vila Nova de Gaia (440 m², duas camadas, mineral em xisto). Lajes com circulação de viaturas: avaliação caso a caso, sem sistema prometido.
+- Ligações: «Outros serviços» de todas as páginas, rodapé e menu móvel (não no menu principal do computador).
