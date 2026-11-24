@@ -675,7 +675,7 @@ def pagina_artigo(caminho, a, tipo):
                     "about": {"@type": "Service", "serviceType": "Impermeabilização", "provider": {"@id": NEGOCIO_ID}}})
         extra = [(n, a[c]) for c, n in (("tipo_cliente", "Cliente"), ("data", "Data"), ("duracao", "Duração")) if a.get(c)]
         ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"] + extra)
-        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" srcset="/assets/{a["img"].replace(".webp", "-600.webp")} 600w, /assets/{a["img"]} 1200w" sizes="(max-width: 980px) 100vw, 55vw" width="1200" height="675"></figure>'
+        corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" srcset="/assets/{a["img"].replace(".webp", "-600.webp")} 600w, /assets/{a["img"]} 1200w" sizes="(max-width: 980px) 100vw, 55vw" width="1200" height="675" loading="lazy" decoding="async"></figure>'
                   f'<div><h2>Ficha da obra</h2><table class="price-table h-ficha"><tbody>{ficha}</tbody></table><div class="h-texto">{"".join(f"<p>{e(t)}</p>" for t in a["texto"])}</div></div></div></section>')
         fases = [(t, a.get("fases", {}).get(c)) for c, t in (("antes", "Antes"), ("durante", "Durante a obra"), ("depois", "Depois"))]
         if any(ks for _, ks in fases):
