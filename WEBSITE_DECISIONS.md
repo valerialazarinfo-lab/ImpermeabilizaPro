@@ -118,3 +118,10 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 - 4 páginas de zona novas para completar os 13 concelhos da ficha: Odivelas, Amadora, Lourinhã, Cadaval (geradas por `scripts/gerar_paginas.py`, com «na»/«no» no título). Freguesias atuais e fatores gerais, sem obras inventadas.
 - Rodapé: link «Deixe a sua avaliação no Google» e as 13 zonas.
 - Verificado: `scripts/verificar_site.py` sem erros (41 páginas); sem overflow em iPhone 13; sem erros JS.
+
+## Firma da sociedade e Sobre nós — 24 November 2026
+
+- Decisão da responsável (24-11-2026): publicar já a firma. ImpermeabilizaPro é a marca da Lazar & Souza, Lda. (NIPC 519771311, segundo o pacto assinado), «sociedade por quotas em constituição». Substitui a regra de 13-11 de só publicar a denominação depois do registo.
+- Fonte única: `EMPRESA` em `scripts/gerar_paginas.py` (Sobre nós, informações legais, privacidade, llms.txt, dados estruturados) + rodapé em `scripts/partials/footer.html` + JSON-LD de `index.html`.
+- Sede: não publicada (sede provisória e mudança prevista). Quando houver certidão: `registada=True` e `sede`.
+- Página `/sobre-nos/` e modelo de obra (`MODELO_OBRA`, `docs/modelo-obra.md`) publicados a 24-11-2026.
