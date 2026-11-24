@@ -118,7 +118,7 @@ F = {
 FAQ_MIN = ("Qual é o mínimo de obra?", f"Trabalhamos em coberturas, terraços e outras áreas planas a partir de {MIN} m². Não fazemos pequenas reparações. Várias zonas da mesma morada somam-se.")
 FAQ_IVA = ("Os preços têm IVA?", IVA_LONGO)
 FAQ_ZONA = ("Em que zonas trabalham?", "A partir de Sobral de Monte Agraço, nos distritos de Lisboa, Santarém, Setúbal e Leiria. Outras zonas mediante confirmação.")
-LINKS_SERV = [("/coberturas-planas/", "Coberturas planas"), ("/terracos/", "Terraços"), ("/paredes/", "Caves e paredes enterradas"), ("/tela-asfaltica/", "Tela asfáltica"),
+LINKS_SERV = [("/coberturas-planas/", "Coberturas planas"), ("/terracos/", "Terraços"), ("/impermeabilizacao-terraco-garagem/", "Terraços sobre garagens"), ("/paredes/", "Caves e paredes enterradas"), ("/tela-asfaltica/", "Tela asfáltica"),
               ("/impermeabilizacao-condominios/", "Condomínios"), ("/empresas/", "Construtoras"), ("/precos-impermeabilizacao/", "Preços por m²"), ("/obras/", "Obras reais"), ("/guias/", "Guias")]
 PRECOS_TELA = [("material", "tela_1"), ("material", "tela_2"), ("remocao", "tela_antiga"), ("suporte", "degradado"), ("suporte", "pendentes"), ("acesso", "escadas")]
 PRECOS_TERRACO = [("material", "tela_1"), ("material", "tela_2"), ("material", "membrana_liquida"), ("remocao", "tela_antiga"), ("remocao", "sobre_ceramico"), ("suporte", "degradado"), ("suporte", "pendentes"), ("acesso", "escadas")]
@@ -150,6 +150,25 @@ PAGINAS = {
                "Em condomínios preparamos a proposta com preço por m² e total, pronta para levar à assembleia."],
         precos=PRECOS_TERRACO, faq=[("É preciso levantar o pavimento?", "Nem sempre. Em alguns casos aplica-se o sistema sobre o cerâmico existente; noutros, levantar é a única forma de garantir o resultado. Decidimos depois de ver fotografias."), FAQ_MIN, FAQ_IVA],
         servico="Impermeabilização de terraços", oferta=("material", "tela_2")),
+    "impermeabilizacao-terraco-garagem": dict(
+        titulo="Impermeabilização de Terraço sobre Garagem: Preço por m² | ImpermeabilizaPro",
+        desc=f"Infiltrações no teto da garagem? Impermeabilização de terraços e lajes sobre garagens de prédios e condomínios, com tela asfáltica, a partir de {MIN} m². Preço por m² na hora.",
+        eyebrow="TERRAÇOS SOBRE GARAGENS", h1="Impermeabilização de terraço sobre garagem",
+        sub="Para infiltrações no teto da garagem: impermeabilização do terraço ou da laje por cima, em prédios, condomínios e obra nova. Já fizemos um terraço sobre garagem com 440 m².",
+        sup="terraco", fotos=["gaia_caso", "gaia_obra", "gaia_juntas", "gaia_remate", "gaia_largo"],
+        inclui=[("Diagnóstico com fotografias", "Do teto da garagem e do terraço por cima, para ver por onde entra a água."),
+                ("Remoção do sistema antigo", "Tela, membrana ou pavimento, quando necessário."),
+                ("Tela em duas camadas", "Como no terraço de 440 m² em Vila Nova de Gaia."),
+                ("Ralos, juntas e remates", "Encontros com paredes, platibandas e soleiras, onde a água entra mais vezes.")],
+        texto=["Num terraço sobre garagem, a água que passa a impermeabilização aparece no teto da garagem, muitas vezes longe do ponto onde entra. Por isso pedimos fotografias das duas zonas antes de propor a solução.",
+               "Em Vila Nova de Gaia impermeabilizámos um terraço sobre garagem com 440 m², com duas camadas de tela e acabamento mineral em xisto. Quando o terraço leva pavimento por cima, a tela fica protegida por ele.",
+               "Para lajes com circulação de viaturas, o sistema é avaliado caso a caso, depois de vermos a obra."],
+        precos=PRECOS_TERRACO,
+        faq=[("A água entra pelo teto da garagem. O problema está no terraço?", "Muitas vezes sim, sobretudo junto a ralos, juntas e encontros com paredes. Confirmamos com fotografias do teto da garagem e do terraço por cima."),
+             ("É preciso levantar o pavimento do terraço?", "Nem sempre. Em alguns casos aplica-se o sistema sobre o pavimento existente; noutros, levantar é a única forma de garantir o resultado. Decidimos depois de ver fotografias."),
+             ("Fazem a proposta para a assembleia do condomínio?", "Sim. A proposta escrita tem o preço por m², o total com IVA e o que está incluído."), FAQ_MIN, FAQ_IVA],
+        servico="Impermeabilização de terraço sobre garagem", oferta=("material", "tela_2"),
+        wa="Olá, temos infiltrações no teto da garagem e queria uma proposta para impermeabilizar o terraço por cima. Tem cerca de [m²] e fica em [localidade]."),
     "paredes": dict(
         titulo="Impermeabilização de Caves e Paredes Enterradas | ImpermeabilizaPro",
         desc=f"Impermeabilização de caves, fundações e paredes enterradas com tela asfáltica, em obra nova e reabilitação. A partir de {MIN} m². Preço por m².",
