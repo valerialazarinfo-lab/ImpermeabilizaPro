@@ -441,7 +441,7 @@ def tabela_home():
 
 
 def sitemap():
-    urls = ["", "calculadora/"] + [f"{s}/" for s in PAGINAS] + ["obras/"] + [f"obras/{s}/" for s in OBRAS] + ["guias/"] + [f"guias/{s}/" for s in GUIAS]
+    urls = ["", "calculadora/"] + [f"{s}/" for s in PAGINAS] + ["sobre-nos/", "obras/"] + [f"obras/{s}/" for s in obras_publicadas()] + ["guias/"] + [f"guias/{s}/" for s in GUIAS]
     corpo = "".join(f"  <url><loc>{SITE}/{u}</loc><lastmod>{HOJE}</lastmod></url>\n" for u in urls)
     (RAIZ / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{corpo}</urlset>\n', encoding="utf-8")
 
@@ -467,7 +467,7 @@ def llms():
 ## Páginas
 - [Calculadora de preço por m²]({SITE}/calculadora/)
 - [Preços de impermeabilização por m²]({SITE}/precos-impermeabilizacao/)
-""" + "\n".join(f"- [{p['h1']}]({SITE}/{s}/)" for s, p in PAGINAS.items() if s != "precos-impermeabilizacao") + "\n\n## Obras reais\n" + "\n".join(f"- [{a['h1']}]({SITE}/obras/{s}/): " + "; ".join(f"{k}: {v}" for k, v in a["ficha"]) for s, a in OBRAS.items()) + "\n\n## Guias\n" + "\n".join(f"- [{a['h1']}]({SITE}/guias/{s}/): {a['resumo']}" for s, a in GUIAS.items()) + "\n"
+""" + "\n".join(f"- [{p['h1']}]({SITE}/{s}/)" for s, p in PAGINAS.items() if s != "precos-impermeabilizacao") + "\n\n## Obras reais\n" + "\n".join(f"- [{a['h1']}]({SITE}/obras/{s}/): " + "; ".join(f"{k}: {v}" for k, v in a["ficha"]) for s, a in obras_publicadas().items()) + "\n\n## Guias\n" + "\n".join(f"- [{a['h1']}]({SITE}/guias/{s}/): {a['resumo']}" for s, a in GUIAS.items()) + "\n"
     (RAIZ / "llms.txt").write_text(txt, encoding="utf-8")
 
 
@@ -499,6 +499,38 @@ OBRAS = {
                "Num terraço comprido com platibandas, os remates laterais são a parte mais importante: é por aí que a água entra mais vezes."],
         galeria=["cobertura_remates", "cobertura_ralo", "murete"], sup="terraco"),
 }
+
+# ---------------------------------------------------------------- modelo de obra nova (guia: docs/modelo-obra.md)
+# Copiar este bloco para dentro de OBRAS, com um slug novo («localidade-tipo-area»), e preencher só com dados reais.
+# Enquanto publicar=False a obra não gera página, não entra no sitemap, no índice, no llms.txt nem no PDF.
+# Para publicar=True é obrigatório autorizacao_cliente=True (autorização escrita do cliente guardada no Drive, nunca aqui).
+# Campos opcionais (ficam escondidos se vazios): tipo_cliente, data, duracao, fases (antes/durante/depois).
+MODELO_OBRA = dict(
+    publicar=False, autorizacao_cliente=False,
+    titulo="Obra: [Tipo] em [Localidade], [área] m² | ImpermeabilizaPro",
+    desc="Impermeabilização de [tipo] com [área] m² em [localidade]: [sistema] e [acabamento].",
+    h1="[Tipo] em [Localidade]", img="caso-[localidade]-[area]m2.webp",
+    ficha=[("Local", "[Concelho]"), ("Área", "[área] m²"), ("Tipo", "[cobertura plana / terraço / cave]"), ("Sistema", "[sistema e marca]"), ("Acabamento", "[acabamento]")],
+    tipo_cliente="[Construtora / Condomínio / Empresa]", data="[mês e ano]", duracao="[n.º de dias]",
+    texto=["[O problema ou o pedido: o que o cliente precisava.]", "[A solução: porque escolhemos este sistema e o ponto mais difícil da obra.]"],
+    fases=dict(antes=["[chave F]"], durante=["[chave F]"], depois=["[chave F]"]),
+    sup="terraco",
+)
+
+
+def obras_publicadas():
+    """Obras antigas (sem o campo publicar) e obras novas com publicar=True e autorização do cliente."""
+    out = {}
+    for s, a in OBRAS.items():
+        if not a.get("publicar", True):
+            continue
+        if "publicar" in a and a.get("autorizacao_cliente") is not True:
+            raise SystemExit(f"Obra «{s}»: publicar=True exige autorizacao_cliente=True (autorização escrita do cliente).")
+        textos = [a["titulo"], a["desc"], a["h1"], a.get("tipo_cliente", ""), a.get("data", ""), a.get("duracao", "")] + [x for par in a["ficha"] for x in par] + a["texto"]
+        if any(re.search(r"\[[^\]]+\]", str(t)) for t in textos):
+            raise SystemExit(f"Obra «{s}»: ainda tem campos do modelo por preencher ([...]).")
+        out[s] = a
+    return out
 
 GUIAS = {
     "tela-asfaltica-ou-membrana-liquida": dict(
@@ -591,10 +623,16 @@ def pagina_artigo(caminho, a, tipo):
     if tipo == "obra":
         lds.append({"@context": "https://schema.org", "@type": "WebPage", "name": a["h1"], "url": url, "description": a["desc"], "image": f"{SITE}/assets/{a['img']}",
                     "about": {"@type": "Service", "serviceType": "Impermeabilização", "provider": {"@id": NEGOCIO_ID}}})
-        ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])
+        extra = [(n, a[c]) for c, n in (("tipo_cliente", "Cliente"), ("data", "Data"), ("duracao", "Duração")) if a.get(c)]
+        ficha = "".join(f"<tr><th scope=\"row\">{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"] + extra)
         corpo += (f'<section class="h-sec"><div class="wrap h-obra"><figure class="h-caso"><img src="/assets/{a["img"]}" alt="{e(a["h1"])}" srcset="/assets/{a["img"].replace(".webp", "-600.webp")} 600w, /assets/{a["img"]} 1200w" sizes="(max-width: 980px) 100vw, 55vw" width="1200" height="675"></figure>'
                   f'<div><h2>Ficha da obra</h2><table class="price-table h-ficha"><tbody>{ficha}</tbody></table><div class="h-texto">{"".join(f"<p>{e(t)}</p>" for t in a["texto"])}</div></div></div></section>')
-        corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>{e(a.get("galeria_titulo", "Outras fotografias de obras semelhantes"))}</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
+        fases = [(t, a.get("fases", {}).get(c)) for c, t in (("antes", "Antes"), ("durante", "Durante a obra"), ("depois", "Depois"))]
+        if any(ks for _, ks in fases):
+            corpo += ('<section class="h-sec soft"><div class="wrap"><h2>Antes, durante e depois</h2>'
+                      + "".join(f'<h3>{t}</h3><div class="h-galeria h-galeria-{len(ks)}">{"".join(figura(k) for k in ks)}</div>' for t, ks in fases if ks) + '</div></section>')
+        if a.get("galeria"):
+            corpo += (f'<section class="h-sec soft"><div class="wrap"><h2>{e(a.get("galeria_titulo", "Outras fotografias de obras semelhantes"))}</h2><div class="h-galeria h-galeria-{len(a["galeria"])}">{"".join(figura(k) for k in a["galeria"])}</div></div></section>')
     else:
         lds.append({"@context": "https://schema.org", "@type": "Article", "headline": a["h1"], "description": a["desc"], "url": url, "inLanguage": "pt-PT", "dateModified": HOJE,
                     "author": {"@type": "Person", "name": "Vinícius Nascimento"}, "publisher": {"@id": NEGOCIO_ID}, "image": f"{SITE}/assets/foto-real-20260915-162914.jpeg"})
@@ -611,19 +649,19 @@ def pagina_artigo(caminho, a, tipo):
             f'<div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_{tipo}" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
             f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div>'
             f'<p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p></div></div></section>')
-    outros = OBRAS if tipo == "obra" else GUIAS
+    outros = obras_publicadas() if tipo == "obra" else GUIAS
     links = "".join(f'<a href="/{"obras" if tipo == "obra" else "guias"}/{s}/">{e(o["h1"])}</a>' for s, o in outros.items() if f"/{s}" not in caminho)
     servicos = "".join(f'<a href="{u}">{e(t)}</a>' for u, t in LINKS_SERV)
     corpo += calc + f'<section class="h-sec soft"><div class="wrap"><h2 style="font-size:1.2rem">{"Outras obras" if tipo == "obra" else "Outros guias"}</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Serviços</h2><div class="h-links">{servicos}</div></div></section>'
     hero = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
-    chave_og = {"caso-aroeira-3000m2.webp": "aroeira", "caso-gaia-440m2.webp": "gaia_caso", "caso-ericeira-200m2.webp": "ericeira"}.get(a.get("img", ""))
+    chave_og = a.get("og") or {"caso-aroeira-3000m2.webp": "aroeira", "caso-gaia-440m2.webp": "gaia_caso", "caso-ericeira-200m2.webp": "ericeira"}.get(a.get("img", ""))
     return cabeca(a["titulo"], a["desc"], url, lds, imagem=og_img(chave_og) if chave_og else None) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-12\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):
-    itens = OBRAS if tipo == "obra" else GUIAS
+    itens = obras_publicadas() if tipo == "obra" else GUIAS
     base = "obras" if tipo == "obra" else "guias"
     h1 = "Obras reais" if tipo == "obra" else "Guias de impermeabilização"
     desc = ("Obras de impermeabilização realizadas: paredes enterradas, terraços e coberturas, com área, sistema e fotografias reais." if tipo == "obra"
@@ -670,7 +708,7 @@ def cabeca(titulo, desc, url, lds, robots="index,follow,max-image-preview:large"
 
 
 def gerar_obras_guias():
-    for tipo, itens, base in (("obra", OBRAS, "obras"), ("guia", GUIAS, "guias")):
+    for tipo, itens, base in (("obra", obras_publicadas(), "obras"), ("guia", GUIAS, "guias")):
         (RAIZ / base).mkdir(exist_ok=True)
         (RAIZ / base / "index.html").write_text(pagina_indice(tipo), encoding="utf-8")
         for s, a in itens.items():
@@ -683,7 +721,7 @@ def gerar_obras_guias():
 def apresentacao():
     obras = "".join(
         f'<div class="ob"><img src="/assets/{a["img"]}" alt=""><div><h3>{e(a["h1"])}</h3><table>{"".join(f"<tr><th>{e(k)}</th><td>{e(v)}</td></tr>" for k, v in a["ficha"])}</table></div></div>'
-        for a in OBRAS.values())
+        for a in obras_publicadas().values())
     serv = [("g-obra-real-cobertura-02.webp", "Coberturas planas", "Edifícios, armazéns e pavilhões."), ("g-telhado-real-04.webp", "Terraços", "De cobertura, sobre garagens e de condomínios."),
             ("g-parede-real-01.webp", "Caves e paredes enterradas", "Obra nova, antes do aterro."), ("g-telhado-real-01.webp", "Tela asfáltica", "Uma ou duas camadas, acabamento mineral.")]
     servh = "".join(f'<div class="sv"><img src="/assets/{i}" alt=""><b>{e(t)}</b><span>{e(d)}</span></div>' for i, t, d in serv)
@@ -788,6 +826,70 @@ def pagina_texto(slug, titulo, desc, h1, secoes, robots="noindex,follow", canoni
     return head + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
 
 
+# ---------------------------------------------------------------- Sobre nós (só factos confirmados; campos vazios ficam escondidos)
+SOBRE = dict(
+    # Preencher SÓ depois do registo (certidão permanente). Até lá a página diz «sociedade por quotas em constituição».
+    empresa=None,          # ex.: dict(denominacao="…, Lda.", nipc="…", sede="…")
+    # Pessoas além do Vinícius: (nome, função, texto, imagem em /assets/ ou None). Só com autorização da pessoa.
+    equipa_extra=[],
+    # Credenciais só quando emitidas: (nome, valor), ex.: ("Alvará IMPIC", "n.º … classe …"), ("Seguro de responsabilidade civil", "…").
+    credenciais=[],
+)
+
+
+def pagina_sobre():
+    url = f"{SITE}/sobre-nos/"
+    emp = SOBRE["empresa"]
+    if emp:
+        quem = (f"ImpermeabilizaPro é a marca da {e(emp['denominacao'])}, NIPC {e(emp['nipc'])}, com sede em {e(emp['sede'])}. "
+                "Fazemos impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas.")
+    else:
+        quem = ("ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição, com base em Sobral de Monte Agraço. "
+                "Fazemos impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas. "
+                'A denominação, o NIF e a sede serão publicados aqui e nas <a href="/informacoes-legais/">informações legais</a> logo após o registo.')
+    pessoas = [("Vinícius Nascimento", "Responsável técnico",
+                "5 anos de experiência em impermeabilização. É quem faz a obra e quem fala consigo: pode ligar ou escrever-lhe diretamente.", "vinicius-nascimento-v2.webp")] + list(SOBRE["equipa_extra"])
+    equipa = ""
+    for nome, funcao, txt, img in pessoas:
+        foto = f'<img src="/assets/{img}" alt="{e(nome)}" width="720" height="900" loading="lazy">' if img else ""
+        estilo = "" if img else ' style="grid-template-columns:1fr"'
+        equipa += f'<div class="h-resp"{estilo}>{foto}<div><h3>{e(nome)}</h3><p class="h-lead"><strong>{e(funcao)}.</strong> {e(txt)}</p></div></div>'
+    fazemos = [f"Coberturas planas, terraços e outras áreas planas a partir de {MIN} m², incluindo terraços sobre garagens e coberturas de armazéns e pavilhões.",
+               "Caves e paredes enterradas em obra nova, antes do aterro.",
+               "Tela asfáltica (uma ou duas camadas, com acabamento mineral quando fica à vista) e membranas líquidas.",
+               "Obra completa (material e mão de obra) ou só execução, em subempreitada para construtoras."]
+    nao_fazemos = ["Telhados de telha ou inclinados.", "Trabalhos em grande altura.", "Pequenas reparações."]
+    lista = lambda xs: "<ul>" + "".join(f"<li>{minimo_span(x)}</li>" for x in xs) + "</ul>"
+    obras = obras_publicadas()
+    cards = "".join(f'<a class="h-servico" href="/obras/{s_}/"><img src="/assets/{a["img"]}" srcset="/assets/{a["img"].replace(".webp", "-600.webp")} 600w, /assets/{a["img"]} 1200w" sizes="(max-width: 620px) 100vw, 33vw" alt="" width="1200" height="675" loading="lazy"><div><strong>{e(a["h1"])}</strong><span>{e(a["desc"])}</span></div></a>' for s_, a in obras.items())
+    cred = ("<h2>Documentos da empresa</h2><table class=\"price-table h-ficha\"><tbody>" + "".join(f'<tr><th scope="row">{e(k)}</th><td>{e(v)}</td></tr>' for k, v in SOBRE["credenciais"]) + "</tbody></table>") if SOBRE["credenciais"] else ""
+    wa = WA_BASE + urllib.parse.quote("Olá, gostaria de pedir uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade].")
+    corpo = (f'<section class="h-hero slim"><img src="/assets/foto-real-20260915-162914-1600.webp" srcset="/assets/foto-real-20260915-162914-800.webp 800w, /assets/foto-real-20260915-162914-1600.webp 1600w" sizes="100vw" alt="" width="1920" height="1080" fetchpriority="high">'
+             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › Sobre nós</p><h1>Sobre nós</h1><p class="h-sub">Impermeabilização de coberturas planas, terraços e caves para construtoras, condomínios e empresas, a partir de Sobral de Monte Agraço.</p></div></section>'
+             f'<section class="h-sec"><div class="wrap narrow h-artigo"><h2>Quem somos</h2><p>{quem}</p>{cred}</div></section>'
+             f'<section class="h-sec soft"><div class="wrap narrow"><h2>Quem faz a obra</h2>{equipa}</div></section>'
+             f'<section class="h-sec"><div class="wrap narrow h-artigo"><h2>O que fazemos</h2>{lista(fazemos)}<h2>O que não fazemos</h2>{lista(nao_fazemos)}'
+             f'<h2>Onde trabalhamos</h2><p>A partir de Sobral de Monte Agraço, nos distritos de Lisboa, Santarém, Setúbal e Leiria. Outras zonas mediante confirmação.</p></div></section>'
+             '<section class="h-sec soft"><div class="wrap"><h2>Como trabalhamos</h2><ol class="h-passos"><li><strong>Envie medidas e fotografias</strong>Pelo WhatsApp ou email: área, localização e, se tiver, planta ou caderno de encargos.</li>'
+             '<li><strong>Receba a proposta</strong>Solução, preço por m² e total, e o que está incluído.</li><li><strong>Execução</strong>Combinamos datas com a obra e acompanhamos até ao fim.</li></ol></div></section>'
+             + (f'<section class="h-sec"><div class="wrap"><h2>Algumas obras</h2><div class="h-servicos h-servicos-3">{cards}</div><p style="margin-top:16px"><a href="/obras/">Ver todas as obras</a></p></div></section>' if cards else "")
+             + f'<section class="h-sec soft"><div class="wrap narrow"><h2>Fale connosco</h2><p>Para uma proposta, diga-nos a área aproximada e a localidade da obra.</p>'
+             f'<p><a class="btn whatsapp big wa-direct" data-placement="sobre_nos" href="{e(wa)}" target="_blank" rel="noopener noreferrer">WhatsApp</a> <a class="btn outline big" href="tel:+351930446198" data-track="phone_sobre_nos">930 446 198</a> '
+             '<a class="btn outline big" href="mailto:proimpermeabiliza@gmail.com">Email</a> <a class="btn outline big" href="/calculadora/">Calcular o preço</a></p>'
+             '<p class="calc-legal">O WhatsApp abre com a mensagem preenchida; só nos chega quando carregar em Enviar.</p></div></section>')
+    crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": "Sobre nós", "item": url}]}
+    sobre = {"@context": "https://schema.org", "@type": "AboutPage", "name": "Sobre nós", "url": url, "inLanguage": "pt-PT", "about": {"@id": NEGOCIO_ID},
+             "mentions": [{"@type": "Person", "name": "Vinícius Nascimento", "jobTitle": "Responsável técnico", "worksFor": {"@id": NEGOCIO_ID}, "image": f"{SITE}/assets/vinicius-nascimento-v2.webp"}]}
+    return (cabeca("Sobre Nós: Quem Faz a Sua Impermeabilização | ImpermeabilizaPro",
+                   "Quem somos, o que fazemos e o que não fazemos: impermeabilização de coberturas planas, terraços e caves para construtoras, condomínios e empresas.", url, [crumbs, sobre])
+            + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n")
+
+
+def gerar_sobre():
+    (RAIZ / "sobre-nos").mkdir(exist_ok=True)
+    (RAIZ / "sobre-nos" / "index.html").write_text(pagina_sobre(), encoding="utf-8")
+
+
 def pagina_404():
     servicos = "".join(f'<a href="{u}">{e(t)}</a>' for u, t in LINKS_SERV)
     corpo = ('<section class="h-hero slim h-hero-texto"><div class="wrap"><h1>Esta página não existe</h1><p class="h-sub">O endereço pode ter mudado. Veja o preço da sua obra ou escolha o serviço.</p></div></section>'
@@ -825,6 +927,7 @@ if __name__ == "__main__":
         (d / "index.html").write_text(pagina(slug, p), encoding="utf-8")
     gerar_obras_guias()
     gerar_legais()
+    gerar_sobre()
     pagina_404()
     apresentacao()
     tabela_home()
