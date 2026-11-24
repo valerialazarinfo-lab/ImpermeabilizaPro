@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261113-12';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261124-1';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -40,7 +40,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261113-12', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261124-1', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -110,6 +110,11 @@ export async function montarCalculadora(raiz) {
     }
     if (r.estado === 'abaixo_minimo') {
       res.replaceChildren(el('p', { class: 'calc-aviso calc-stop' }, `Trabalhamos em obras a partir de ${r.minimo} m². Para ${d.area} m² não apresentamos preço.`),
+        el('p', { class: 'calc-nota' }, `Se houver várias zonas na mesma morada (coberturas, terraços, caves), some as áreas.`));
+      return;
+    }
+    if (r.estado === 'abaixo_valor') {
+      res.replaceChildren(el('p', { class: 'calc-aviso calc-stop' }, `Com estas respostas, a obra fica abaixo do nosso valor mínimo de ${r.minimoEur.toLocaleString('pt-PT')} € sem IVA, por isso não apresentamos preço.`),
         el('p', { class: 'calc-nota' }, `Se houver várias zonas na mesma morada (coberturas, terraços, caves), some as áreas.`));
       return;
     }

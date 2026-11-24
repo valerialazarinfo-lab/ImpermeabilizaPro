@@ -133,3 +133,14 @@ test('só mão de obra: preço do sistema × 0,53, extras iguais', () => {
 test('CSV com valores errados falha de forma clara', () => {
   assert.throws(() => lerPrecos(csv.replace('tela_1;Tela asfáltica, 1 camada;22;32', 'tela_1;Tela asfáltica, 1 camada;40;32')), /inválidos/);
 });
+
+test('valor mínimo por obra (2.000 € sem IVA): abaixo disso não há preço', () => {
+  const baixo = calcular({ ...base, area: 100, material: 'tela_1', fornecimento: 'cliente', remates: 'poucos', ralos: 0 }, t);
+  assert.equal(baixo.estado, 'abaixo_valor');
+  assert.equal(baixo.minimoEur, 2000);
+  const ok = calcular({ ...base, area: 200 }, t);
+  assert.equal(ok.estado, 'preco');
+  assert.ok(ok.totalSemIva.max >= 2000);
+  const semRegra = lerPrecos(csv.replace(/^config;minimo_obra_eur;.*\n/m, ''));
+  assert.equal(calcular({ ...base, area: 100, material: 'tela_1', fornecimento: 'cliente', remates: 'poucos', ralos: 0 }, semRegra).estado, 'preco');
+});
