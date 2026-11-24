@@ -12,7 +12,7 @@ Fala com a Valeria em português de Portugal. Esta skill é só para o site. Cus
 - Repositório **público**: nunca pôr custos internos, dados de clientes, orçamentos, segredos ou IDs do Drive.
 - Nunca inventar avaliações, obras, garantias, alvará, seguro, certificações nem números. Fotografias só reais.
 - Público: construtoras, condomínios e empresas; obras a partir do mínimo (hoje 100 m²) em coberturas e áreas planas. Não anunciar telhados de telha/inclinados, grande altura nem pequenas reparações. Casas de banho = serviço à parte, sem preço automático.
-- Empresa: «ImpermeabilizaPro, sociedade por quotas em constituição». Denominação, NIF, sede, alvará e seguro só depois de existirem.
+- Empresa: «ImpermeabilizaPro, marca da Lazar & Souza, Lda. (NIPC 519771311), sociedade por quotas em constituição» (decisão de 24-11-2026; dados em `EMPRESA` no gerador). Sede, alvará e seguro só depois de existirem; com a certidão de registo, pôr `registada=True` e a sede.
 - IVA à taxa legal (23%; 6% quando a lei permite). Autoliquidação desligada (`config;autoliquidacao_ativa` = 0) até haver alvará/certificado IMPIC (DL 97/2026).
 - WhatsApp/email abrem mensagens preenchidas; nunca dizer «pedido recebido». Medição só com consentimento e só categorias.
 - Nunca fazer merge em `main` sem a Valeria dizer «podes publicar» para essa alteração.
