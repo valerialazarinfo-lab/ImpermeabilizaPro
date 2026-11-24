@@ -140,3 +140,7 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 ## Sem «em constituição» — 24 November 2026
 
 - Decisão da responsável: não dizer «em constituição» em lado nenhum (site, ficha Google, textos). A firma aparece como «Lazar & Souza, Lda. (NIPC 519771311)». Ponto fraco registado: até haver certidão de registo, a sociedade ainda não está registada. Sede continua só depois do registo.
+
+## Horário — 24 November 2026
+
+- Horário de atendimento igual ao da ficha Google (todos os dias, 08:00–22:00, confirmado a 13-11-2026): rodapé e `openingHoursSpecification` nos dados estruturados da página inicial. Se mudar na ficha, mudar aqui também.
