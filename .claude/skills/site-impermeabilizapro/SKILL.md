@@ -30,6 +30,8 @@ Fala com a Valeria em português de Portugal. Esta skill é só para o site. Cus
 | Mínimo de obra | `python3 scripts/definir_minimo_obra.py <m²>` |
 | Ícones (favicon, Apple) e imagens de partilha 1200×630 | `python3 scripts/gerar_imagens.py` (fotos reais; nova chave em `F` do gerador = acrescentar em `OG`) |
 | Página de erro | `404.html`, gerada por `pagina_404()` no gerador |
+| Datas do sitemap e «Atualizado em» | `scripts/datas_reais.py` (repõe páginas que só mudaram na data; lastmod = última alteração real) |
+| Aviso ao Bing (IndexNow) | `scripts/indexnow.py` + `.github/workflows/indexnow.yml` (automático em cada publicação; chave pública em `/<chave>.txt`, não apagar) |
 
 ## Fluxo de cada alteração
 1. `git fetch origin main` e criar ramo novo `claude/<tema>` a partir de `origin/main` (outras conversas também publicam: partir sempre do `main` atual).
@@ -38,6 +40,7 @@ Fala com a Valeria em português de Portugal. Esta skill é só para o site. Cus
    ```
    python3 scripts/gerar_paginas.py
    python3 scripts/harmonizar_layout.py
+   python3 scripts/datas_reais.py
    node scripts/gerar_pdf.js
    python3 scripts/verificar_site.py
    node --test calculadora/motor.test.mjs

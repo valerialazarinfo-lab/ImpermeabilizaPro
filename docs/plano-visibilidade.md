@@ -11,6 +11,8 @@ Não há forma honesta de garantir o 1.º lugar: depende da concorrência, das a
 - `sitemap.xml` gerado automaticamente; páginas fracas ou fora do foco (`/simulador/`, `/telhados/`) com `noindex`.
 - Site rápido no telemóvel (fotografia principal com 51 KB) e calculadora no topo de cada página para quem chega não sair.
 
+- (24-11-2026) **IndexNow**: cada publicação avisa automaticamente o Bing (e outros motores IndexNow) das páginas alteradas. O sitemap passou a ter a data real da última alteração de cada página.
+
 ## O que tens de fazer (por ordem de impacto)
 
 ### 1. Google Search Console (15 min) — sem isto o Google pode nem ver as páginas novas

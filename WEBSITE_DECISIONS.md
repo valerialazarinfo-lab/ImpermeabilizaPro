@@ -125,3 +125,9 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 - Fonte única: `EMPRESA` em `scripts/gerar_paginas.py` (Sobre nós, informações legais, privacidade, llms.txt, dados estruturados) + rodapé em `scripts/partials/footer.html` + JSON-LD de `index.html`.
 - Sede: não publicada (sede provisória e mudança prevista). Quando houver certidão: `registada=True` e `sede`.
 - Página `/sobre-nos/` e modelo de obra (`MODELO_OBRA`, `docs/modelo-obra.md`) publicados a 24-11-2026.
+- Construtoras e condomínios: secção «Como pedir a proposta» e email pré-preenchido para anexos (24-11-2026).
+
+## Indexação — 24 November 2026
+
+- IndexNow: chave pública em `/<chave>.txt` na raiz; `.github/workflows/indexnow.yml` envia, 2 minutos depois de cada push para `main`, só os URLs do sitemap cujas páginas mudaram. Gratuito, sem conta. Não substitui o Search Console nem o Bing Webmaster Tools.
+- Datas verdadeiras: `scripts/datas_reais.py` (depois do harmonizador) repõe páginas que só mudaram na data e põe no sitemap a data real da última alteração. Antes, todas as páginas mostravam a data do dia da geração.
