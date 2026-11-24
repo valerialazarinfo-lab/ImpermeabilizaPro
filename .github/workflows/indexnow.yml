@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
     paths: ['**/index.html', 'index.html', 'sitemap.xml']
+  workflow_dispatch:  # lançamento manual: envia todas as páginas do sitemap
 permissions:
   contents: read
 jobs:

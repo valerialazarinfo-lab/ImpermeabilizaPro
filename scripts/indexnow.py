@@ -2,7 +2,7 @@
 """Avisa os motores IndexNow (Bing, Yandex, Seznam…) das páginas do sitemap que mudaram entre dois commits.
 
 A chave é pública por desenho: o ficheiro <chave>.txt na raiz prova que o site é nosso. Não é um segredo.
-Uso: python3 scripts/indexnow.py <commit_antes> <commit_depois> [--simular]
+Uso: python3 scripts/indexnow.py <commit_antes> <commit_depois> [--simular]   (sem commits: todas as páginas do sitemap)
 """
 import json
 import pathlib
@@ -24,7 +24,7 @@ def chave():
 
 
 def urls_alteradas(antes, depois):
-    if set(antes) == {"0"}:  # primeiro push do ramo: não há «antes»
+    if not antes or set(antes) == {"0"}:  # lançamento manual ou primeiro push: todas as páginas do sitemap
         nomes = subprocess.run(["git", "ls-files", "*.html"], cwd=RAIZ, capture_output=True, text=True, check=True).stdout.split()
     else:
         nomes = subprocess.run(["git", "diff", "--name-only", antes, depois], cwd=RAIZ, capture_output=True, text=True, check=True).stdout.split()
@@ -43,7 +43,7 @@ def urls_alteradas(antes, depois):
 
 
 def main():
-    antes, depois = sys.argv[1], sys.argv[2]
+    antes, depois = (sys.argv[1:3] + ["", ""])[:2]
     k = chave()
     urls = urls_alteradas(antes, depois)
     if not urls:
