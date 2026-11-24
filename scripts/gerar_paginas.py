@@ -935,9 +935,22 @@ def pagina_sobre():
             + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n")
 
 
+def pagina_avaliar():
+    """/avaliar/: endereço curto (e código QR em assets/qr-avaliar.png) que leva ao formulário de avaliação do Google."""
+    corpo = ('<section class="h-hero slim h-hero-texto"><div class="wrap"><h1>Avaliar a ImpermeabilizaPro no Google</h1>'
+             '<p class="h-sub">Obrigado por nos ajudar. Vai ser encaminhado para o Google, onde pode deixar a sua opinião sobre a obra.</p>'
+             f'<p><a class="btn whatsapp big" href="{REVIEW_URL}" rel="noopener">Abrir o Google para avaliar</a></p></div></section>')
+    extra = (f'<meta http-equiv="refresh" content="0;url={REVIEW_URL}">'
+             f'<script>location.replace({json.dumps(REVIEW_URL)})</script>')
+    head = cabeca("Avaliar no Google | ImpermeabilizaPro", "Deixe a sua avaliação da ImpermeabilizaPro no Google.", SITE + "/", [], robots="noindex,nofollow", extra_head=extra)
+    return head + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n"
+
+
 def gerar_sobre():
     (RAIZ / "sobre-nos").mkdir(exist_ok=True)
     (RAIZ / "sobre-nos" / "index.html").write_text(pagina_sobre(), encoding="utf-8")
+    (RAIZ / "avaliar").mkdir(exist_ok=True)
+    (RAIZ / "avaliar" / "index.html").write_text(pagina_avaliar(), encoding="utf-8")
 
 
 def pagina_404():

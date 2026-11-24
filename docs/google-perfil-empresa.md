@@ -14,6 +14,7 @@ Regras confirmadas nas páginas de ajuda da Google (ver Fontes). Não inventar f
 - Publicações antigas que anunciavam telhados eliminadas; publicação nova sem telhados, com botão «Ligar agora».
 - 10 fotografias reais carregadas; 3 cópias exatas eliminadas. Falta apagar as 2 versões antigas do terraço com clarabóia quando as novas saírem de «Pending».
 - Link para pedir avaliações: https://g.page/r/CSxqX6SG4QDvEBM/review (já no rodapé do site).
+- (24-11-2026) Endereço curto para pedir avaliações: **https://impermeabilizapro.pt/avaliar/** (leva ao formulário do Google). Código QR pronto a imprimir em `assets/qr-avaliar.png` (propostas, faturas, cartões). Se o link do Google mudar, muda-se só `REVIEW_URL` em `scripts/gerar_paginas.py`; os QR impressos continuam a funcionar.
 - **Descrição a corrigir:** a descrição colocada de manhã não refere o mínimo de 100 m² nem a falta de pequenas reparações. Substituir pela descrição da secção 2.
 - Ponto de partida (relatório Google de outubro de 2026): 67 visualizações, 1 visita ao site, 0 chamadas.
 
@@ -64,7 +65,7 @@ Regras confirmadas nas páginas de ajuda da Google (ver Fontes). Não inventar f
 
 ### Mensagem para WhatsApp (copiar e substituir [nome] e [link])
 
-> Olá [nome], obrigado por ter confiado em nós a impermeabilização. Se puder, deixe a sua opinião sobre o trabalho no Google — demora um minuto e ajuda outras pessoas a escolher: [link]. Obrigado! Vinícius — ImpermeabilizaPro
+> Olá [nome], obrigado por ter confiado em nós a impermeabilização. Se puder, deixe a sua opinião sobre o trabalho no Google, demora um minuto e ajuda outras pessoas a escolher: impermeabilizapro.pt/avaliar. Obrigado! Vinícius, ImpermeabilizaPro
 
 ### Mensagem para email (fica sempre em rascunho até confirmarem)
 
