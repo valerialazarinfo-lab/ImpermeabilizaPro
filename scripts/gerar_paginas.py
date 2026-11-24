@@ -425,7 +425,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261113-12"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261124-1"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -689,7 +689,7 @@ def pagina_artigo(caminho, a, tipo):
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
     chave_og = a.get("og") or {"caso-aroeira-3000m2.webp": "aroeira", "caso-gaia-440m2.webp": "gaia_caso", "caso-ericeira-200m2.webp": "ericeira"}.get(a.get("img", ""))
-    return cabeca(a["titulo"], a["desc"], url, lds, imagem=og_img(chave_og) if chave_og else None) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261113-12\"></script>\n</body>\n</html>\n"
+    return cabeca(a["titulo"], a["desc"], url, lds, imagem=og_img(chave_og) if chave_og else None) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261124-1\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):
@@ -930,7 +930,7 @@ def pagina_404():
              '<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div></div>'
              f'<h2 style="margin-top:28px;font-size:1.2rem">Serviços</h2><div class="h-links">{servicos}</div></div></section>')
     head = cabeca("Página não encontrada | ImpermeabilizaPro", "Esta página não existe. Veja o preço por m² da sua obra ou escolha o serviço.", SITE + "/", [], robots="noindex,follow")
-    fim = '</main>\n<footer></footer>\n<script type="module" src="/calculadora/widget.mjs?v=20261113-12"></script>\n</body>\n</html>\n'
+    fim = '</main>\n<footer></footer>\n<script type="module" src="/calculadora/widget.mjs?v=20261124-1"></script>\n</body>\n</html>\n'
     (RAIZ / "404.html").write_text(head + '<main id="conteudo">\n' + corpo + '\n' + fim, encoding="utf-8")
 
 

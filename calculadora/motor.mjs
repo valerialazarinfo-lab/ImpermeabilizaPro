@@ -55,7 +55,7 @@ export function fatorEscala(area, t) {
   return melhor ? med(melhor) : 1;
 }
 
-/** estado: 'preco' | 'abaixo_minimo' | 'avaliacao' | 'excluido' | 'invalido' */
+/** estado: 'preco' | 'abaixo_minimo' | 'abaixo_valor' | 'avaliacao' | 'excluido' | 'invalido' */
 export function calcular(entrada, t) {
   const area = Number(String(entrada.area ?? '').replace(',', '.'));
   const minimo = minimoObra(t);
@@ -116,6 +116,10 @@ export function calcular(entrada, t) {
   const iva = autoliquidacao ? 0 : cfg(t, 'iva_percentagem');
   const m2 = (k) => ({ min: Math.round((baixo * k) / area), max: Math.round((alto * k) / area) });
   const tot = (k) => ({ min: arred(baixo * k, 50), max: arred(alto * k, 50) });
+  const minimoEur = t.config.minimo_obra_eur ? cfg(t, 'minimo_obra_eur') : 0;
+  if (minimoEur && alto < minimoEur) {
+    return { estado: 'abaixo_valor', minimoEur, area, motivo: `O valor mínimo por obra é ${minimoEur.toLocaleString('pt-PT')} € sem IVA.` };
+  }
   return {
     estado: 'preco',
     area,

@@ -6,10 +6,11 @@
 # Para mudar o mínimo de obra use: python3 scripts/definir_minimo_obra.py 200  (atualiza este ficheiro e todas as páginas)
 grupo;chave;descricao;min;max;unidade;regra;origem
 config;minimo_obra_m2;Mínimo de obra;100;100;m²;;Decisão comercial (pedido de 2026-11-13). Alterar com scripts/definir_minimo_obra.py
+config;minimo_obra_eur;Valor mínimo por obra (sem IVA);2000;2000;€;;Decisão da Valeria (2026-11-18): menos de 2.000 € de faturação por obra não compensa. Abaixo disto a calculadora não mostra preço
 config;iva_percentagem;IVA;23;23;%;;Taxa normal do Continente (CIVA art. 18.º). A taxa de 6% (verba 2.27) só se aplica em certas reparações em habitação com materiais ≤ 20% — por isso não é usada por defeito
 config;area_maxima_m2;Área máxima com preço automático;3000;3000;m²;;HIPÓTESE: acima disto orçamento sempre à medida
 config;ralos_maximo;Ralos máximos com preço automático;20;20;un;;HIPÓTESE
-config;fator_preco_entrada;Fator de preço (aplicado a tudo);1;1;fator;;Decisão (2026-11-13): preço médio de mercado. O mínimo do intervalo garante ≥50% de margem sobre os custos conhecidos (cálculo interno no Drive, não publicar custos). 0,9 dava 45–47%
+config;fator_preco_entrada;Fator de preço (aplicado a tudo);1;1;fator;;Decisão (2026-11-13): preço médio de mercado. A margem real depende dos custos e do volume mensal, ainda por confirmar pelo Vinícius (verificação interna de 2026-11-24 no Drive; não publicar custos)
 config;autoliquidacao_ativa;Autoliquidação do IVA para empresas (1 = sim, 0 = não);0;0;sim/não;;Desde 1-7-2026 só com alvará ou certificado IMPIC válido (DL 97/2026; Ofício-Circulado 25117/2026). Pôr 1 quando houver habilitação IMPIC
 config;margem_base_percentagem;Margem do intervalo (±, à volta do melhor e do pior caso);5;5;%;;Decisão de apresentação: intervalo estreito à volta do valor médio
 cliente;empresa;Empresa ou construtora;0;0;iva;autoliquidacao;CIVA art. 2.º n.º 1 al. j): autoliquidação só se config;autoliquidacao_ativa = 1 (prestador com alvará/certificado IMPIC, desde 1-7-2026)
@@ -29,9 +30,9 @@ superficie;cave;Cave, garagem ou parede enterrada;1,05;1,2;fator;materiais:tela_
 superficie;parede_exterior;Parede exterior / fachada (até 1.º piso);0,7;0,9;fator;materiais:cimenticia|membrana_liquida,recomendado:cimenticia;HIPÓTESE. Mercado: fachada elastomérica 10–18 €/m² s/IVA (impermeabilizar.pt), 50–90 €/m² (habitissimo.pt)
 superficie;casa_banho;Casa de banho ou zona interior (serviço à parte);0;0;fator;servico_a_parte;Decisão do negócio (2026-11-13): serviço à parte, orçamentado após avaliação; o mínimo de m² não se aplica
 superficie;telhado_inclinado;Telhado de telha ou inclinado;0;0;fator;excluido;Regra do negócio (AGENTS.md): não fazemos telhados de telha/inclinados
-material;tela_1;Tela asfáltica, 1 camada;22;32;€/m²;;impermeabilizar.pt 22–38 €/m² s/IVA (terraço em betão); pom-lda.pt 25–35 €/m² (suporte bom); bluepeak.pt 15–25 €/m² — consultado 2026-11-13 via pesquisa
+material;tela_1;Tela asfáltica, 1 camada;22;32;€/m²;;impermeabilizar.pt 22–38 €/m² s/IVA (terraço em betão); pom-lda.pt 25–35 €/m² (suporte bom); bluepeak.pt 15–25 €/m² — consultado 2026-11-13 via pesquisa. Confirmado 2026-11-24: APP 15–25, SBS 30–45 €/m² em Lisboa (impermeabilizar.pt); trabalho completo sobretudo 25–45 €/m² (impermeabilizaportugal.pt, visualupworks.com)
 material;tela_2;Tela asfáltica, 2 camadas (sistema multicamada);30;42;€/m²;;impermeabilizar.pt 28–42 €/m² s/IVA (multicamada SOPREMA) — consultado 2026-11-13 via pesquisa
-material;membrana_liquida;Membrana líquida (poliuretano);25;40;€/m²;;visualupworks.com 25–40 €/m²; bluepeak.pt 25–40 €/m² instalado — IVA não indicado nas fontes
+material;membrana_liquida;Membrana líquida (poliuretano);25;40;€/m²;;visualupworks.com 25–40 €/m²; bluepeak.pt 25–40 €/m² instalado — IVA não indicado nas fontes. Confirmado 2026-11-24: 25–55 €/m² aplicada (prummo.app, impermeabilizaportugal.pt)
 material;cimenticia;Membrana cimentícia flexível;18;30;€/m²;;HIPÓTESE. Única referência: casadosasfaltos.com tabela de concursos 2021 (argamassa semiflexível ~18 €/m², desatualizada)
 material;nao_sei;Não sei — recomendem a melhor solução;0;0;€/m²;nao_sei;Usa o intervalo de todos os materiais aceites na superfície escolhida
 suporte;bom;Bom estado, sem fissuras;0;0;€/m²;;Referência base
@@ -40,7 +41,7 @@ suporte;degradado;Degradado, precisa de regularização;10;20;€/m²;;visualupw
 suporte;pendentes;Água acumula — corrigir pendentes;15;25;€/m²;;pom-lda.pt: tela com correção de pendentes 45–65 €/m² vs 25–35 €/m² com suporte bom
 suporte;nao_sei;Não sei;0;20;€/m²;nota,nao_sei;Intervalo alargado até à regularização; confirmar com fotografias
 remocao;nenhuma;Não há sistema antigo a remover;0;0;€/m²;;Referência base
-remocao;tela_antiga;Remover tela ou membrana antiga;8;15;€/m²;;visualupworks.com +8–15 €/m²; pom-lda.pt +10–20 €/m²
+remocao;tela_antiga;Remover tela ou membrana antiga;8;15;€/m²;;visualupworks.com +8–15 €/m²; pom-lda.pt +10–20 €/m²; impermeabilizaportugal.pt +5–15 €/m² (2026-11-24)
 remocao;sobre_ceramico;Aplicar sobre o pavimento cerâmico existente;8;14;€/m²;;impermeabilizar.pt: terraço com cerâmica sem levantar 35–52 vs betão 22–38 €/m² s/IVA
 remocao;levantar_ceramico;Levantar pavimento cerâmico;15;25;€/m²;nota;HIPÓTESE com base em impermeabilizar.pt (levantar e recolocar 48–68 €/m²). Não inclui pavimento novo
 remocao;nao_sei;Não sei;0;15;€/m²;nota,nao_sei;Intervalo até à remoção de tela antiga
