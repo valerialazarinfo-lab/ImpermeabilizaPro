@@ -1,0 +1,18 @@
+name: Avisar motores de pesquisa (IndexNow)
+on:
+  push:
+    branches: [main]
+    paths: ['**/index.html', 'index.html', 'sitemap.xml']
+permissions:
+  contents: read
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Esperar que o GitHub Pages publique
+        run: sleep 120
+      - name: Enviar as páginas alteradas
+        run: python3 scripts/indexnow.py "${{ github.event.before }}" "${{ github.sha }}"
