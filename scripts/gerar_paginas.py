@@ -244,7 +244,16 @@ PAGINAS = {
                "Procuramos parcerias com construtoras na região de Lisboa e Oeste: proposta rápida, preço por m² claro e cumprimento do planeamento da obra."],
         precos=PRECOS_TELA[:2] + PRECOS_MO + [("material", "membrana_liquida")], faq=[("Como é faturado o IVA?", IVA_LONGO), ("Fazem só a mão de obra?", "Sim, quando a construtora fornece o material. A calculadora tem a opção «só mão de obra» e a tabela mostra o preço por m²."), FAQ_MIN],
         servico="Subempreitada de impermeabilização", oferta=("material", "tela_2"),
-        wa="Olá, sou de uma construtora e queria uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]. Posso enviar medições."),
+        wa="Olá, sou de uma construtora e queria uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]. Posso enviar medições.",
+        dossier=dict(
+            enviar=["Medições ou mapa de quantidades.", "Plantas de cobertura e cortes, com os pormenores de remates (platibandas, soleiras, ralos), se houver.",
+                    "Caderno de encargos ou sistema especificado, se houver.", "Localidade da obra e data prevista para a impermeabilização."],
+            recebe=["Proposta escrita com o sistema, o preço por m² e o total sem IVA.", "O que está incluído: com material e mão de obra, ou só a execução.", "A disponibilidade para entrar em obra."],
+            obra=["Ralos, tubos e passagens colocados antes da impermeabilização.", "Soleiras e caixilharias com altura suficiente para o remate subir acima do pavimento acabado.",
+                  "Evitar furar a impermeabilização depois de feita; se for preciso, avisar para rematar."],
+            guia=("/guias/planear-impermeabilizacao-obra-nova/", "Guia: como planear a impermeabilização numa obra nova"),
+            email=("Pedido de proposta: impermeabilização (construtora)",
+                   "Olá,\n\nEmpresa: \nObra (localidade): \nÁrea aproximada (m²): \nTipo: cobertura / terraço / paredes enterradas\nCom material ou só mão de obra: \nData prevista: \n\nSeguem em anexo as medições e as plantas.\n"))),
     "impermeabilizacao-condominios": dict(
         titulo="Impermeabilização de Terraços de Condomínios | Preço por m²",
         desc=f"Impermeabilização de terraços de cobertura e coberturas planas de condomínios. Proposta clara com preço por m² e total para a assembleia. A partir de {MIN} m².",
@@ -257,7 +266,14 @@ PAGINAS = {
                "Envie fotografias do terraço e a área aproximada; a administração recebe a proposta por escrito."],
         precos=PRECOS_TERRACO, faq=[("O IVA é de 23%?", "Para condomínios aplica-se a taxa legal: 23%, ou 6% em obras de reparação de habitação quando os materiais não passam de 20% do valor."), FAQ_MIN, FAQ_ZONA],
         servico="Impermeabilização de terraços de condomínios", oferta=("material", "tela_2"),
-        wa="Olá, sou da administração de um condomínio e queria uma proposta para impermeabilizar o terraço. Tem cerca de [m²] e fica em [localidade]."),
+        wa="Olá, sou da administração de um condomínio e queria uma proposta para impermeabilizar o terraço. Tem cerca de [m²] e fica em [localidade].",
+        dossier=dict(
+            enviar=["Fotografias do terraço: vista geral, ralos, platibandas e as zonas com problemas.", "Área aproximada em m².", "Localidade e acesso à cobertura (escada, alçapão, elevador)."],
+            recebe=["Proposta escrita com o preço por m², o total com IVA e o que está incluído, pronta para a assembleia."],
+            obra=["Trabalho no terraço, sem entrar nas frações.", "Datas combinadas com a administração."],
+            guia=("/guias/impermeabilizar-terraco-condominio/", "Guia: impermeabilizar o terraço do condomínio"),
+            email=("Pedido de proposta: terraço de condomínio",
+                   "Olá,\n\nCondomínio (localidade): \nÁrea aproximada do terraço (m²): \nAcesso à cobertura: \n\nSeguem em anexo as fotografias do terraço.\n"))),
     "precos-impermeabilizacao": dict(
         titulo="Preços de Impermeabilização por m² em 2026 | ImpermeabilizaPro",
         desc=f"Tabela de preços de impermeabilização por m² em 2026: tela asfáltica, membrana líquida e cimentícia, com e sem IVA, e acréscimos. Obras a partir de {MIN} m².",
@@ -393,6 +409,18 @@ def pagina(slug, p):
     corpo += f'<section class="h-sec{" soft" if not ordem_precos_topo else ""}"><div class="wrap"><h2>{"O que inclui" if not p.get("local") else "Em " + e(p["local"]["nome"])}</h2><ul class="h-inclui">{inclui}</ul>'
     corpo += f'<div class="h-texto" style="margin-top:18px">{texto}{local}</div></div></section>\n'
     corpo += (sec_fotos if ordem_precos_topo else precos)
+    if p.get("dossier"):
+        d = p["dossier"]
+        ul = lambda xs: "<ul>" + "".join(f"<li>{e(x)}</li>" for x in xs) + "</ul>"
+        mail = "mailto:proimpermeabiliza@gmail.com?subject=" + urllib.parse.quote(d["email"][0]) + "&body=" + urllib.parse.quote(d["email"][1])
+        dados = ""
+        if slug == "empresas":
+            linhas = [("Empresa", f"{EMPRESA['denominacao']}" + ("" if EMPRESA["registada"] else " (sociedade por quotas em constituição)")), ("NIPC", EMPRESA["nipc"]),
+                      ("Responsável técnico", "Vinícius Nascimento"), ("Contacto", "930 446 198 · proimpermeabiliza@gmail.com")] + list(SOBRE["credenciais"])
+            dados = '<h3>Dados da empresa</h3><table class="price-table h-ficha"><tbody>' + "".join(f'<tr><th scope="row">{e(k)}</th><td>{e(v)}</td></tr>' for k, v in linhas) + "</tbody></table>"
+        corpo += (f'<section class="h-sec" id="proposta"><div class="wrap narrow h-artigo"><h2>Como pedir a proposta</h2><h3>O que nos enviar</h3>{ul(d["enviar"])}'
+                  f'<p><a class="btn outline big" href="{e(mail)}" data-track="email_proposta_{slug}">Enviar por email com anexos</a></p>'
+                  f'<h3>O que recebe</h3>{ul(d["recebe"])}<h3>Em obra</h3>{ul(d["obra"])}<p><a href="{d["guia"][0]}">{e(d["guia"][1])}</a></p>{dados}</div></section>\n')
     corpo += f'<section class="h-sec h-faq" id="faq"><div class="wrap narrow"><h2>Perguntas frequentes</h2>{faq}</div></section>\n'
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
