@@ -2,7 +2,7 @@
 
 Antes de alterar o site, ler **CODEX_HANDOFF_2026-10-15.md**, **WEBSITE_DECISIONS.md**, **MAPA_INFILT_ACAO_LEADS.md** e **lead-backend/README.md**.
 
-Foco: serviço real de impermeabilização em Portugal, apresentado como empresa (ImpermeabilizaPro, marca da Lazar & Souza, Lda., sociedade em constituição desde novembro de 2026; firma e NIPC publicados por decisão de 24-11-2026 com «em constituição»; sede, alvará e seguro só depois de existirem), captação orgânica e pedidos genuínos para obras a partir de 100 m². Não anunciar trabalhos em telhados de telha/inclinados ou em grande altura; não inventar fotografias, testemunhos, garantias, preços ou certificações. Respeitar URLs existentes e confirmar redirects e indexação.
+Foco: serviço real de impermeabilização em Portugal, apresentado como empresa (ImpermeabilizaPro, marca da Lazar & Souza, Lda.; firma e NIPC publicados por decisão de 24-11-2026, sem «em constituição» por decisão da mesma data; sede, alvará e seguro só depois de existirem), captação orgânica e pedidos genuínos para obras a partir de 100 m². Não anunciar trabalhos em telhados de telha/inclinados ou em grande altura; não inventar fotografias, testemunhos, garantias, preços ou certificações. Respeitar URLs existentes e confirmar redirects e indexação.
 
 Este repositório é **público**: nunca inserir informações privadas de clientes, propostas/orçamentos confidenciais, passwords, segredos, APIs ou backups.
 

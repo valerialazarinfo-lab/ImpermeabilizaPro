@@ -136,3 +136,7 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 
 - Nova página `/impermeabilizacao-terraco-garagem/` para pesquisas de infiltrações no teto da garagem (condomínios e construtoras). Só factos já publicados: obra de Vila Nova de Gaia (440 m², duas camadas, mineral em xisto). Lajes com circulação de viaturas: avaliação caso a caso, sem sistema prometido.
 - Ligações: «Outros serviços» de todas as páginas, rodapé e menu móvel (não no menu principal do computador).
+
+## Sem «em constituição» — 24 November 2026
+
+- Decisão da responsável: não dizer «em constituição» em lado nenhum (site, ficha Google, textos). A firma aparece como «Lazar & Souza, Lda. (NIPC 519771311)». Ponto fraco registado: até haver certidão de registo, a sociedade ainda não está registada. Sede continua só depois do registo.

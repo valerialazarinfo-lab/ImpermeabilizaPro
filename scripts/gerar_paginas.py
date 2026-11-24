@@ -18,10 +18,9 @@ RAIZ = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://impermeabilizapro.pt"
 HOJE = datetime.date.today().isoformat()
 NEGOCIO_ID = SITE + "/#negocio"
-# Firma da sociedade (decisão da Valeria, 24-11-2026: publicar já, com «em constituição»; sede só depois do registo).
+# Firma da sociedade (decisões da Valeria, 24-11-2026: publicar já a firma e o NIPC, sem «em constituição»; sede só depois do registo).
 EMPRESA = dict(denominacao="Lazar & Souza, Lda.", nipc="519771311", sede=None, registada=False)
-EMPRESA_FRASE = (f"ImpermeabilizaPro é a marca da {EMPRESA['denominacao']} (NIPC {EMPRESA['nipc']}), sociedade por quotas "
-                 + ("" if EMPRESA["registada"] else "em constituição, ") + "com base em Sobral de Monte Agraço.")
+EMPRESA_FRASE = f"ImpermeabilizaPro é a marca da {EMPRESA['denominacao']} (NIPC {EMPRESA['nipc']}), com base em Sobral de Monte Agraço."
 WA_BASE = "https://wa.me/351930446198?text="
 e = lambda s: html.escape(str(s), quote=True)
 
@@ -434,7 +433,7 @@ def pagina(slug, p):
         mail = "mailto:proimpermeabiliza@gmail.com?subject=" + urllib.parse.quote(d["email"][0]) + "&body=" + urllib.parse.quote(d["email"][1])
         dados = ""
         if slug == "empresas":
-            linhas = [("Empresa", f"{EMPRESA['denominacao']}" + ("" if EMPRESA["registada"] else " (sociedade por quotas em constituição)")), ("NIPC", EMPRESA["nipc"]),
+            linhas = [("Empresa", EMPRESA["denominacao"]), ("NIPC", EMPRESA["nipc"]),
                       ("Responsável técnico", "Vinícius Nascimento"), ("Contacto", "930 446 198 · proimpermeabiliza@gmail.com")] + list(SOBRE["credenciais"])
             dados = '<h3>Dados da empresa</h3><table class="price-table h-ficha"><tbody>' + "".join(f'<tr><th scope="row">{e(k)}</th><td>{e(v)}</td></tr>' for k, v in linhas) + "</tbody></table>"
         corpo += (f'<section class="h-sec" id="proposta"><div class="wrap narrow h-artigo"><h2>Como pedir a proposta</h2><h3>O que nos enviar</h3>{ul(d["enviar"])}'
@@ -827,7 +826,7 @@ REVIEW_URL = "https://g.page/r/CSxqX6SG4QDvEBM/review"
 
 PRIVACIDADE = [
     ("Quem trata os dados", [
-        e(EMPRESA_FRASE) + " Até ao registo da sociedade, o responsável pelo tratamento é Vinícius Nascimento. A sede será indicada aqui logo após o registo.",
+        e(EMPRESA_FRASE) + " Contacto do responsável pelo tratamento: Vinícius Nascimento, gerente.",
         'Contacto para privacidade: <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a> · <a href="tel:+351930446198">930 446 198</a>.']),
     ("Calculadora de preço", [
         "As respostas à calculadora (tipo de cliente, superfície, área, localização, estado da superfície e outras) são usadas no seu navegador para calcular a estimativa. Não são enviadas para nenhuma base de dados do site.",
@@ -852,7 +851,7 @@ PRIVACIDADE = [
 
 LEGAIS = [
     ("Quem somos", [
-        e(EMPRESA_FRASE) + " A sede será indicada aqui logo após o registo. Vinícius Nascimento é o responsável técnico.",
+        e(EMPRESA_FRASE) + " Vinícius Nascimento é o gerente e o responsável técnico.",
         'Contacto: <a href="tel:+351930446198">930 446 198</a> (chamada para a rede móvel nacional, telefone e WhatsApp) · <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a>.']),
     ("Preços, estimativas e propostas", [
         "Os preços do site e da calculadora são estimativas indicativas por m². Não são uma proposta nem um orçamento vinculativo. O valor, os trabalhos incluídos, o prazo, as condições de pagamento e os impostos aplicáveis são definidos na proposta escrita para cada obra, depois de vermos fotografias ou a obra.",
@@ -894,9 +893,9 @@ def pagina_sobre():
         quem = (e(EMPRESA_FRASE) + (f" Sede: {e(emp['sede'])}." if emp.get("sede") else "") + " "
                 "Fazemos impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas.")
     else:
-        quem = ("ImpermeabilizaPro é o nome comercial de uma sociedade por quotas em constituição, com base em Sobral de Monte Agraço. "
+        quem = ("ImpermeabilizaPro é uma empresa de impermeabilização com base em Sobral de Monte Agraço. "
                 "Fazemos impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas. "
-                'A denominação, o NIF e a sede serão publicados aqui e nas <a href="/informacoes-legais/">informações legais</a> logo após o registo.')
+                'Os dados da empresa estão nas <a href="/informacoes-legais/">informações legais</a>.')
     pessoas = [("Vinícius Nascimento", "Responsável técnico",
                 "5 anos de experiência em impermeabilização. É quem faz a obra e quem fala consigo: pode ligar ou escrever-lhe diretamente.", "vinicius-nascimento-v2.webp")] + list(SOBRE["equipa_extra"])
     equipa = ""
