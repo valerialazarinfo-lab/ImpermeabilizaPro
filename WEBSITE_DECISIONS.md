@@ -144,3 +144,11 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 ## Horário — 24 November 2026
 
 - Horário de atendimento igual ao da ficha Google (todos os dias, 08:00–22:00, confirmado a 13-11-2026): rodapé e `openingHoursSpecification` nos dados estruturados da página inicial. Se mudar na ficha, mudar aqui também.
+
+## Sociedade registada e email da empresa — 26 November 2026
+
+- LAZAR & SOUZA, LDA com registo definitivo (AP. 18/20261123, entregue a 23-11-2026) e certidão permanente de 25-11-2026. Sede e capital do pacto social (artigos 2.º e 4.º): Rua dos Lusíadas, 69, 1.º Dto, 2590-031 Sobral de Monte Agraço; capital 1.000 €.
+- Identificação legal completa (firma, tipo, sede, NIPC e matrícula, conservatória, capital) nas informações legais, na privacidade e nos dados estruturados (art. 171.º CSC; art. 10.º DL 7/2004). Rodapé curto (decisão de 26-11): firma, NIPC e ligação «Dados legais» em todas as páginas.
+- Por confirmar: se o capital já foi depositado; se não, o art. 171.º pode exigir indicar o capital realizado.
+- Email do site passa de proimpermeabiliza@gmail.com para geral@lazarsouza.pt (testado a 26-11: SPF, DKIM e DMARC PASS). A ficha Google continua gerida pela conta proimpermeabiliza. O backend de pedidos (não ativo) mantém a configuração antiga.
+- Por confirmar na certidão permanente: o nome exato da conservatória (o site diz «Conservatória do Registo Comercial», como as assinaturas).

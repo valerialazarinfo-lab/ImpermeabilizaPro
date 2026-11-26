@@ -18,9 +18,17 @@ RAIZ = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://impermeabilizapro.pt"
 HOJE = datetime.date.today().isoformat()
 NEGOCIO_ID = SITE + "/#negocio"
-# Firma da sociedade (decisões da Valeria, 24-11-2026: publicar já a firma e o NIPC, sem «em constituição»; sede só depois do registo).
-EMPRESA = dict(denominacao="Lazar & Souza, Lda.", nipc="519771311", sede=None, registada=False)
-EMPRESA_FRASE = f"ImpermeabilizaPro é a marca da {EMPRESA['denominacao']} (NIPC {EMPRESA['nipc']}), com base em Sobral de Monte Agraço."
+# Sociedade (registo definitivo AP. 18/20261123; certidão permanente de 25-11-2026; sede e capital do pacto social, artigos 2.º e 4.º).
+# Identificação obrigatória em sítios na Internet: art. 171.º do Código das Sociedades Comerciais e art. 10.º do DL 7/2004.
+EMAIL = "geral@lazarsouza.pt"
+EMPRESA = dict(denominacao="LAZAR & SOUZA, LDA", nipc="519771311", tipo="Sociedade por quotas",
+               sede="Rua dos Lusíadas, 69, 1.º Dto, 2590-031 Sobral de Monte Agraço", rua="Rua dos Lusíadas, 69, 1.º Dto",
+               codigo_postal="2590-031", localidade="Sobral de Monte Agraço", capital="1.000 €",
+               conservatoria="Conservatória do Registo Comercial", registada=True)
+EMPRESA_LEGAL = (f"{EMPRESA['denominacao']} · {EMPRESA['tipo']} · Sede: {EMPRESA['sede']} · "
+                 f"NIPC e matrícula {EMPRESA['nipc']}, {EMPRESA['conservatoria']} · Capital social {EMPRESA['capital']}")
+EMPRESA_FRASE = (f"ImpermeabilizaPro é uma marca da {EMPRESA['denominacao']}, sociedade por quotas com sede na {EMPRESA['sede']}, "
+                 f"NIPC e matrícula {EMPRESA['nipc']} ({EMPRESA['conservatoria']}), capital social {EMPRESA['capital']}.")
 WA_BASE = "https://wa.me/351930446198?text="
 e = lambda s: html.escape(str(s), quote=True)
 
@@ -385,7 +393,7 @@ def pagina(slug, p):
     wa = WA_BASE + urllib.parse.quote(p.get("wa", "Olá, gostaria de pedir uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]."))
     faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]}
     serv = {"@context": "https://schema.org", "@type": "Service", "name": p["servico"], "serviceType": "Impermeabilização", "url": url,
-            "provider": {"@type": "HomeAndConstructionBusiness", "@id": NEGOCIO_ID, "name": "ImpermeabilizaPro", "legalName": EMPRESA["denominacao"], "taxID": EMPRESA["nipc"], "telephone": "+351930446198", "url": SITE + "/"},
+            "provider": {"@type": "HomeAndConstructionBusiness", "@id": NEGOCIO_ID, "name": "ImpermeabilizaPro", "legalName": EMPRESA["denominacao"], "taxID": EMPRESA["nipc"], "email": EMAIL, "address": {"@type": "PostalAddress", "streetAddress": EMPRESA["rua"], "postalCode": EMPRESA["codigo_postal"], "addressLocality": EMPRESA["localidade"], "addressCountry": "PT"}, "telephone": "+351930446198", "url": SITE + "/"},
             "areaServed": [{"@type": "AdministrativeArea", "name": p.get("area")}] if p.get("area") else [{"@type": "AdministrativeArea", "name": n} for n in ("Distrito de Lisboa", "Distrito de Santarém", "Distrito de Setúbal", "Distrito de Leiria")]}
     if p.get("oferta"):
         serv["offers"] = oferta(*p["oferta"])
@@ -395,7 +403,7 @@ def pagina(slug, p):
         attrs = (f' data-superficie="{p["sup"]}"' if p.get("sup") else "") + (f' data-cliente="{p["cliente"]}"' if p.get("cliente") else "")
         calc = (f'<div class="calc" data-calc data-modo="rapido"{attrs}><h2>Preço por m² em 30 segundos</h2><form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form>'
                 f'<div class="calc-res" data-calc-result aria-live="polite"></div><div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_{slug}" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
-                f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div><p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p>'
+                f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:geral@lazarsouza.pt">Enviar por email (com plantas)</a></div><p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p>'
                 f'<noscript><p class="calc-aviso">A calculadora precisa de JavaScript. Ligue 930 446 198 ou use o WhatsApp.</p></noscript></div>')
     else:
         calc = (f'<div class="calc"><h2>Peça o orçamento</h2><p>Envie fotografias, a fase da obra e a localidade.</p><div class="calc-acoes"><a class="btn whatsapp big wa-direct" data-placement="hero_{slug}" href="{wa}" target="_blank" rel="noopener noreferrer">Enviar fotografias pelo WhatsApp</a>'
@@ -430,11 +438,11 @@ def pagina(slug, p):
     if p.get("dossier"):
         d = p["dossier"]
         ul = lambda xs: "<ul>" + "".join(f"<li>{e(x)}</li>" for x in xs) + "</ul>"
-        mail = "mailto:proimpermeabiliza@gmail.com?subject=" + urllib.parse.quote(d["email"][0]) + "&body=" + urllib.parse.quote(d["email"][1])
+        mail = "mailto:geral@lazarsouza.pt?subject=" + urllib.parse.quote(d["email"][0]) + "&body=" + urllib.parse.quote(d["email"][1])
         dados = ""
         if slug == "empresas":
-            linhas = [("Empresa", EMPRESA["denominacao"]), ("NIPC", EMPRESA["nipc"]),
-                      ("Responsável técnico", "Vinícius Nascimento"), ("Contacto", "930 446 198 · proimpermeabiliza@gmail.com")] + list(SOBRE["credenciais"])
+            linhas = [("Empresa", EMPRESA["denominacao"]), ("Tipo", EMPRESA["tipo"]), ("Sede", EMPRESA["sede"]), ("NIPC e matrícula", EMPRESA["nipc"]), ("Capital social", EMPRESA["capital"]),
+                      ("Responsável técnico", "Vinícius Nascimento"), ("Contacto", "930 446 198 · geral@lazarsouza.pt")] + list(SOBRE["credenciais"])
             dados = '<h3>Dados da empresa</h3><table class="price-table h-ficha"><tbody>' + "".join(f'<tr><th scope="row">{e(k)}</th><td>{e(v)}</td></tr>' for k, v in linhas) + "</tbody></table>"
         corpo += (f'<section class="h-sec" id="proposta"><div class="wrap narrow h-artigo"><h2>Como pedir a proposta</h2><h3>O que nos enviar</h3>{ul(d["enviar"])}'
                   f'<p><a class="btn outline big" href="{e(mail)}" data-track="email_proposta_{slug}">Enviar por email com anexos</a></p>'
@@ -443,7 +451,7 @@ def pagina(slug, p):
     corpo += (f'<section class="h-sec soft"><div class="wrap"><div class="h-cta"><div><h2>Tem uma obra a partir de <span data-minimo-obra>{MIN}</span> m²?</h2><p>Envie medidas e fotografias. Respondemos com preço por m² e total.</p></div>'
               f'<a class="btn whatsapp big wa-direct" data-placement="cta_final" href="{wa}" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a></div>'
               f'<h2 style="margin-top:28px;font-size:1.2rem">Outros serviços</h2><div class="h-links">{links}</div><h2 style="margin-top:20px;font-size:1.2rem">Zonas</h2><div class="h-links">{zonas}</div></div></section>')
-    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261124-1"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
+    modulo = '<script type="module" src="/calculadora/widget.mjs?v=20261126-1"></script>' if 'data-calc ' in calc or 'data-calc>' in calc else ""
     return f'''<!doctype html>
 <html lang="pt-PT">
 <head>
@@ -500,7 +508,7 @@ def llms():
     linhas = [f"- {linha(g, k)['descricao']}: {n0(faixa(g, k)[0])}–{n0(faixa(g, k)[1])} €/m² sem IVA" + (" (material e mão de obra)" if g == "material" else (" (sem material)" if g == "mo" else " (acréscimo)")) for g, k in com_fonte(PRECOS_TODOS)]
     txt = f"""# ImpermeabilizaPro
 
-> Marca da {EMPRESA['denominacao']} (NIPC {EMPRESA['nipc']}). Impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas, em Portugal (distritos de Lisboa, Santarém, Setúbal e Leiria). Base em Sobral de Monte Agraço. Responsável: Vinícius Nascimento (5 anos de experiência). Obras a partir de {MIN} m².
+> Marca da {EMPRESA['denominacao']} (NIPC {EMPRESA['nipc']}, sede em {EMPRESA['localidade']}). Impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas, em Portugal (distritos de Lisboa, Santarém, Setúbal e Leiria). Base em Sobral de Monte Agraço. Responsável: Vinícius Nascimento (5 anos de experiência). Obras a partir de {MIN} m².
 
 ## Factos
 - Serviços: coberturas planas, terraços, caves e paredes enterradas, aplicação de tela asfáltica (uma ou duas camadas), membranas líquidas e cimentícias, subempreitada para construtoras. Casas de banho: serviço à parte.
@@ -508,7 +516,7 @@ def llms():
 - Mínimo de obra: {MIN} m² em coberturas e áreas planas.
 - Obras reais: Aroeira (mais de 3.000 m² de paredes enterradas, tela Imperalum), Vila Nova de Gaia (terraço sobre garagem, 440 m², duas camadas), Ericeira (terraço de cobertura, cerca de 200 m²).
 - IVA: {IVA_LONGO}
-- Contacto: +351 930 446 198 (telefone e WhatsApp), proimpermeabiliza@gmail.com.
+- Contacto: +351 930 446 198 (telefone e WhatsApp), geral@lazarsouza.pt.
 
 ## Preços indicativos (atualizado em {HOJE}, obras a partir de {MIN} m², acesso fácil)
 """ + "\n".join(linhas) + f"""
@@ -617,6 +625,19 @@ GUIAS = {
         faq=[("A mancha pode aparecer longe do ponto onde a água entra?", "Pode. A água pode correr por baixo da impermeabilização ou pela laje antes de aparecer no teto. Por isso pedimos fotografias do teto e do terraço."),
              ("Pintar o teto resolve?", "Não. Se a água vem do terraço, a mancha volta enquanto a entrada de água não for corrigida."),
              ("Fazem a reparação de só um canto do terraço?", f"Não fazemos pequenas reparações. Trabalhamos em terraços e coberturas a partir de {MIN} m².")]),
+    "rececao-obra-impermeabilizacao": dict(
+        titulo="Receção da Obra de Impermeabilização: o que Verificar (Checklist)",
+        desc="O que verificar no fim de uma obra de impermeabilização de terraço ou cobertura antes de a dar por concluída: remates, ralos, teste de alagamento e documentos.",
+        h1="Receção da obra de impermeabilização: o que verificar antes de fechar", sup="cobertura_plana", cliente="condominio",
+        resumo="No fim da obra, os pontos a ver são os mesmos onde a água costuma entrar: remates em platibandas e soleiras, ralos e juntas. Antes de tapar com pavimento ou proteção, é prática comum fazer um teste de alagamento. E vale a pena ficar com a descrição do sistema aplicado por escrito.",
+        secoes=[("Remates e pontos singulares", ["A tela sobe nas platibandas, muretes e soleiras e está bem colada no topo, sem pontas levantadas.", "Ralos e tubos estão rematados à volta, sem rugas nem falhas.", "As sobreposições entre faixas de tela estão contínuas e bem soldadas."]),
+                ("Escoamento", ["Depois de chover, ou com água de uma mangueira, a água corre para os ralos e não fica parada em zonas grandes.", "Ralos e caleiras estão limpos e desentupidos."]),
+                ("Teste de alagamento", ["Antes de colocar pavimento ou proteção, é prática comum encher a cobertura com água durante algum tempo e verificar por baixo se aparece humidade.", "Se a impermeabilização fica à vista, observe o comportamento depois das primeiras chuvas."]),
+                ("Documentos a pedir", ["Descrição do sistema aplicado: materiais, número de camadas e acabamento.", "Fichas técnicas dos materiais usados.", "Fatura e, se tiver sido acordada, a garantia por escrito.", "Fotografias de antes, durante e depois."])],
+        precos=[("material", "tela_2"), ("remocao", "tela_antiga"), ("suporte", "pendentes")],
+        faq=[("Quando devo fazer o teste de alagamento?", "Antes de tapar a impermeabilização com pavimento ou proteção, porque depois é muito mais difícil corrigir."),
+             ("A impermeabilização pode ficar à vista?", "Pode, com tela autoprotegida com acabamento mineral ou com proteção adequada. Num terraço transitável leva pavimento ou proteção por cima."),
+             ("O que fazer se aparecer humidade depois da obra?", "Fotografar o local e a data e contactar logo quem fez a obra, para verificar os remates e ralos dessa zona.")]),
     "comparar-orcamentos-impermeabilizacao": dict(
         titulo="Como Comparar Orçamentos de Impermeabilização (Checklist)",
         desc="O que deve constar num orçamento de impermeabilização para comparar propostas: área, sistema, remoção, remates, acabamento, prazo, garantia e IVA.",
@@ -710,7 +731,7 @@ def pagina_artigo(caminho, a, tipo):
     calc = (f'<section class="h-sec" id="pedido"><div class="wrap"><div class="calc" data-calc data-modo="rapido"{attrs} style="max-width:760px;margin:0 auto"><h2>{"Tem uma obra semelhante? Veja o preço por m²" if tipo == "obra" else "Quanto custaria na sua obra?"}</h2>'
             f'<form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form><div class="calc-res" data-calc-result aria-live="polite"></div>'
             f'<div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_{tipo}" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
-            f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div>'
+            f'<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:geral@lazarsouza.pt">Enviar por email (com plantas)</a></div>'
             f'<p class="calc-legal">Estimativa indicativa, não é orçamento. O WhatsApp abre com os dados preenchidos; só nos chega quando carregar em Enviar.</p></div></div></section>')
     outros = obras_publicadas() if tipo == "obra" else GUIAS
     links = "".join(f'<a href="/{"obras" if tipo == "obra" else "guias"}/{s}/">{e(o["h1"])}</a>' for s, o in outros.items() if f"/{s}" not in caminho)
@@ -720,7 +741,7 @@ def pagina_artigo(caminho, a, tipo):
             f'<div class="wrap"><p class="h-crumbs"><a href="/">Início</a> › <a href="{crumbs_url}">{crumbs_nome}</a></p><p class="h-eyebrow">{"OBRA REAL" if tipo == "obra" else "GUIA"}</p><h1>{e(a["h1"])}</h1><p class="h-sub">{e(a["desc"])}</p>'
             f'<p><a class="btn whatsapp big" href="#pedido">Ver preço para a minha obra</a> <a class="h-tel" href="tel:+351930446198" data-track="phone_hero">930 446 198</a></p></div></section>')
     chave_og = a.get("og") or {"caso-aroeira-3000m2.webp": "aroeira", "caso-gaia-440m2.webp": "gaia_caso", "caso-ericeira-200m2.webp": "ericeira"}.get(a.get("img", ""))
-    return cabeca(a["titulo"], a["desc"], url, lds, imagem=og_img(chave_og) if chave_og else None) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261124-1\"></script>\n</body>\n</html>\n"
+    return cabeca(a["titulo"], a["desc"], url, lds, imagem=og_img(chave_og) if chave_og else None) + f"<main id=\"conteudo\">\n{hero}\n{corpo}\n</main>\n<footer></footer>\n<script type=\"module\" src=\"/calculadora/widget.mjs?v=20261126-1\"></script>\n</body>\n</html>\n"
 
 
 def pagina_indice(tipo):
@@ -816,7 +837,7 @@ h2{{font-size:24px;margin:0 0 4px;color:#0a2340}}.lead{{color:#4a5e6f;margin:0 0
 <h1>Impermeabilização de coberturas, terraços e caves para obras</h1>
 <p>Para construtoras, condomínios e empresas nos distritos de Lisboa, Santarém, Setúbal e Leiria. Base em Sobral de Monte Agraço.</p>
 <div class="chips"><span>Obras a partir de {MIN} m²</span><span>De {MIN} a mais de 3.000 m²</span><span>Com material ou só execução</span><span>Preço claro por m²</span></div>
-<div class="ct">Vinícius Nascimento · 5 anos de experiência<br><b>930 446 198</b> (telefone e WhatsApp)<br>proimpermeabiliza@gmail.com · impermeabilizapro.pt</div></div></section>
+<div class="ct">Vinícius Nascimento · 5 anos de experiência<br><b>930 446 198</b> (telefone e WhatsApp)<br>geral@lazarsouza.pt · impermeabilizapro.pt</div></div></section>
 <section class="pg"><h2>O que fazemos</h2><p class="lead">Coberturas e áreas planas a partir de {MIN} m². Subempreitada ou obra completa.</p><div class="svs">{servh}</div>
 <div class="para"><div><b>Construtoras e empreiteiros</b>Subempreitada com material e mão de obra, ou só execução.</div><div><b>Condomínios e administrações</b>Proposta com preço por m² e total para a assembleia.</div><div><b>Empresas e armazéns</b>Coberturas planas de grande área.</div><div><b>Moradias com grandes áreas</b>Coberturas e terraços a partir de {MIN} m².</div></div>
 <p class="nao">Não fazemos pequenas reparações, telhados de telha nem trabalhos em grande altura.</p><div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
@@ -825,7 +846,7 @@ h2{{font-size:24px;margin:0 0 4px;color:#0a2340}}.lead{{color:#4a5e6f;margin:0 0
 {tabela_precos(PRECOS_TERRACO)}
 <p class="nota">Valores indicativos ({HOJE}); não são orçamento. {e(IVA_LONGO)} O valor final é confirmado depois de vermos a obra.</p>
 <h2 style="margin-top:14px">Como trabalhamos</h2><div class="passos"><div><b>1. Medições e fotografias</b>Planta, mapa de quantidades ou caderno de encargos.</div><div><b>2. Proposta</b>Solução, preço por m², total e o que está incluído.</div><div><b>3. Execução</b>Datas combinadas com o planeamento da obra.</div></div>
-<div class="fim"><b>Peça uma proposta</b><br>930 446 198 (telefone e WhatsApp) · proimpermeabiliza@gmail.com<br>Calculadora de preço por m²: impermeabilizapro.pt/calculadora</div>
+<div class="fim"><b>Peça uma proposta</b><br>930 446 198 (telefone e WhatsApp) · geral@lazarsouza.pt<br>Calculadora de preço por m²: impermeabilizapro.pt/calculadora</div>
 <div class="rod"><span>ImpermeabilizaPro</span><span>930 446 198 · impermeabilizapro.pt</span></div></section>
 </body></html>'''
     # Imagens em JPEG leve (assets/pdf/) para o PDF não ficar pesado.
@@ -839,8 +860,8 @@ REVIEW_URL = "https://g.page/r/CSxqX6SG4QDvEBM/review"
 
 PRIVACIDADE = [
     ("Quem trata os dados", [
-        e(EMPRESA_FRASE) + " Contacto do responsável pelo tratamento: Vinícius Nascimento, gerente.",
-        'Contacto para privacidade: <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a> · <a href="tel:+351930446198">930 446 198</a>.']),
+        e(f"Responsável pelo tratamento: {EMPRESA['denominacao']}, sociedade por quotas com sede na {EMPRESA['sede']}, NIPC {EMPRESA['nipc']}. ImpermeabilizaPro é uma marca desta sociedade. Gerente: Vinícius Nascimento."),
+        'Contacto para privacidade: <a href="mailto:geral@lazarsouza.pt">geral@lazarsouza.pt</a> · <a href="tel:+351930446198">930 446 198</a>.']),
     ("Calculadora de preço", [
         "As respostas à calculadora (tipo de cliente, superfície, área, localização, estado da superfície e outras) são usadas no seu navegador para calcular a estimativa. Não são enviadas para nenhuma base de dados do site.",
         "Se aceitar os cookies de medição, registamos apenas categorias de utilização: que a calculadora foi usada, o tipo de cliente, o tipo de superfície, o escalão de área (por exemplo, 200 a 499 m²), a zona e se a estimativa teve preço. Nunca registamos a localidade escrita, a área exata, o texto das mensagens nem dados de contacto."]),
@@ -857,15 +878,15 @@ PRIVACIDADE = [
     ("Conservação", [
         "As respostas da calculadora não são guardadas pelo site. As mensagens recebidas são conservadas pelo tempo necessário ao pedido, à relação contratual e às obrigações legais (por exemplo, faturação)."]),
     ("Os seus direitos", [
-        'Pode pedir acesso, retificação, apagamento, limitação, portabilidade ou oposição, quando aplicável, através de <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a>. Pode retirar o consentimento sem afetar o tratamento anterior. Tem direito a apresentar reclamação à <a href="https://www.cnpd.pt/" target="_blank" rel="noopener noreferrer">Comissão Nacional de Proteção de Dados</a>.']),
+        'Pode pedir acesso, retificação, apagamento, limitação, portabilidade ou oposição, quando aplicável, através de <a href="mailto:geral@lazarsouza.pt">geral@lazarsouza.pt</a>. Pode retirar o consentimento sem afetar o tratamento anterior. Tem direito a apresentar reclamação à <a href="https://www.cnpd.pt/" target="_blank" rel="noopener noreferrer">Comissão Nacional de Proteção de Dados</a>.']),
     ("Serviços utilizados", [
         'O site é publicado através do GitHub Pages, que regista dados técnicos de acesso (incluindo o endereço IP) para disponibilizar e proteger o serviço. Com consentimento, a Google tag carrega o Google Analytics e o Google Ads. Ao abrir o WhatsApp, o email ou o Google, passa a usar esses serviços. Consulte as políticas da <a href="https://docs.github.com/pt/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub</a>, da <a href="https://policies.google.com/privacy?hl=pt-PT" target="_blank" rel="noopener noreferrer">Google</a> e do <a href="https://www.whatsapp.com/legal/privacy-policy-eea" target="_blank" rel="noopener noreferrer">WhatsApp</a>, incluindo transferências internacionais.']),
 ]
 
 LEGAIS = [
     ("Quem somos", [
-        e(EMPRESA_FRASE) + " Vinícius Nascimento é o gerente e o responsável técnico.",
-        'Contacto: <a href="tel:+351930446198">930 446 198</a> (chamada para a rede móvel nacional, telefone e WhatsApp) · <a href="mailto:proimpermeabiliza@gmail.com">proimpermeabiliza@gmail.com</a>.']),
+        e(EMPRESA_FRASE) + " Vinícius Nascimento é o sócio-gerente e o diretor técnico.",
+        'Contacto: <a href="tel:+351930446198">930 446 198</a> (chamada para a rede móvel nacional, telefone e WhatsApp) · <a href="mailto:geral@lazarsouza.pt">geral@lazarsouza.pt</a>.']),
     ("Preços, estimativas e propostas", [
         "Os preços do site e da calculadora são estimativas indicativas por m². Não são uma proposta nem um orçamento vinculativo. O valor, os trabalhos incluídos, o prazo, as condições de pagamento e os impostos aplicáveis são definidos na proposta escrita para cada obra, depois de vermos fotografias ou a obra.",
         f"Trabalhamos em coberturas, terraços e outras áreas planas a partir de {MIN} m². Não fazemos pequenas reparações, telhados de telha ou inclinados, nem trabalhos em grande altura.",
@@ -903,13 +924,13 @@ def pagina_sobre():
     url = f"{SITE}/sobre-nos/"
     emp = SOBRE["empresa"]
     if emp:
-        quem = (e(EMPRESA_FRASE) + (f" Sede: {e(emp['sede'])}." if emp.get("sede") else "") + " "
+        quem = (e(EMPRESA_FRASE) + " "
                 "Fazemos impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas.")
     else:
         quem = ("ImpermeabilizaPro é uma empresa de impermeabilização com base em Sobral de Monte Agraço. "
                 "Fazemos impermeabilização de coberturas planas, terraços, caves e paredes enterradas para construtoras, condomínios e empresas. "
                 'Os dados da empresa estão nas <a href="/informacoes-legais/">informações legais</a>.')
-    pessoas = [("Vinícius Nascimento", "Responsável técnico",
+    pessoas = [("Vinícius Nascimento", "Sócio-gerente, direção técnica",
                 "5 anos de experiência em impermeabilização. É quem faz a obra e quem fala consigo: pode ligar ou escrever-lhe diretamente.", "vinicius-nascimento-v2.webp")] + list(SOBRE["equipa_extra"])
     equipa = ""
     for nome, funcao, txt, img in pessoas:
@@ -937,11 +958,11 @@ def pagina_sobre():
              + (f'<section class="h-sec"><div class="wrap"><h2>Algumas obras</h2><div class="h-servicos h-servicos-3">{cards}</div><p style="margin-top:16px"><a href="/obras/">Ver todas as obras</a></p></div></section>' if cards else "")
              + f'<section class="h-sec soft"><div class="wrap narrow"><h2>Fale connosco</h2><p>Para uma proposta, diga-nos a área aproximada e a localidade da obra.</p>'
              f'<p><a class="btn whatsapp big wa-direct" data-placement="sobre_nos" href="{e(wa)}" target="_blank" rel="noopener noreferrer">WhatsApp</a> <a class="btn outline big" href="tel:+351930446198" data-track="phone_sobre_nos">930 446 198</a> '
-             '<a class="btn outline big" href="mailto:proimpermeabiliza@gmail.com">Email</a> <a class="btn outline big" href="/calculadora/">Calcular o preço</a></p>'
+             '<a class="btn outline big" href="mailto:geral@lazarsouza.pt">Email</a> <a class="btn outline big" href="/calculadora/">Calcular o preço</a></p>'
              '<p class="calc-legal">O WhatsApp abre com a mensagem preenchida; só nos chega quando carregar em Enviar.</p></div></section>')
     crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": "Sobre nós", "item": url}]}
     sobre = {"@context": "https://schema.org", "@type": "AboutPage", "name": "Sobre nós", "url": url, "inLanguage": "pt-PT", "about": {"@id": NEGOCIO_ID},
-             "mentions": [{"@type": "Person", "name": "Vinícius Nascimento", "jobTitle": "Responsável técnico", "worksFor": {"@id": NEGOCIO_ID}, "image": f"{SITE}/assets/vinicius-nascimento-v2.webp"}]}
+             "mentions": [{"@type": "Person", "name": "Vinícius Nascimento", "jobTitle": "Sócio-gerente, direção técnica", "worksFor": {"@id": NEGOCIO_ID}, "image": f"{SITE}/assets/vinicius-nascimento-v2.webp"}]}
     return (cabeca("Sobre Nós: Quem Faz a Sua Impermeabilização | ImpermeabilizaPro",
                    "Quem somos, o que fazemos e o que não fazemos: impermeabilização de coberturas planas, terraços e caves para construtoras, condomínios e empresas.", url, [crumbs, sobre])
             + f"<main id=\"conteudo\">\n{corpo}\n</main>\n<footer></footer>\n</body>\n</html>\n")
@@ -971,10 +992,10 @@ def pagina_404():
              '<section class="h-sec"><div class="wrap"><div class="calc" data-calc data-modo="rapido" style="max-width:760px;margin:0 auto"><h2>Preço por m² em 30 segundos</h2>'
              '<form data-calc-form novalidate><p class="calc-vazio">A carregar a calculadora…</p></form><div class="calc-res" data-calc-result aria-live="polite"></div>'
              '<div class="calc-acoes" id="calcAcoes" hidden><a class="btn whatsapp big" id="calcWa" data-placement="calculadora_404" href="https://wa.me/351930446198" target="_blank" rel="noopener noreferrer">Pedir proposta pelo WhatsApp</a>'
-             '<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:proimpermeabiliza@gmail.com">Enviar por email (com plantas)</a></div></div>'
+             '<a class="btn outline big" href="tel:+351930446198" data-track="phone_calculadora">Ligar</a><a class="btn outline big calc-email" id="calcEmail" href="mailto:geral@lazarsouza.pt">Enviar por email (com plantas)</a></div></div>'
              f'<h2 style="margin-top:28px;font-size:1.2rem">Serviços</h2><div class="h-links">{servicos}</div></div></section>')
     head = cabeca("Página não encontrada | ImpermeabilizaPro", "Esta página não existe. Veja o preço por m² da sua obra ou escolha o serviço.", SITE + "/", [], robots="noindex,follow")
-    fim = '</main>\n<footer></footer>\n<script type="module" src="/calculadora/widget.mjs?v=20261124-1"></script>\n</body>\n</html>\n'
+    fim = '</main>\n<footer></footer>\n<script type="module" src="/calculadora/widget.mjs?v=20261126-1"></script>\n</body>\n</html>\n'
     (RAIZ / "404.html").write_text(head + '<main id="conteudo">\n' + corpo + '\n' + fim, encoding="utf-8")
 
 

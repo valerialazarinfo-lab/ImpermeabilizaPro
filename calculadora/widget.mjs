@@ -4,7 +4,7 @@
  * #calcAcoes e #calcWa (o link de WhatsApp existe no HTML para a medição de cliques do script.js).
  * Opções: data-modo="rapido" (perguntas de afinação fechadas) ou "completo".
  */
-import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261124-1';
+import { lerPrecos, calcular, minimoObra } from '/calculadora/motor.mjs?v=20261126-1';
 
 const WA = 'https://wa.me/351930446198?text=';
 const ROTULOS = {
@@ -40,7 +40,7 @@ export async function montarCalculadora(raiz) {
   const modo = raiz.dataset.modo || 'rapido';
   let t;
   try {
-    const r = await fetch('/calculadora/precos.csv?v=20261124-1', { cache: 'no-cache' });
+    const r = await fetch('/calculadora/precos.csv?v=20261126-1', { cache: 'no-cache' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     t = lerPrecos(await r.text());
   } catch (e) {
@@ -85,7 +85,7 @@ export async function montarCalculadora(raiz) {
     'Posso enviar fotografias e a planta/medições.'].join('\n');
   const mostrarAcoes = (d, r) => {
     wa.href = WA + encodeURIComponent(mensagem(d, r));
-    if (mail) mail.href = 'mailto:proimpermeabiliza@gmail.com?subject=' + encodeURIComponent(`Pedido de proposta · ${desc('superficie', d)} · ${d.area || '?'} m²`) + '&body=' + encodeURIComponent(mensagem(d, r).replace('Posso enviar fotografias e a planta/medições.', 'Junto em anexo fotografias, planta ou medições.'));
+    if (mail) mail.href = 'mailto:geral@lazarsouza.pt?subject=' + encodeURIComponent(`Pedido de proposta · ${desc('superficie', d)} · ${d.area || '?'} m²`) + '&body=' + encodeURIComponent(mensagem(d, r).replace('Posso enviar fotografias e a planta/medições.', 'Junto em anexo fotografias, planta ou medições.'));
     acoes.hidden = false;
   };
   const escalao = (a) => { const n = Number(String(a).replace(',', '.')); return !n ? 'sem_area' : n < 100 ? '<100' : n < 200 ? '100-199' : n < 500 ? '200-499' : n < 1000 ? '500-999' : '1000+'; };
