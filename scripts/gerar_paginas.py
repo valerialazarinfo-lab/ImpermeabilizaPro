@@ -22,12 +22,11 @@ NEGOCIO_ID = SITE + "/#negocio"
 # Identificação obrigatória em sítios na Internet: art. 171.º do Código das Sociedades Comerciais e art. 10.º do DL 7/2004.
 EMAIL = "geral@lazarsouza.pt"
 EMPRESA = dict(denominacao="LAZAR & SOUZA, LDA", nipc="519771311", tipo="Sociedade por quotas",
-               sede="Rua dos Lusíadas, 69, 1.º Dto, 2590-031 Sobral de Monte Agraço", rua="Rua dos Lusíadas, 69, 1.º Dto",
-               codigo_postal="2590-031", localidade="Sobral de Monte Agraço", capital="1.000 €",
+               localidade="Sobral de Monte Agraço", capital="1.000 €",  # morada da sede não vai para o site (decisão da Valeria, 26-11-2026)
                conservatoria="Conservatória do Registo Comercial", registada=True)
-EMPRESA_LEGAL = (f"{EMPRESA['denominacao']} · {EMPRESA['tipo']} · Sede: {EMPRESA['sede']} · "
+EMPRESA_LEGAL = (f"{EMPRESA['denominacao']} · {EMPRESA['tipo']} · Sede: {EMPRESA['localidade']} · "
                  f"NIPC e matrícula {EMPRESA['nipc']}, {EMPRESA['conservatoria']} · Capital social {EMPRESA['capital']}")
-EMPRESA_FRASE = (f"ImpermeabilizaPro é uma marca da {EMPRESA['denominacao']}, sociedade por quotas com sede na {EMPRESA['sede']}, "
+EMPRESA_FRASE = (f"ImpermeabilizaPro é uma marca da {EMPRESA['denominacao']}, sociedade por quotas com sede em {EMPRESA['localidade']}, "
                  f"NIPC e matrícula {EMPRESA['nipc']} ({EMPRESA['conservatoria']}), capital social {EMPRESA['capital']}.")
 WA_BASE = "https://wa.me/351930446198?text="
 e = lambda s: html.escape(str(s), quote=True)
@@ -393,7 +392,7 @@ def pagina(slug, p):
     wa = WA_BASE + urllib.parse.quote(p.get("wa", "Olá, gostaria de pedir uma proposta de impermeabilização. A obra tem cerca de [m²] e fica em [localidade]."))
     faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]}
     serv = {"@context": "https://schema.org", "@type": "Service", "name": p["servico"], "serviceType": "Impermeabilização", "url": url,
-            "provider": {"@type": "HomeAndConstructionBusiness", "@id": NEGOCIO_ID, "name": "ImpermeabilizaPro", "legalName": EMPRESA["denominacao"], "taxID": EMPRESA["nipc"], "email": EMAIL, "address": {"@type": "PostalAddress", "streetAddress": EMPRESA["rua"], "postalCode": EMPRESA["codigo_postal"], "addressLocality": EMPRESA["localidade"], "addressCountry": "PT"}, "telephone": "+351930446198", "url": SITE + "/"},
+            "provider": {"@type": "HomeAndConstructionBusiness", "@id": NEGOCIO_ID, "name": "ImpermeabilizaPro", "legalName": EMPRESA["denominacao"], "taxID": EMPRESA["nipc"], "email": EMAIL, "address": {"@type": "PostalAddress", "addressLocality": EMPRESA["localidade"], "addressCountry": "PT"}, "telephone": "+351930446198", "url": SITE + "/"},
             "areaServed": [{"@type": "AdministrativeArea", "name": p.get("area")}] if p.get("area") else [{"@type": "AdministrativeArea", "name": n} for n in ("Distrito de Lisboa", "Distrito de Santarém", "Distrito de Setúbal", "Distrito de Leiria")]}
     if p.get("oferta"):
         serv["offers"] = oferta(*p["oferta"])
@@ -441,7 +440,7 @@ def pagina(slug, p):
         mail = "mailto:geral@lazarsouza.pt?subject=" + urllib.parse.quote(d["email"][0]) + "&body=" + urllib.parse.quote(d["email"][1])
         dados = ""
         if slug == "empresas":
-            linhas = [("Empresa", EMPRESA["denominacao"]), ("Tipo", EMPRESA["tipo"]), ("Sede", EMPRESA["sede"]), ("NIPC e matrícula", EMPRESA["nipc"]), ("Capital social", EMPRESA["capital"]),
+            linhas = [("Empresa", EMPRESA["denominacao"]), ("Tipo", EMPRESA["tipo"]), ("Sede", EMPRESA["localidade"]), ("NIPC e matrícula", EMPRESA["nipc"]), ("Capital social", EMPRESA["capital"]),
                       ("Responsável técnico", "Vinícius Nascimento"), ("Contacto", "930 446 198 · geral@lazarsouza.pt")] + list(SOBRE["credenciais"])
             dados = '<h3>Dados da empresa</h3><table class="price-table h-ficha"><tbody>' + "".join(f'<tr><th scope="row">{e(k)}</th><td>{e(v)}</td></tr>' for k, v in linhas) + "</tbody></table>"
         corpo += (f'<section class="h-sec" id="proposta"><div class="wrap narrow h-artigo"><h2>Como pedir a proposta</h2><h3>O que nos enviar</h3>{ul(d["enviar"])}'
@@ -860,7 +859,7 @@ REVIEW_URL = "https://g.page/r/CSxqX6SG4QDvEBM/review"
 
 PRIVACIDADE = [
     ("Quem trata os dados", [
-        e(f"Responsável pelo tratamento: {EMPRESA['denominacao']}, sociedade por quotas com sede na {EMPRESA['sede']}, NIPC {EMPRESA['nipc']}. ImpermeabilizaPro é uma marca desta sociedade. Gerente: Vinícius Nascimento."),
+        e(f"Responsável pelo tratamento: {EMPRESA['denominacao']}, sociedade por quotas com sede em {EMPRESA['localidade']}, NIPC {EMPRESA['nipc']}. ImpermeabilizaPro é uma marca desta sociedade. Gerente: Vinícius Nascimento."),
         'Contacto para privacidade: <a href="mailto:geral@lazarsouza.pt">geral@lazarsouza.pt</a> · <a href="tel:+351930446198">930 446 198</a>.']),
     ("Calculadora de preço", [
         "As respostas à calculadora (tipo de cliente, superfície, área, localização, estado da superfície e outras) são usadas no seu navegador para calcular a estimativa. Não são enviadas para nenhuma base de dados do site.",
