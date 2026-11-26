@@ -148,6 +148,7 @@ Decisões da responsável (2026-11-13), aplicadas no PR «Calculadora com IVA, m
 ## Sociedade registada e email da empresa — 26 November 2026
 
 - LAZAR & SOUZA, LDA com registo definitivo (AP. 18/20261123, entregue a 23-11-2026) e certidão permanente de 25-11-2026. Sede e capital do pacto social (artigos 2.º e 4.º): Rua dos Lusíadas, 69, 1.º Dto, 2590-031 Sobral de Monte Agraço; capital 1.000 €.
-- Identificação legal no rodapé de todas as páginas, nas informações legais, na privacidade (responsável pelo tratamento) e nos dados estruturados (art. 171.º CSC; art. 10.º DL 7/2004). Linha igual à das assinaturas de email.
+- Identificação legal completa (firma, tipo, sede, NIPC e matrícula, conservatória, capital) nas informações legais, na privacidade e nos dados estruturados (art. 171.º CSC; art. 10.º DL 7/2004). Rodapé curto (decisão de 26-11): firma, NIPC e ligação «Dados legais» em todas as páginas.
+- Por confirmar: se o capital já foi depositado; se não, o art. 171.º pode exigir indicar o capital realizado.
 - Email do site passa de proimpermeabiliza@gmail.com para geral@lazarsouza.pt (testado a 26-11: SPF, DKIM e DMARC PASS). A ficha Google continua gerida pela conta proimpermeabiliza. O backend de pedidos (não ativo) mantém a configuração antiga.
 - Por confirmar na certidão permanente: o nome exato da conservatória (o site diz «Conservatória do Registo Comercial», como as assinaturas).
